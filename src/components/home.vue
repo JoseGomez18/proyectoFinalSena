@@ -10,9 +10,7 @@
     </div>
     <div class="video-section">
       <video controls>
-        <source src="path-to-your-video.mp4" type="video/mp4" />
-        Tu navegador no soporta la etiqueta de video.
-      </video>
+        <source src="path-to-your-video.mp4" type="video/mp4" /></video>
     </div>
   </div>
 </template>
@@ -28,7 +26,7 @@ export default {
   display: flex;
   height: 100vh;
   padding: 2rem;
-  background: #f5f5f5;
+  background: var(--color-fondo);
 }
 
 .text-section {
@@ -43,23 +41,24 @@ export default {
 .text-section h1 {
   font-size: 2.5rem;
   line-height: 1.4;
-  color: #333;
+  color: var(--color-texto);
 }
 
 .ai-button {
   margin-top: 1.5rem;
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
-  color: #ffffff;
-  background-color: #4b6cb7;
+  color: var(--color-texto-claro);
+  background-color: var(--color-primario);
   border: none;
   border-radius: 25px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .ai-button:hover {
-  background-color: #182848;
+  background-color: var(--color-secundario);
+  transform: translateY(-3px);
 }
 
 .video-section {
