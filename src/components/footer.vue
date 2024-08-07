@@ -37,19 +37,23 @@ export default {
 
 <style scoped>
 .footer {
-  background-color: #333;
-  color: #fff;
+  background-color: var(--color-primario);
+  color: var(--color-texto-claro);
   padding: 2rem 0;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
 }
 
 .inner {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .footer-section {
-  flex: 1 1 300px; /* Ancho flexible para cada sección */
+  flex: 1 1 300px;
   margin-bottom: 1.5rem;
 }
 
@@ -73,19 +77,19 @@ export default {
 }
 
 .footer-section ul li a {
-  color: #fff;
+  color: var(--color-texto-claro);
   text-decoration: none;
   transition: color 0.3s ease;
 }
 
 .footer-section ul li a:hover {
-  color: #ccc;
+  color: var(--color-primario-claro); /* O cualquier tono más claro o secundario */
 }
 
 .bottom-bar {
   text-align: center;
   padding-top: 1rem;
-  border-top: 1px solid #666;
+  border-top: 1px solid var(--color-borde);
 }
 
 .bottom-bar p {

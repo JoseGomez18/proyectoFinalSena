@@ -1,10 +1,13 @@
 <template>
   <div class="ciudades-destacadas">
-    <h2>Ciudades</h2>
+    <h2>Ciudades Destacadas</h2>
     <div class="contenedor-tarjetas">
       <div class="tarjetas-horizontales" ref="horizontalContainer">
         <div class="tarjeta" v-for="(ciudad, index) in ciudades" :key="index">
           <img :src="require(`@/assets/${ciudad.imagen}`)" :alt="ciudad.nombre" />
+          <div class="contenido-tarjeta">
+            <h3>{{ ciudad.nombre }}</h3>
+          </div>
         </div>
       </div>
       <div class="controles">
@@ -24,18 +27,15 @@ export default {
         { nombre: 'Ciudad 1', imagen: 'imgPrueba.jpg' },
         { nombre: 'Ciudad 2', imagen: 'images.jpeg' },
         { nombre: 'Ciudad 3', imagen: 'images.jpeg' },
-        { nombre: 'Ciudad 1', imagen: 'imgPrueba.jpg' },
-        { nombre: 'Ciudad 2', imagen: 'images.jpeg' },
-        { nombre: 'Ciudad 3', imagen: 'imgPrueba.jpg' },
-        { nombre: 'Ciudad 1', imagen: 'images.jpeg' },
-        { nombre: 'Ciudad 2', imagen: 'imgPrueba.jpg' },
-        { nombre: 'Ciudad 3', imagen: 'imgPrueba.jpg' },
-        { nombre: 'Ciudad 1', imagen: 'images.jpeg' },
-        { nombre: 'Ciudad 2', imagen: 'imgPrueba.jpg' },
-        { nombre: 'Ciudad 3', imagen: 'imgPrueba.jpg' },
+        { nombre: 'Ciudad 4', imagen: 'imgPrueba.jpg' },
+        { nombre: 'Ciudad 5', imagen: 'images.jpeg' },
+        { nombre: 'Ciudad 6', imagen: 'imgPrueba.jpg' },
+        { nombre: 'Ciudad 7', imagen: 'images.jpeg' },
+        { nombre: 'Ciudad 8', imagen: 'imgPrueba.jpg' },
+        { nombre: 'Ciudad 9', imagen: 'images.jpeg' },
+        { nombre: 'Ciudad 10', imagen: 'imgPrueba.jpg' },
       ],
-      currentIndex: 0,
-      scrollStep: 300, // Ancho de desplazamiento por paso
+      scrollStep: 300,
     };
   },
   methods: {
@@ -46,6 +46,12 @@ export default {
       } else {
         container.scrollLeft += this.scrollStep;
       }
+      this.updateCurrentIndex();
+    },
+    updateCurrentIndex() {
+      const container = this.$refs.horizontalContainer;
+      const index = Math.round(container.scrollLeft / this.scrollStep);
+      console.log('Current Index:', index); // Depuración
     },
   },
 };
@@ -54,14 +60,14 @@ export default {
 <style scoped>
 .ciudades-destacadas {
   padding: 2rem;
-  background: #f5f5f5;
+  background: var(--color-fondo);
 }
 
 .ciudades-destacadas h2 {
-  font-size: 2rem;
+  font-size: 2.5rem;
   margin-bottom: 1.5rem;
   text-align: center;
-  color: #333;
+  color: var(--color-texto);
 }
 
 .contenedor-tarjetas {
@@ -73,22 +79,35 @@ export default {
 .tarjetas-horizontales {
   display: flex;
   gap: 1rem;
-  padding-bottom: 1rem; /* Espacio adicional para el control */
+  padding-bottom: 1rem;
+  scroll-behavior: smooth;
+  overflow-x: auto; /* Permitir desplazamiento horizontal */
 }
 
 .tarjeta {
-  flex: 0 0 300px; /* Ancho fijo de cada tarjeta */
-  background: #ffffff;
+  flex: 0 0 300px;
+  background: var(--color-fondo-claro);
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   transition: transform 0.3s ease;
 }
 
+.tarjeta:hover {
+  transform: translateY(-5px);
+}
+
 .tarjeta img {
   width: 100%;
   height: 200px;
   object-fit: cover;
+}
+
+.contenido-tarjeta {
+  padding: 0.5rem;
+  text-align: center;
+  color: var(--color-texto-claro);
+  background: var(--color-secundario);
 }
 
 .controles {
@@ -103,9 +122,9 @@ export default {
 
 .btn-prev,
 .btn-next {
-  background-color: #fff;
-  color: #333;
-  border: 1px solid #ccc;
+  background-color: var(--color-primario);
+  color: var(--color-texto-claro);
+  border: 1px solid var(--color-borde);
   padding: 0.5rem 1rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
@@ -113,6 +132,6 @@ export default {
 
 .btn-prev:hover,
 .btn-next:hover {
-  background-color: #f0f0f0;
+  background-color: var(--color-primario-oscuro);
 }
 </style>

@@ -26,11 +26,11 @@ export default {
   data() {
     return {
       lugaresHorizontales: [
-        { nombre: 'Lugar 1', imagen: 'imgPrueba.jpg' }, // Usando imgPrueba.jpg aquí
-        { nombre: 'Lugar 2', imagen: 'imgPrueba.jpg' }, // Cambia a las imágenes reales que tengas
-        { nombre: 'Lugar 3', imagen: 'imgPrueba.jpg' },
+        { nombre: 'Medellin', imagen: 'imgPrueba.jpg' },
+        { nombre: 'Bogota', imagen: 'imgPrueba.jpg' },
+        { nombre: 'Cali', imagen: 'imgPrueba.jpg' },
       ],
-      lugarAnchoCompleto: { nombre: 'Lugar Destacado', imagen: 'imgPrueba.jpg' },
+      lugarAnchoCompleto: { nombre: 'Cartagena', imagen: 'imgPrueba.jpg' },
     };
   },
 };
@@ -39,14 +39,14 @@ export default {
 <style scoped>
 .lugares-destacados {
   padding: 2rem;
-  background: #f5f5f5;
+  background: var(--color-fondo);
 }
 
 .lugares-destacados h2 {
   font-size: 2rem;
   margin-bottom: 1.5rem;
   text-align: center;
-  color: #333;
+  color: var(--color-texto);
 }
 
 .contenedor-tarjetas {
@@ -63,7 +63,7 @@ export default {
 
 .tarjeta {
   flex: 1;
-  background: #ffffff;
+  background: var(--color-acento);
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
@@ -76,18 +76,20 @@ export default {
 
 .tarjeta img {
   width: 100%;
-  height: 200px;
+  height: 170px;
   object-fit: cover;
 }
 
 .contenido-tarjeta {
   padding: 1rem;
   text-align: center;
+  color: var(--color-texto-claro);
+  background: var(--color-secundario);
 }
 
 .tarjeta-ancho-completo {
   width: 100%;
-  background: #ffffff;
+  background: var(--color-secundario);
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
@@ -100,12 +102,13 @@ export default {
 
 .tarjeta-ancho-completo img {
   width: 100%;
-  height: 250px;
+  height: 200px;
   object-fit: cover;
 }
 
 .tarjeta-ancho-completo .contenido-tarjeta {
   padding: 1rem;
   text-align: center;
+  color: var(--color-texto-claro);
 }
 </style>

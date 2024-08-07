@@ -38,26 +38,23 @@ export default {
         { nombre: 'Destino 1', imagen: 'imgPrueba.jpg', categorias: ['turismo', 'fiesta', 'city'] },
         { nombre: 'Destino 2', imagen: 'imgPrueba.jpg', categorias: ['bosque', 'relax'] },
         { nombre: 'Destino 3', imagen: 'imgPrueba.jpg', categorias: ['playa', 'city'] },
-        { nombre: 'Destino 1', imagen: 'imgPrueba.jpg', categorias: ['turismo', 'fiesta', 'city'] },
-        { nombre: 'Destino 2', imagen: 'imgPrueba.jpg', categorias: ['bosque', 'relax'] },
-        { nombre: 'Destino 3', imagen: 'imgPrueba.jpg', categorias: ['playa', 'city'] },
-        // Agrega más destinos con diferentes categorías según sea necesario
+        { nombre: 'Destino 4', imagen: 'imgPrueba.jpg', categorias: ['turismo', 'fiesta', 'city'] },
+        { nombre: 'Destino 5', imagen: 'imgPrueba.jpg', categorias: ['bosque', 'relax'] },
+        { nombre: 'Destino 6', imagen: 'imgPrueba.jpg', categorias: ['playa', 'city'] },
       ],
       categoriaSeleccionada: null,
-      scrollStep: 300, // Ancho de desplazamiento por paso
+      scrollStep: 300,
     };
   },
   computed: {
     destinosFiltrados() {
       if (!this.categoriaSeleccionada) return this.destinos;
-
       return this.destinos.filter(destino => destino.categorias.includes(this.categoriaSeleccionada));
     },
   },
   methods: {
     seleccionarCategoria(index) {
       this.categoriaSeleccionada = this.categorias[index].filtro;
-      // Scroll al inicio del contenedor al cambiar de categoría
       this.$refs.horizontalContainer.scrollLeft = 0;
     },
     scrollHorizontal(direction) {
@@ -75,35 +72,38 @@ export default {
 <style scoped>
 .categorias-destinos {
   padding: 2rem;
-  background: #f5f5f5;
+  background: var(--color-fondo);
 }
 
 .categorias-destinos h2 {
   font-size: 2rem;
   margin-bottom: 1.5rem;
   text-align: center;
-  color: #333;
+  color: var(--color-texto);
 }
 
 .botones-categorias {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   gap: 1rem;
   margin-bottom: 1rem;
 }
 
 .botones-categorias button {
   flex: 1;
-  background-color: #fff;
-  color: #333;
-  border: 1px solid #ccc;
+  background-color: var(--color-primario);
+  color: var(--color-texto-claro);
+  border: 1px solid var(--color-borde);
   padding: 0.5rem 1rem;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  border-radius: 25px;
+  transition: background-color 0.3s ease, transform 0.2s;
 }
 
 .botones-categorias button:hover {
-  background-color: #f0f0f0;
+  background-color: #4ba2db; /* Un tono más claro del color primario */
+  color: #ffffff; /* Blanco, para contraste con el fondo azul claro */
+  transform: translateY(-3px);
 }
 
 .contenedor-tarjetas {
@@ -115,16 +115,21 @@ export default {
 .tarjetas-horizontales {
   display: flex;
   gap: 1rem;
-  padding-bottom: 1rem; /* Espacio adicional para el control */
+  padding-bottom: 1rem;
+  overflow-x: auto; /* Añadir overflow-x para permitir desplazamiento horizontal */
 }
 
 .tarjeta {
-  flex: 0 0 300px; /* Ancho fijo de cada tarjeta */
-  background: #ffffff;
+  flex: 0 0 300px;
+  background: var(--color-fondo-claro);
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   transition: transform 0.3s ease;
+}
+
+.tarjeta:hover {
+  transform: translateY(-5px);
 }
 
 .tarjeta img {
@@ -145,17 +150,17 @@ export default {
 
 .btn-prev,
 .btn-next {
-  background-color: #fff;
-  color: #333;
-  border: 1px solid #ccc;
+  background-color: var(--color-primario);
+  color: var(--color-texto-claro);
+  border: 1px solid var(--color-borde);
   padding: 0.5rem 1rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  border-radius: 50%;
 }
 
 .btn-prev:hover,
 .btn-next:hover {
-  background-color: #f0f0f0;
+  background-color: var(--color-primario-oscuro);
 }
 </style>
-
