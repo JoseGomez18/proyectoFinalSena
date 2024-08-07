@@ -1,25 +1,42 @@
 <template>
   <div class="home-container">
+    <!-- <chat v-if="seen"/> -->
     <div class="text-section">
       <h1>
         Busca tus próximos destinos <br />
         de la forma más <br />
         personalizada con IA
       </h1>
-      <button class="ai-button">IA</button>
     </div>
     <div class="video-section">
-      <video controls>
+      <chat/>
+      <!-- <video controls>
         <source src="path-to-your-video.mp4" type="video/mp4" />
         Tu navegador no soporta la etiqueta de video.
-      </video>
+      </video> -->
+      <!-- <button class="ai-button" v-on:click="activar()">IA</button> -->
     </div>
   </div>
 </template>
 
 <script>
+ import Chat from '../components/chat.vue'
 export default {
   name: 'Home',
+  data(){
+      return{
+        seen: false
+      }
+    },
+    methods: {
+      activar(){
+        this.seen = !this.seen
+        console.log(this.seen)
+      }
+    },
+    components: {
+        Chat
+    }
 };
 </script>
 
@@ -28,11 +45,12 @@ export default {
   display: flex;
   height: 100vh;
   padding: 2rem;
-  background: #f5f5f5;
+  background: var(--color-fondo);
 }
 
 .text-section {
   flex: 1;
+  width: 40%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -43,27 +61,29 @@ export default {
 .text-section h1 {
   font-size: 2.5rem;
   line-height: 1.4;
-  color: #333;
+  color: var(--color-texto);
 }
 
 .ai-button {
   margin-top: 1.5rem;
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
-  color: #ffffff;
-  background-color: #4b6cb7;
+  color: var(--color-texto-claro);
+  background-color: var(--color-primario);
   border: none;
   border-radius: 25px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .ai-button:hover {
-  background-color: #182848;
+  background-color: var(--color-secundario);
+  transform: translateY(-3px);
 }
 
 .video-section {
   flex: 1;
+  width: 60%;
   display: flex;
   justify-content: center;
   align-items: center;
