@@ -1,23 +1,42 @@
 <template>
   <div class="home-container">
+    <!-- <chat v-if="seen"/> -->
     <div class="text-section">
       <h1>
         Busca tus próximos destinos <br />
         de la forma más <br />
         personalizada con IA
       </h1>
-      <button class="ai-button">IA</button>
     </div>
     <div class="video-section">
-      <video controls>
-        <source src="path-to-your-video.mp4" type="video/mp4" /></video>
+      <chat/>
+      <!-- <video controls>
+        <source src="path-to-your-video.mp4" type="video/mp4" />
+        Tu navegador no soporta la etiqueta de video.
+      </video> -->
+      <!-- <button class="ai-button" v-on:click="activar()">IA</button> -->
     </div>
   </div>
 </template>
 
 <script>
+ import Chat from '../components/chat.vue'
 export default {
   name: 'Home',
+  data(){
+      return{
+        seen: false
+      }
+    },
+    methods: {
+      activar(){
+        this.seen = !this.seen
+        console.log(this.seen)
+      }
+    },
+    components: {
+        Chat
+    }
 };
 </script>
 
@@ -31,6 +50,7 @@ export default {
 
 .text-section {
   flex: 1;
+  width: 40%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -63,6 +83,7 @@ export default {
 
 .video-section {
   flex: 1;
+  width: 60%;
   display: flex;
   justify-content: center;
   align-items: center;
