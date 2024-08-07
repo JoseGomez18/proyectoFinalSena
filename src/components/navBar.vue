@@ -2,20 +2,20 @@
   <nav class="navbar">
     <div class="navbar-container">
       <div class="navbar-logo">
-        <router-link to="/">MyBrand</router-link>
+        <router-link to="/">PagiTours</router-link>
       </div>
       <ul class="navbar-list">
         <li class="navbar-item">
-          <router-link to="/" class="text_color">Home</router-link>
+          <router-link to="/" class="navbar-link">Home</router-link>
         </li>
         <li class="navbar-item">
-          <router-link to="/about" class="text_color">About</router-link>
+          <router-link to="/lugaresDest" class="navbar-link">Lugares Destacados</router-link>
         </li>
         <li class="navbar-item">
-          <router-link to="/services" class="text_color">Services</router-link>
+          <router-link to="/services" class="navbar-link">Ciudades</router-link>
         </li>
         <li class="navbar-item">
-          <router-link to="/contact" class="text_color">Contact</router-link>
+          <router-link to="/contact" class="navbar-link">Explorar</router-link>
         </li>
       </ul>
     </div>
@@ -30,9 +30,11 @@ export default {
 
 <style scoped>
 .navbar {
-  background: linear-gradient(90deg, #4b6cb7 0%, #182848 100%);
+  background: var(--color-gradiente-primario);
   padding: 1rem 0;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-bottom-left-radius: 10px; 
+  border-bottom-right-radius: 10px; 
 }
 
 .navbar-container {
@@ -44,8 +46,9 @@ export default {
   padding: 0 1rem;
 }
 
-.navbar-logo a {
-  color: #ffffff;
+.navbar-logo a,
+.navbar-logo router-link {
+  color: var(--color-texto-claro);
   font-size: 1.5rem;
   font-weight: bold;
   text-decoration: none;
@@ -58,25 +61,21 @@ export default {
   padding: 0;
 }
 
-.text_color{
-  color: white;
-}
-
 .navbar-item {
   margin-left: 1.5rem;
 }
 
-
-.navbar-item a {
-  color: #ffffff;
+.navbar-link {
+  color: var(--color-texto-claro);
   text-decoration: none;
   font-size: 1rem;
   font-weight: 500;
   transition: color 0.3s ease;
+  cursor: pointer;
 }
 
-.navbar-item a:hover {
-  color: #ffd700;
+.navbar-link:hover {
+  color: var(--color-acento-claro);
 }
 
 @media (max-width: 768px) {
