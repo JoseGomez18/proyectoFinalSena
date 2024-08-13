@@ -3,10 +3,10 @@
       <navBar/>
       <!-- <chat v-if="seen"/> -->
       <homeVue/>
+      <exploraDestVue/>
       <!-- <button v-on:click="activar()">activar</button> -->
       <lugaresDestaVue/>
       <ciudadesVue/>
-      <exploraDestVue/>
       <footerVue/>
     </div>
   </template>

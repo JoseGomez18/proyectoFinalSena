@@ -1,7 +1,9 @@
 //import { createRouter, createWebHashHistory } from 'vue-router'
 import { createWebHashHistory, createRouter } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import ChatView from '../views/ChatView.vue'
+import ExploraDest from '@/components/exploraDest.vue'
+import LugaresDesta from '@/components/lugaresDesta.vue'
+import Ciudades from '@/components/ciudades.vue'
 
 const routes = [
     {
@@ -10,9 +12,19 @@ const routes = [
         component: HomeView,
     },
     {
-        path: '/chat',
-        name: 'chat',
-        component: ChatView
+        path: '/exploraDest',
+        name: 'exploraDest',
+        component: ExploraDest
+    },
+    {
+        path: '/lugaresDesta',
+        name: 'lugaresDesta',
+        component: LugaresDesta
+    },
+    {
+        path: '/ciudades',
+        name: 'ciudades',
+        component: Ciudades
     }
 ]
 
