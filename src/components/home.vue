@@ -1,3 +1,4 @@
+
 <template>
   <div class="home-container">
     <!-- <chat v-if="seen"/> -->
@@ -8,10 +9,10 @@
         personalizada con IA
       </h1>
     </div>
-    <div class="video-section">
+    <div class="chat">
       <chat/>
-      <!-- <video controls>
-        <source src="path-to-your-video.mp4" type="video/mp4" />
+      <!-- <video controls autoplay muted loop>
+        <source src="../assets/videoFront2.mp4" type="video/mp4" />
         Tu navegador no soporta la etiqueta de video.
       </video> -->
       <!-- <button class="ai-button" v-on:click="activar()">IA</button> -->
@@ -45,7 +46,7 @@ export default {
   display: flex;
   height: 100vh;
   padding: 2rem;
-  background: var(--color-fondo);
+  background: #f5f5f5;
 }
 
 .text-section {
@@ -61,27 +62,26 @@ export default {
 .text-section h1 {
   font-size: 2.5rem;
   line-height: 1.4;
-  color: var(--color-texto);
+  color: #333;
 }
 
 .ai-button {
   margin-top: 1.5rem;
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
-  color: var(--color-texto-claro);
-  background-color: var(--color-primario);
+  color: #ffffff;
+  background-color: #4b6cb7;
   border: none;
   border-radius: 25px;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  transition: background-color 0.3s ease;
 }
 
 .ai-button:hover {
-  background-color: var(--color-secundario);
-  transform: translateY(-3px);
+  background-color: #182848;
 }
 
-.video-section {
+.chat {
   flex: 1;
   width: 60%;
   display: flex;
@@ -89,10 +89,15 @@ export default {
   align-items: center;
 }
 
-.video-section video {
+.chat video {
   width: 100%;
   max-width: 600px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  width: 100%;
+    max-width: 600px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 </style>
