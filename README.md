@@ -1,3 +1,5 @@
+🗺️ TravelAI - Asistente de Sugerencia de Destinos
+
 # front
 
 ## Project setup
