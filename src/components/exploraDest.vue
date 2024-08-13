@@ -2,7 +2,9 @@
   <div class="categorias-destinos">
     <h2>Categorías de Destinos</h2>
     <div class="botones-categorias">
-      <button v-for="(categoria, index) in categorias" :key="index" @click="seleccionarCategoria(index)">
+      <button @click="seleccionarCategoria(null)" :class="{ active: categoriaSeleccionada === null }">Todas</button>
+      <button v-for="(categoria, index) in categorias" :key="index" @click="seleccionarCategoria(categoria.filtro)" :class="{ active: categoriaSeleccionada === categoria.filtro }">
+        <span class="emoji">{{ categoria.emoji }}</span>
         {{ categoria.nombre }}
       </button>
     </div>
@@ -26,13 +28,14 @@ export default {
   data() {
     return {
       categorias: [
-        { nombre: 'Turismo', filtro: 'turismo' },
-        { nombre: 'Fiesta', filtro: 'fiesta' },
-        { nombre: 'Bosque', filtro: 'bosque' },
-        { nombre: 'Relax', filtro: 'relax' },
-        { nombre: 'Playa', filtro: 'playa' },
-        { nombre: 'City', filtro: 'city' },
-        { nombre: 'Romance', filtro: 'romance' },
+        { nombre: 'Todas', filtro: null, emoji: '🌍' },
+        { nombre: 'Turismo', filtro: 'turismo', emoji: '🌄' },
+        { nombre: 'Fiesta', filtro: 'fiesta', emoji: '🎉' },
+        { nombre: 'Bosque', filtro: 'bosque', emoji: '🌳' },
+        { nombre: 'Relax', filtro: 'relax', emoji: '😌' },
+        { nombre: 'Playa', filtro: 'playa', emoji: '🏖️' },
+        { nombre: 'City', filtro: 'city', emoji: '🌆' },
+        { nombre: 'Romance', filtro: 'romance', emoji: '❤️' },
       ],
       destinos: [
         { nombre: 'Destino 1', imagen: 'imgPrueba.jpg', categorias: ['turismo', 'fiesta', 'city'] },
@@ -53,8 +56,8 @@ export default {
     },
   },
   methods: {
-    seleccionarCategoria(index) {
-      this.categoriaSeleccionada = this.categorias[index].filtro;
+    seleccionarCategoria(filtro) {
+      this.categoriaSeleccionada = filtro;
       this.$refs.horizontalContainer.scrollLeft = 0;
     },
     scrollHorizontal(direction) {
@@ -71,38 +74,50 @@ export default {
 
 <style scoped>
 .categorias-destinos {
-  padding: 2rem;
+  padding: 1.5rem;
   background: var(--color-fondo);
+  border-radius: 10px;
 }
 
 .categorias-destinos h2 {
-  font-size: 2rem;
-  margin-bottom: 1.5rem;
-  text-align: center;
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  text-align: left;
   color: var(--color-texto);
 }
 
 .botones-categorias {
   display: flex;
-  justify-content: space-around;
-  gap: 1rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
   margin-bottom: 1rem;
 }
 
 .botones-categorias button {
-  flex: 1;
-  background-color: var(--color-primario);
-  color: var(--color-texto-claro);
-  border: 1px solid var(--color-borde);
+  background-color: white;
+  color: var(--color-texto);
+  border: 1px solid var(--color-primario);
   padding: 0.5rem 1rem;
   cursor: pointer;
-  border-radius: 25px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   transition: background-color 0.3s ease, transform 0.2s;
 }
 
+.botones-categorias button .emoji {
+  font-size: 1.2rem;
+}
+
+.botones-categorias button.active {
+  background-color: var(--color-primario);
+  color: white;
+}
+
 .botones-categorias button:hover {
-  background-color: #4ba2db; /* Un tono más claro del color primario */
-  color: #ffffff; /* Blanco, para contraste con el fondo azul claro */
+  background-color: var(--color-secundario);
   transform: translateY(-3px);
 }
 
@@ -116,12 +131,12 @@ export default {
   display: flex;
   gap: 1rem;
   padding-bottom: 1rem;
-  overflow-x: auto; /* Añadir overflow-x para permitir desplazamiento horizontal */
+  overflow-x: auto;
 }
 
 .tarjeta {
-  flex: 0 0 300px;
-  background: var(--color-fondo-claro);
+  flex: 0 0 250px;
+  background: white;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
@@ -150,17 +165,22 @@ export default {
 
 .btn-prev,
 .btn-next {
-  background-color: var(--color-primario);
-  color: var(--color-texto-claro);
-  border: 1px solid var(--color-borde);
-  padding: 0.5rem 1rem;
+  background-color: white;
+  color: var(--color-texto);
+  border: 1px solid var(--color-primario);
+  padding: 0.5rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
   border-radius: 50%;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .btn-prev:hover,
 .btn-next:hover {
-  background-color: var(--color-primario-oscuro);
+  background-color: var(--color-secundario);
 }
 </style>

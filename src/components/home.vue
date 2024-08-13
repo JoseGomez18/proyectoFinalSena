@@ -1,44 +1,41 @@
 
 <template>
   <div class="home-container">
-    <!-- <chat v-if="seen"/> -->
     <div class="text-section">
       <h1>
         Busca tus próximos destinos <br />
         de la forma más <br />
-        personalizada con IA
+        <span class="highlight">personalizada con IA</span>
       </h1>
+      <button class="ai-button" @click="activar">Explorar con IA</button>
     </div>
-    <div class="chat">
-      <chat/>
-      <!-- <video controls autoplay muted loop>
-        <source src="../assets/videoFront2.mp4" type="video/mp4" />
-        Tu navegador no soporta la etiqueta de video.
-      </video> -->
-      <!-- <button class="ai-button" v-on:click="activar()">IA</button> -->
+    <div class="video-section">
+      <chat v-if="seen"/>
+      <!-- Asegúrate de tener tu video aquí si decides usar uno -->
     </div>
   </div>
 </template>
 
 <script>
- import Chat from '../components/chat.vue'
+import Chat from '../components/chat.vue'
+
 export default {
   name: 'Home',
-  data(){
-      return{
-        seen: false
-      }
-    },
-    methods: {
-      activar(){
-        this.seen = !this.seen
-        console.log(this.seen)
-      }
-    },
-    components: {
-        Chat
+  data() {
+    return {
+      seen: false
     }
-};
+  },
+  methods: {
+    activar() {
+      this.seen = !this.seen
+      console.log(this.seen)
+    }
+  },
+  components: {
+    Chat
+  }
+}
 </script>
 
 <style scoped>
@@ -46,12 +43,13 @@ export default {
   display: flex;
   height: 100vh;
   padding: 2rem;
-  background: #f5f5f5;
+  background: var(--color-gradiente-primario);
+  color: var(--color-texto-claro);
+
 }
 
 .text-section {
   flex: 1;
-  width: 40%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -62,34 +60,52 @@ export default {
 .text-section h1 {
   font-size: 2.5rem;
   line-height: 1.4;
-  color: #333;
+  color: var(--color-texto-claro);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  margin-bottom: 1rem;
+}
+
+.text-section .highlight {
+  color: var(--color-acento-claro);
+  font-weight: bold;
+  animation: glow 2s infinite alternate;
+}
+
+@keyframes glow {
+  0% {
+    text-shadow: 0 0 10px var(--color-acento-claro), 0 0 20px var(--color-acento-claro);
+  }
+  100% {
+    text-shadow: 0 0 20px var(--color-acento-claro), 0 0 30px var(--color-acento-claro);
+  }
 }
 
 .ai-button {
-  margin-top: 1.5rem;
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
-  color: #ffffff;
-  background-color: #4b6cb7;
+  color: var(--color-texto-claro);
+  background-color: black;
   border: none;
   border-radius: 25px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin-top: 1.5rem;
 }
 
 .ai-button:hover {
-  background-color: #182848;
+  background-color: var(--color-acento-claro);
+  color: black;
+  transform: translateY(-3px);
 }
 
 .chat {
   flex: 1;
-  width: 60%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.chat video {
+.video-section chat {
   width: 100%;
   max-width: 600px;
   border-radius: 10px;
