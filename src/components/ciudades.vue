@@ -60,14 +60,14 @@ export default {
 <style scoped>
 .ciudades-destacadas {
   padding: 2rem;
-  background: var(--color-fondo);
+  background: var(--color-gradiente-primario);
 }
 
 .ciudades-destacadas h2 {
   font-size: 2.5rem;
   margin-bottom: 1.5rem;
   text-align: center;
-  color: var(--color-texto);
+  color: white;
 }
 
 .contenedor-tarjetas {

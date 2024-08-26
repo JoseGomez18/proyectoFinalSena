@@ -37,11 +37,9 @@ export default {
 
 <style scoped>
 .footer {
-  background-color: var(--color-primario);
-  color: var(--color-texto-claro);
+  background: #1a283b;
+  color: white;
   padding: 2rem 0;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
 }
 
 .inner {
