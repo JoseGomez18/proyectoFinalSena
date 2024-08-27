@@ -64,6 +64,7 @@ export default {
 </script>
 
 <style scoped>
+/* Estilos generales para la barra de navegación */
 .navbar {
   background: #1a283b;
   padding: 1rem 0;
@@ -75,6 +76,7 @@ export default {
   z-index: 1000;
 }
 
+/* Contenedor de la barra de navegación */
 .navbar-container {
   display: flex;
   justify-content: space-between;
@@ -84,6 +86,7 @@ export default {
   padding: 0 1rem;
 }
 
+/* Logo de la barra de navegación */
 .navbar-logo-link {
   display: flex;
   align-items: center;
@@ -99,11 +102,13 @@ export default {
   margin-right: 0.5rem;
 }
 
+/* Menú de la barra de navegación */
 .navbar-list {
   display: flex;
   list-style: none;
   margin: 0;
   padding: 0;
+  transition: transform 0.3s ease;
 }
 
 .navbar-item {
@@ -128,6 +133,7 @@ export default {
   transform: translateY(-3px);
 }
 
+/* Botón de menú (hamburguesa) */
 .navbar-toggle {
   display: none;
 }
@@ -138,17 +144,28 @@ export default {
   cursor: pointer;
 }
 
+/* Estilos para la barra de navegación en modo móvil */
 @media (max-width: 768px) {
+  /* El logo está a la izquierda y la hamburguesa a la derecha en móvil */
+  .navbar-container {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .navbar-logo-link {
+    order: 1;
+  }
+
   .navbar-list {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-top: 1rem;
     position: absolute;
-    top: 60px;
+    top: 50px;
     left: 0;
     right: 0;
-    background: var(--color-gradiente-primario);
+    background: #1a283b;
     padding: 1rem 0;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     border-bottom-left-radius: 10px;
@@ -168,6 +185,20 @@ export default {
 
   .navbar-toggle {
     display: block;
+    order: 2;
+  }
+}
+
+/* Estilos para la barra de navegación en modo escritorio */
+@media (min-width: 769px) {
+  .navbar-list {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .navbar-toggle {
+    display: none;
   }
 }
 </style>
