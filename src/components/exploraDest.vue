@@ -2,7 +2,7 @@
   <div class="categorias-destinos">
     <h2>Categorías de Destinos</h2>
     <div class="botones-categorias">
-      <button @click="seleccionarCategoria(null)" :class="{ active: categoriaSeleccionada === null }">Todas</button>
+      <button @click="seleccionarCategoria(null)" :class="{ active: categoriaSeleccionada === null }">🌍 Todas</button>
       <button v-for="(categoria, index) in categorias" :key="index" @click="seleccionarCategoria(categoria.filtro)" :class="{ active: categoriaSeleccionada === categoria.filtro }">
         <span class="emoji">{{ categoria.emoji }}</span>
         {{ categoria.nombre }}
@@ -28,7 +28,6 @@ export default {
   data() {
     return {
       categorias: [
-        { nombre: 'Todas', filtro: null, emoji: '🌍' },
         { nombre: 'Turismo', filtro: 'turismo', emoji: '🌄' },
         { nombre: 'Fiesta', filtro: 'fiesta', emoji: '🎉' },
         { nombre: 'Bosque', filtro: 'bosque', emoji: '🌳' },
@@ -38,11 +37,11 @@ export default {
         { nombre: 'Romance', filtro: 'romance', emoji: '❤️' },
       ],
       destinos: [
-        { nombre: 'Destino 1', imagen: 'imgPrueba.jpg', categorias: ['turismo', 'fiesta', 'city'] },
-        { nombre: 'Destino 2', imagen: 'imgPrueba.jpg', categorias: ['bosque', 'relax'] },
+        { nombre: 'Destino 1', imagen: 'dubai.jpg', categorias: ['turismo', 'fiesta', 'city'] },
+        { nombre: 'Destino 2', imagen: 'estambul.jpg', categorias: ['bosque', 'relax'] },
         { nombre: 'Destino 3', imagen: 'imgPrueba.jpg', categorias: ['playa', 'city'] },
-        { nombre: 'Destino 4', imagen: 'imgPrueba.jpg', categorias: ['turismo', 'fiesta', 'city'] },
-        { nombre: 'Destino 5', imagen: 'imgPrueba.jpg', categorias: ['bosque', 'relax'] },
+        { nombre: 'Destino 4', imagen: 'londres.jpg', categorias: ['turismo', 'fiesta', 'city'] },
+        { nombre: 'Destino 5', imagen: 'paris.jpg', categorias: ['bosque', 'relax'] },
         { nombre: 'Destino 6', imagen: 'imgPrueba.jpg', categorias: ['playa', 'city'] },
       ],
       categoriaSeleccionada: null,
@@ -75,15 +74,18 @@ export default {
 <style scoped>
 .categorias-destinos {
   padding: 1.5rem;
-  background: var(--color-fondo);
-  border-radius: 10px;
+  display: flex;
+  height: 500px;
+  flex-direction: column;
+  /* justify-content: center; */
+  background: #263f58;
 }
 
 .categorias-destinos h2 {
   font-size: 1.8rem;
   margin-bottom: 1rem;
-  text-align: left;
-  color: var(--color-texto);
+  text-align: center;
+  color: white;
 }
 
 .botones-categorias {
@@ -125,6 +127,7 @@ export default {
   margin-top: 1rem;
   position: relative;
   overflow: hidden;
+  height: 200px;
 }
 
 .tarjetas-horizontales {
@@ -149,7 +152,7 @@ export default {
 
 .tarjeta img {
   width: 100%;
-  height: 200px;
+  height: 220px;
   object-fit: cover;
 }
 

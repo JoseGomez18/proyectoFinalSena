@@ -65,11 +65,9 @@ export default {
 
 <style scoped>
 .navbar {
-  background: var(--color-gradiente-primario);
+  background: #1a283b;
   padding: 1rem 0;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
   position: fixed;
   top: 0;
   left: 0;
@@ -113,7 +111,7 @@ export default {
 }
 
 .navbar-link {
-  color: var(--color-texto-claro);
+  color: rgb(125 211 252);
   text-decoration: none;
   font-size: 1rem;
   font-weight: 500;
@@ -122,12 +120,11 @@ export default {
 }
 
 .navbar-link.active {
-  color: var(--color-acento-claro);
   transform: translateY(-3px);
 }
 
 .navbar-link:hover {
-  color: var(--color-acento-claro);
+  color: grey;
   transform: translateY(-3px);
 }
 

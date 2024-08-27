@@ -1,5 +1,4 @@
-
-<template>
+  <template>
   <div class="home-container">
     <div class="text-section">
       <h1>
@@ -11,7 +10,6 @@
     </div>
     <div class="video-section">
       <chat v-if="seen"/>
-      <!-- Asegúrate de tener tu video aquí si decides usar uno -->
     </div>
   </div>
 </template>
@@ -53,7 +51,7 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   padding-right: 2rem;
 }
 
@@ -66,35 +64,27 @@ export default {
 }
 
 .text-section .highlight {
-  color: var(--color-acento-claro);
+  color: rgb(125 211 252);
   font-weight: bold;
   animation: glow 2s infinite alternate;
 }
 
-@keyframes glow {
-  0% {
-    text-shadow: 0 0 10px var(--color-acento-claro), 0 0 20px var(--color-acento-claro);
-  }
-  100% {
-    text-shadow: 0 0 20px var(--color-acento-claro), 0 0 30px var(--color-acento-claro);
-  }
-}
-
 .ai-button {
+  align-self: center;
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
-  color: var(--color-texto-claro);
-  background-color: black;
+  color: white;
+  background-color: rgb(14 165 233);
   border: none;
-  border-radius: 25px;
+  border-radius: 10px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
   margin-top: 1.5rem;
 }
 
 .ai-button:hover {
-  background-color: var(--color-acento-claro);
-  color: black;
+  background-color: rgb(2 132 199);
+  color: white;
   transform: translateY(-3px);
 }
 
@@ -116,4 +106,5 @@ export default {
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-</style>
+</style> 
+
