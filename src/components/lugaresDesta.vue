@@ -16,11 +16,11 @@
     data() {
       return {
         lugares: [
-          { nombre: 'Medellín', imagen: 'imgPrueba.jpg', tamano: 'grande' },
-          { nombre: 'Bogotá', imagen: 'imgPrueba.jpg', tamano: 'mediana' },
-          { nombre: 'Cartagena', imagen: 'imgPrueba.jpg', tamano: 'grande' },
-          { nombre: 'Santa Marta', imagen: 'imgPrueba.jpg', tamano: 'pequena' },
-          { nombre: 'Barranquilla', imagen: 'imgPrueba.jpg', tamano: 'pequena' },
+          { nombre: 'dubai', imagen: 'dubai.jpg', tamano: 'grande' },
+          { nombre: 'estambul', imagen: 'estambul.jpg', tamano: 'mediana' },
+          { nombre: 'londres', imagen: 'londres.jpg', tamano: 'grande' },
+          { nombre: 'paris', imagen: 'paris.jpg', tamano: 'pequena' },
+          { nombre: 'Medellin', imagen: 'medellin.jpg', tamano: 'pequena' },
         ],
       };
     },
@@ -30,21 +30,21 @@
   <style scoped>
   .lugares-destacados {
     padding: 2rem;
-    background: var(--color-fondo);
+    background: #2e4b63;
   }
 
   .lugares-destacados h2 {
     font-size: 2rem;
     margin-bottom: 1.5rem;
     text-align: center;
-    color: var(--color-texto);
+    color: white;
   }
 
   .galeria {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    grid-auto-rows: 200px;
-    gap: 1rem;
+    grid-auto-rows: 140px;
+    gap: 0.7rem;
   }
 
   .tarjeta {

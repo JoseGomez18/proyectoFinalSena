@@ -124,7 +124,7 @@ main {
   width: 500px;
   max-width: 100%;
   height: 70vh;
-  background: #edf0ef;
+  background: rgb(31 41 55);
   border: 1px solid #ccc;
   border-radius: 4px;
   padding: 8px;
