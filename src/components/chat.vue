@@ -11,6 +11,7 @@
               <h2>{{ message.lugar.nombre_lugar }}</h2>
               <p id="cardLp">Clima: {{message.lugar.clima}}</p>
               <p id="cardLp">Descripción: {{ message.lugar.descripcion }}</p>
+              <button @click="pagina(message.lugar.id)">Seleccionar</button>
               <!-- <p>{{ message.lugar.nombre_lugar }}</p>
               <p>{{ message.lugar.clima }}</p> -->
             </div>
@@ -73,19 +74,19 @@
       async botResponse(userInput) {
         try {
         // se envia el mensaje del usuario
-        const response = await axios.post('http://localhost:3001/busquedaIA', { input: userInput });
+        const response = await axios.post('http://localhost:3001/api/busquedaIA', { input: userInput });
         // validacion de error o cargar la respuesta del bot
         if (response.data.error) {
           this.messages.push({ type: 'bot', text: response.data.error });
         } else {
           const botMessage = response.data.length > 0 ? response.data : "No se encontraron resultados.";
           this.messages.push({ type: 'bot', text: botMessage });
-          console.log(response)
+          console.log(botMessage)
           if(response.data){
             const ids = (response.data.match(/\[([0-9, ]+)\]/) || [])[1]?.split(',').map(Number) || 0;
 
             if (ids !== 0){
-               const response2 = await axios.post('http://localhost:3001/infoDestino', { id: ids });
+               const response2 = await axios.post('http://localhost:3001/api/infoDestino', { id: ids });
               //  this.lugares = response2.data
 
               response2.data.forEach(lugar => {
@@ -104,7 +105,9 @@
         console.error("Error:", error);
         this.messages.push({ type: 'bot', text: "Hubo un error al procesar tu solicitud." });
       }
-      }
+      },
+      pagina(id){
+        this.$router.push({ name: 'DetallesLugar', params: { id } });      }
     },
   };
   

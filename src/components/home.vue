@@ -88,7 +88,7 @@ export default {
   transform: translateY(-3px);
 }
 
-.video-section {
+.chat {
   flex: 1;
   display: flex;
   justify-content: center;
@@ -100,6 +100,11 @@ export default {
   max-width: 600px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  width: 100%;
+    max-width: 600px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 </style> 
 
