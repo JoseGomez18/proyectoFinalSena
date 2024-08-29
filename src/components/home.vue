@@ -1,4 +1,4 @@
-  <template>
+<template>
   <div class="home-container">
     <div class="text-section">
       <h1>
@@ -9,7 +9,18 @@
       <button class="ai-button" @click="activar">Explorar con IA</button>
     </div>
     <div class="video-section">
-      <chat v-if="seen"/>
+      <video
+        v-if="!seen"
+        autoplay
+        loop
+        muted
+        playsinline
+        class="background-video"
+      >
+        <source src="../assets/videoFront2.mp4" type="video/mp4" />
+        Tu navegador no soporta el elemento de video.
+      </video>
+      <chat v-if="seen" class="chat"/>
     </div>
   </div>
 </template>
@@ -27,7 +38,6 @@ export default {
   methods: {
     activar() {
       this.seen = !this.seen
-      console.log(this.seen)
     }
   },
   components: {
@@ -43,7 +53,8 @@ export default {
   padding: 2rem;
   background: var(--color-gradiente-primario);
   color: var(--color-texto-claro);
-
+  flex-direction: row; /* Horizontal en escritorio */
+  overflow: hidden; /* Evita scroll innecesario */
 }
 
 .text-section {
@@ -64,7 +75,7 @@ export default {
 }
 
 .text-section .highlight {
-  color: rgb(125 211 252);
+  color: rgb(125, 211, 252);
   font-weight: bold;
   animation: glow 2s infinite alternate;
 }
@@ -74,7 +85,7 @@ export default {
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
   color: white;
-  background-color: rgb(14 165 233);
+  background-color: rgb(14, 165, 233);
   border: none;
   border-radius: 10px;
   cursor: pointer;
@@ -83,28 +94,56 @@ export default {
 }
 
 .ai-button:hover {
-  background-color: rgb(2 132 199);
+  background-color: rgb(2, 132, 199);
   color: white;
   transform: translateY(-3px);
 }
 
-.chat {
+.video-section {
   flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative; /* Para posicionar el video y el chat correctamente */
 }
 
-.video-section chat {
+.background-video {
+  width: 100%;
+  height: auto; /* Mantiene la proporción del video */
+  max-width: 600px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.chat {
   width: 100%;
   max-width: 600px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-
-  width: 100%;
-    max-width: 600px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-</style> 
 
+/* Estilos para el diseño responsivo */
+@media (max-width: 768px) {
+  .home-container {
+    flex-direction: column; /* Vertical en móvil */
+  }
+  
+  .text-section {
+    padding-right: 0;
+    padding-bottom: 2rem;
+    align-items: flex-start; /* Alinear el texto al inicio */
+  }
+  
+  .video-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .background-video {
+    max-width: 100%;
+  }
+}
+</style>
