@@ -3,6 +3,10 @@
       <main>
         <h2>CHAT</h2>
         <ul>
+          <div class="sugerencias">
+            <button v-for="(sugerencia, index) in sugerencias" :key="index" @click="sendMessage(sugerencia.text)">{{ sugerencia.text }}</button>
+          </div>
+
           <li v-for="(message, index) in messages" :key="index" :class="['message', message.type]">
             <span>{{ message.type === 'bot' || message.type === 'card' ? 'GPT' : 'Tú' }}</span>
             <p v-if="message.type !== 'card'">{{ message.text }}</p>
@@ -53,22 +57,28 @@
     data() {
       return {
         messages: [
-          { type: 'bot', text: '¿A que país quieres ir de vacaciones?' },
+          { type: 'bot', text: '¿Tienes en mente algún país al que te gustaría viajar o prefieres que te sugiera un tipo de destino según tus preferencias? (por ejemplo, una ciudad vibrante, una playa tranquila, una montaña para escalar, etc.)"' },
+        ],
+        sugerencias: [
+          {text: "Quiero ir a Italia"},
+          {text: "Lugares historicos en Francia"},
+          {text: "Playas tranquilas y economicas"},
+          // {text: "Busco una ciudad con mucha vida nocturna"},
+          // {text: "Quiero un lugar relajado en la playa"},
         ],
         newMessage: '',
         lugares: ''
       };
     },
     methods: {
-      async sendMessage() {
-        if (this.newMessage.trim() === '') return;
+      async sendMessage(message) {
+        const userMessage = message || this.newMessage.trim();
+        if (userMessage === '') return; // Evitar mensajes vacíos
 
-        this.messages.push({ type: 'user', text: this.newMessage });
+        this.messages.push({ type: 'user', text: userMessage }); // Añadir el mensaje del usuario
+        this.newMessage = ''; // Limpiar el input
 
-        const userInput = this.newMessage;
-        this.newMessage = '';
-
-        await this.botResponse(userInput);
+        await this.botResponse(userMessage); // Obtener respuesta del bot
       },
 
       async botResponse(userInput) {
@@ -136,6 +146,7 @@ main {
 }
 
 ul {
+  position: relative;
   display: flex;
   flex-direction: column;
   list-style: none;
@@ -228,7 +239,8 @@ form button {
 }
 
 .cardL h2{
-  padding: 0px 5px
+  padding: 0px 5px;
+  color: black
 }
 
 #cardLp{
@@ -240,6 +252,28 @@ form button {
   width: 100%;
   border-radius: 9px 9px 0 0;
   object-fit: cover;
+}
+
+.sugerencias{
+  position: absolute;
+    top: 160px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1px;
+}
+
+.sugerencias button{
+    margin-top: 0.8rem;
+    border-style: solid;
+    border-width: 1px;
+       cursor: pointer;
+    border-color: rgb(194 202 200);
+    padding: 4px;
+    --tw-text-opacity: 1;
+    color: rgb(72 91 87 / var(--tw-text-opacity));
+    --tw-bg-opacity: 1;
+    background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+    border-radius: 50px;
 }
 </style>
 
