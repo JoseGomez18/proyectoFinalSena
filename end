@@ -1,0 +1,154 @@
+[1mdiff --git a/src/assets/videoFront.mp4 b/src/assets/videoFront.mp4[m
+[1mnew file mode 100644[m
+[1mindex 0000000..ec6c8d4[m
+Binary files /dev/null and b/src/assets/videoFront.mp4 differ
+[1mdiff --git a/src/assets/videoFront2.mp4 b/src/assets/videoFront2.mp4[m
+[1mnew file mode 100644[m
+[1mindex 0000000..8828288[m
+Binary files /dev/null and b/src/assets/videoFront2.mp4 differ
+[1mdiff --git a/src/components/chat.vue b/src/components/chat.vue[m
+[1mindex 70e7f7f..e7cdfe5 100644[m
+[1m--- a/src/components/chat.vue[m
+[1m+++ b/src/components/chat.vue[m
+[36m@@ -11,6 +11,7 @@[m
+               <h2>{{ message.lugar.nombre_lugar }}</h2>[m
+               <p id="cardLp">Clima: {{message.lugar.clima}}</p>[m
+               <p id="cardLp">Descripción: {{ message.lugar.descripcion }}</p>[m
+[32m+[m[32m              <button @click="pagina(message.lugar.id)">Seleccionar</button>[m
+               <!-- <p>{{ message.lugar.nombre_lugar }}</p>[m
+               <p>{{ message.lugar.clima }}</p> -->[m
+             </div>[m
+[36m@@ -73,19 +74,19 @@[m
+       async botResponse(userInput) {[m
+         try {[m
+         // se envia el mensaje del usuario[m
+[31m-        const response = await axios.post('http://localhost:3001/busquedaIA', { input: userInput });[m
+[32m+[m[32m        const response = await axios.post('http://localhost:3001/api/busquedaIA', { input: userInput });[m
+         // validacion de error o cargar la respuesta del bot[m
+         if (response.data.error) {[m
+           this.messages.push({ type: 'bot', text: response.data.error });[m
+         } else {[m
+           const botMessage = response.data.length > 0 ? response.data : "No se encontraron resultados.";[m
+           this.messages.push({ type: 'bot', text: botMessage });[m
+[31m-          console.log(response)[m
+[32m+[m[32m          console.log(botMessage)[m
+           if(response.data){[m
+             const ids = (response.data.match(/\[([0-9, ]+)\]/) || [])[1]?.split(',').map(Number) || 0;[m
+ [m
+             if (ids !== 0){[m
+[31m-               const response2 = await axios.post('http://localhost:3001/infoDestino', { id: ids });[m
+[32m+[m[32m               const response2 = await axios.post('http://localhost:3001/api/infoDestino', { id: ids });[m
+               //  this.lugares = response2.data[m
+ [m
+               response2.data.forEach(lugar => {[m
+[36m@@ -104,7 +105,9 @@[m
+         console.error("Error:", error);[m
+         this.messages.push({ type: 'bot', text: "Hubo un error al procesar tu solicitud." });[m
+       }[m
+[31m-      }[m
+[32m+[m[32m      },[m
+[32m+[m[32m      pagina(id){[m
+[32m+[m[32m        this.$router.push({ name: 'DetallesLugar', params: { id } });      }[m
+     },[m
+   };[m
+   [m
+[1mdiff --git a/src/components/home.vue b/src/components/home.vue[m
+[1mindex 09577d8..e913a4b 100644[m
+[1m--- a/src/components/home.vue[m
+[1m+++ b/src/components/home.vue[m
+[36m@@ -1,3 +1,4 @@[m
+[32m+[m
+ <template>[m
+   <div class="home-container">[m
+     <div class="text-section">[m
+[36m@@ -97,7 +98,7 @@[m [mexport default {[m
+   transform: translateY(-3px);[m
+ }[m
+ [m
+[31m-.video-section {[m
+[32m+[m[32m.chat {[m
+   flex: 1;[m
+   display: flex;[m
+   justify-content: center;[m
+[36m@@ -109,5 +110,10 @@[m [mexport default {[m
+   max-width: 600px;[m
+   border-radius: 10px;[m
+   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);[m
+[32m+[m
+[32m+[m[32m  width: 100%;[m
+[32m+[m[32m    max-width: 600px;[m
+[32m+[m[32m    border-radius: 10px;[m
+[32m+[m[32m    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);[m
+ }[m
+ </style>[m
+[1mdiff --git a/src/router/index.js b/src/router/index.js[m
+[1mindex d55ef78..d8dffbc 100644[m
+[1m--- a/src/router/index.js[m
+[1m+++ b/src/router/index.js[m
+[36m@@ -1,6 +1,7 @@[m
+ //import { createRouter, createWebHashHistory } from 'vue-router'[m
+ import { createWebHashHistory, createRouter } from 'vue-router'[m
+ import HomeView from '../views/HomeView.vue'[m
+[32m+[m[32mimport DetallesLugar from '@/views/DetallesLugar.vue'[m
+ import ExploraDest from '@/components/exploraDest.vue'[m
+ import LugaresDesta from '@/components/lugaresDesta.vue'[m
+ import Ciudades from '@/components/ciudades.vue'[m
+[36m@@ -11,6 +12,12 @@[m [mconst routes = [[m
+         name: 'home',[m
+         component: HomeView,[m
+     },[m
+[32m+[m[32m    {[m
+[32m+[m[32m        path: '/detalles/:id',[m
+[32m+[m[32m        name: 'DetallesLugar',[m
+[32m+[m[32m        component: DetallesLugar,[m
+[32m+[m[32m        props: true[m
+[32m+[m[32m    },[m
+     {[m
+         path: '/exploraDest',[m
+         name: 'exploraDest',[m
+[1mdiff --git a/src/views/DetallesLugar.vue b/src/views/DetallesLugar.vue[m
+[1mnew file mode 100644[m
+[1mindex 0000000..87f9a29[m
+[1m--- /dev/null[m
+[1m+++ b/src/views/DetallesLugar.vue[m
+[36m@@ -0,0 +1,39 @@[m
+[32m+[m[32m<template>[m
+[32m+[m[32m    <div>[m
+[32m+[m[32m      <h1>Detalles del Lugar</h1>[m
+[32m+[m[32m      <div v-if="lugar">[m
+[32m+[m[32m        <img :src="lugar.imagen" alt="Imagen del lugar">[m
+[32m+[m[32m        <h2>{{ lugar.nombre_lugar }}</h2>[m
+[32m+[m[32m        <p>Clima: {{ lugar.clima }}</p>[m
+[32m+[m[32m        <p>{{ lugar.descripcion }}</p>[m
+[32m+[m[32m        <!-- Agrega aquí cualquier otra información que desees mostrar -->[m
+[32m+[m[32m      </div>[m
+[32m+[m[32m      <div v-else>[m
+[32m+[m[32m        <p>Cargando...</p>[m
+[32m+[m[32m      </div>[m
+[32m+[m[32m    </div>[m
+[32m+[m[32m  </template>[m
+[32m+[m[41m  [m
+[32m+[m[32m  <script>[m
+[32m+[m[32m  import axios from 'axios';[m
+[32m+[m[41m  [m
+[32m+[m[32m  export default {[m
+[32m+[m[32m    name: 'DetallesLugar',[m
+[32m+[m[32m    data() {[m
+[32m+[m[32m      return {[m
+[32m+[m[32m        lugar: null[m
+[32m+[m[32m      };[m
+[32m+[m[32m    },[m
+[32m+[m[32m    props: ['id'],[m
+[32m+[m[32m    async created() {[m
+[32m+[m[32m      try {[m
+[32m+[m[32m        const response = await axios.post(`http://localhost:3001/api/detallesLugar/`, {id:this.id});[m
+[32m+[m[32m        console.log(response.data)[m
+[32m+[m[32m        this.lugar = response.data;[m
+[32m+[m[32m      } catch (error) {[m
+[32m+[m[32m        console.error('Error al obtener los detalles del lugar:', error);[m
+[32m+[m[32m      }[m
+[32m+[m[32m    }[m
+[32m+[m[32m  };[m
+[32m+[m[32m  </script>[m
+[32m+[m[41m  [m
+\ No newline at end of file[m

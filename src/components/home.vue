@@ -6,38 +6,74 @@
         de la forma más <br />
         <span class="highlight">personalizada con IA</span>
       </h1>
-      <button class="ai-button" @click="activar">Explorar con IA</button>
+      <button  :disabled="!process" class="ai-button"  @click="activar">{{ buttonText }}</button>
     </div>
     <div class="video-section">
-      <video
-        v-if="!seen"
-        autoplay
-        loop
-        muted
-        playsinline
-        class="background-video"
+      <transition 
+      name="zoom"
+      appear 
+      mode="out-in"
+      enter-active-class="animate__animated animate__zoomIn animate__faster"
+      leave-active-class="animate__animated animate__zoomOut animate__faster"
       >
-        <source src="../assets/videoFront2.mp4" type="video/mp4" />
-        Tu navegador no soporta el elemento de video.
-      </video>
-      <chat v-if="seen" class="chat"/>
+        <video
+          v-if="showVideo"
+          ref="video"
+          autoplay
+          loop
+          muted
+          playsinline
+          class="background-video"
+        >
+          <source src="../assets/videoFront2.mp4" type="video/mp4" />
+          Tu navegador no soporta el elemento de video.
+        </video>
+      </transition>
+      <transition
+        name="zoom"
+        mode="out-in"
+        enter-active-class="animate__animated animate__zoomIn animate__faster"
+        leave-active-class="animate__animated animate__zoomOut animate__faster"
+      >
+        <chat v-if="showChat" class="chat"/>
+
+      </transition> 
+      
+     
     </div>
   </div>
 </template>
 
 <script>
-import Chat from '../components/chat.vue'
+import Chat from '../components/chat.vue';
+import 'animate.css';
 
 export default {
   name: 'Home',
   data() {
     return {
-      seen: false
+      process:true,
+      showVideo: true,
+      showChat: false,
+      buttonText: 'Explorar con IA',
     }
+  },
+  mounted(){
+    // this.$refs.video.classList.add('animate__animated', 'animate__zoomIn');
   },
   methods: {
     activar() {
-      this.seen = !this.seen
+      this.process = !this.process
+      this.showVideo 
+        ? (this.showVideo = !this.showVideo, this.cambiarEstados('showChat'), this.buttonText = 'Volver al Video')
+        : (this.showChat = !this.showChat, this.cambiarEstados('showVideo'),this.buttonText = 'Explorar con IA');
+      this.cambiarEstados('process')
+    },
+
+    cambiarEstados(valEsta) {
+      setTimeout(()=>{
+        this[valEsta] = !this[valEsta];      
+      },500)
     }
   },
   components: {
@@ -47,6 +83,11 @@ export default {
 </script>
 
 <style scoped>
+/*Animaciones de animate.css */
+/* Cambia la duración de todas las animaciones globalmente */
+
+
+/* Estilos de la pagina*/ 
 .home-container {
   display: flex;
   height: 100vh;

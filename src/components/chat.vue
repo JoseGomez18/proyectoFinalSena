@@ -21,13 +21,14 @@
             </div>
           </li>
         </ul>
+        <!-- <LoadingSpinner></LoadingSpinner> -->
         <!-- <div v-for="(lugar,index) in lugares" :key="index" class="cardL message bot ">
           <p id="cardLp">{{lugar.nombre_lugar}}</p>
           <p id="cardLp">{{lugar.clima}}</p>
           <p>hhh</p>
         </div> -->
         <!-- v-for="(lugar,index) in lugares" :key="index" -->
-      
+      <!-- <LoadingSpinner :loading="loading"></LoadingSpinner> -->
 
       </main>
 
@@ -49,11 +50,11 @@
 </template>
 
 <script>
-
+  // import LoadingSpinner from '../components/loadingSpinner.vue';
   import axios from 'axios';
 
   export default {
-     name: 'chat',
+    name: 'chat',
     data() {
       return {
         messages: [
@@ -119,7 +120,14 @@
       pagina(id){
         this.$router.push({ name: 'DetallesLugar', params: { id } });      }
     },
+    // components:{
+    //   LoadingSpinner
+    // }
+  //   components: {
+  //   LoadingSpinner
+  // }
   };
+  
   
 </script>
 
