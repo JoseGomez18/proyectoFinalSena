@@ -1,12 +1,13 @@
 <template>
       <div class="chat-container">
-      <main>
+      <main ref="chatContainer" >
+        
         <h2>CHAT</h2>
         <ul>
           <div class="sugerencias">
             <button v-for="(sugerencia, index) in sugerencias" :key="index" @click="sendMessage(sugerencia.text)">{{ sugerencia.text }}</button>
           </div>
-
+          
           <li v-for="(message, index) in messages" :key="index" :class="['message', message.type]">
             <span>{{ message.type === 'bot' || message.type === 'card' ? 'GPT' : 'Tú' }}</span>
             <p v-if="message.type !== 'card'">{{ message.text }}</p>
@@ -21,7 +22,6 @@
             </div>
           </li>
         </ul>
-        <!-- <LoadingSpinner></LoadingSpinner> -->
         <!-- <div v-for="(lugar,index) in lugares" :key="index" class="cardL message bot ">
           <p id="cardLp">{{lugar.nombre_lugar}}</p>
           <p id="cardLp">{{lugar.clima}}</p>
@@ -29,7 +29,13 @@
         </div> -->
         <!-- v-for="(lugar,index) in lugares" :key="index" -->
       <!-- <LoadingSpinner :loading="loading"></LoadingSpinner> -->
-
+      <transition
+      name ="backLeft"
+      enter-active-class="animate__animated animate__backInLeft animate__faster"
+      leave-active-class="animate__animated animate__backOutLeft animate__faster"
+      >
+        <LoadingSpinner :loading="isLoading"/>
+      </transition>
       </main>
 
       <form @submit.prevent="sendMessage(newMessage)">
@@ -50,8 +56,8 @@
 </template>
 
 <script>
-  // import LoadingSpinner from '../components/loadingSpinner.vue';
   import axios from 'axios';
+  import LoadingSpinner from './loadingSpinner.vue';
 
   export default {
     name: 'chat',
@@ -68,64 +74,66 @@
           // {text: "Quiero un lugar relajado en la playa"},
         ],
         newMessage: '',
-        lugares: ''
+        lugares: '',
+        isLoading: false,
+        process: true,
       };
     },
     methods: {
-      async sendMessage(message) {
-        const userMessage = message || this.newMessage.trim();
-        if (userMessage === '') return; // Evitar mensajes vacíos
+  async sendMessage(message) {
+    const userMessage = message || this.newMessage.trim();
+    if (userMessage === '') return; // Evitar mensajes vacíos
 
-        this.messages.push({ type: 'user', text: userMessage }); // Añadir el mensaje del usuario
-        this.newMessage = ''; // Limpiar el input
+    this.messages.push({ type: 'user', text: userMessage }); // Añadir el mensaje del usuario
+    this.newMessage = ''; // Limpiar el input
+    this.isLoading = true;
+    await this.botResponse(userMessage); // Obtener respuesta del bot
 
-        await this.botResponse(userMessage); // Obtener respuesta del bot
-      },
-
-      async botResponse(userInput) {
-        try {
-        // se envia el mensaje del usuario
-        const response = await axios.post('http://localhost:3001/api/busquedaIA', { input: userInput });
-        // validacion de error o cargar la respuesta del bot
-        if (response.data.error) {
-          this.messages.push({ type: 'bot', text: response.data.error });
-        } else {
-          const botMessage = response.data.length > 0 ? response.data : "No se encontraron resultados.";
-          this.messages.push({ type: 'bot', text: botMessage });
-          console.log(botMessage)
-          if(response.data){
-            const ids = (response.data.match(/\[([0-9, ]+)\]/) || [])[1]?.split(',').map(Number) || 0;
-
-            if (ids !== 0){
-               const response2 = await axios.post('http://localhost:3001/api/infoDestino', { id: ids });
-              //  this.lugares = response2.data
-
-              response2.data.forEach(lugar => {
-              this.messages.push({ type: 'card', lugar });
-             }); 
-
-               console.log(response2.data)
-            }
-
-            console.log(ids); // Salida: [1, 39]
-          }
-          // this.messages.push({ type: 'bot', text: botMessage });
-        }
-
-      } catch (error) {
-        console.error("Error:", error);
-        this.messages.push({ type: 'bot', text: "Hubo un error al procesar tu solicitud." });
+    // Esperar a que el DOM se actualice y luego hacer scroll
+    this.$nextTick(() => {
+      const chatContainer = this.$refs.chatContainer;
+      if (chatContainer) {
+        chatContainer.scrollTop = chatContainer.scrollHeight; // Desplazar al final del contenedor
       }
-      },
-      pagina(id){
-        this.$router.push({ name: 'DetallesLugar', params: { id } });      }
-    },
-    // components:{
-    //   LoadingSpinner
-    // }
-  //   components: {
-  //   LoadingSpinner
-  // }
+    });
+  },
+
+  async botResponse(userInput) {
+    try {
+      const response = await axios.post('http://localhost:3001/api/busquedaIA', { input: userInput });
+      if (response.data.error) {
+        this.messages.push({ type: 'bot', text: response.data.error });
+      } else {
+        this.cambiarEstado('isLoading');
+        const botMessage = response.data.length > 0 ? response.data : "No se encontraron resultados.";
+        this.messages.push({ type: 'bot', text: botMessage });
+
+        if (response.data) {
+          const ids = (response.data.match(/\[([0-9, ]+)\]/) || [])[1]?.split(',').map(Number) || 0;
+
+          if (ids !== 0) {
+            const response2 = await axios.post('http://localhost:3001/api/infoDestino', { id: ids });
+            response2.data.forEach(lugar => {
+              this.messages.push({ type: 'card', lugar });
+            });
+          }
+        }
+      }
+    } catch (error) {
+      this.cambiarEstado('isLoading');
+      setTimeout(() => {
+        this.messages.push({ type: 'bot', text: "Hubo un error al procesar tu solicitud." });
+      }, 600);
+    }
+  },
+
+  cambiarEstado(valEsta) {
+    this[valEsta] = !this[valEsta];
+  },
+},
+    components:{
+      LoadingSpinner
+    }
   };
   
   
@@ -144,13 +152,13 @@
 main {
   width: 500px;
   max-width: 100%;
-  height: 70vh;
+  height: 70vh; /* Altura fija para permitir el scroll */
   background: rgb(31 41 55);
   border: 1px solid #ccc;
   border-radius: 4px;
   padding: 8px;
   margin-bottom: 16px;
-  overflow-y: auto;
+  overflow-y: auto; /* Permitir el scroll vertical */
 }
 
 ul {

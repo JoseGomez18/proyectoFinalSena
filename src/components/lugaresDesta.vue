@@ -5,6 +5,7 @@
         <div class="tarjeta" v-for="(lugar, indice) in lugares" :key="indice" :class="lugar.tamano">
           <img :src="require(`@/assets/${lugar.imagen}`)" :alt="lugar.nombre" />
           <h3 class="nombre-ciudad">{{ lugar.nombre }}</h3>
+          
         </div>
       </div>
     </div>

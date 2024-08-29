@@ -12,7 +12,6 @@
       <transition 
       name="zoom"
       appear 
-      mode="out-in"
       enter-active-class="animate__animated animate__zoomIn animate__faster"
       leave-active-class="animate__animated animate__zoomOut animate__faster"
       >
@@ -31,11 +30,10 @@
       </transition>
       <transition
         name="zoom"
-        mode="out-in"
         enter-active-class="animate__animated animate__zoomIn animate__faster"
         leave-active-class="animate__animated animate__zoomOut animate__faster"
       >
-        <chat v-if="showChat" class="chat"/>
+        <chat v-if="showChat"  class="chat"/>
 
       </transition> 
       

@@ -5,6 +5,8 @@ import DetallesLugar from '@/views/DetallesLugar.vue'
 import ExploraDest from '@/components/exploraDest.vue'
 import LugaresDesta from '@/components/lugaresDesta.vue'
 import Ciudades from '@/components/ciudades.vue'
+import ScrollPrueba from '@/components/scrollPrueba.vue'
+//import LoadingSpinner from '@/components/loadingSpinner.vue'
 
 const routes = [
     {
@@ -32,7 +34,12 @@ const routes = [
         path: '/ciudades',
         name: 'ciudades',
         component: Ciudades
-    }
+    },
+    {
+        path: '/pruebas',
+        name: 'pruebas',
+        component:ScrollPrueba
+    },
 ]
 
 const router = createRouter({
