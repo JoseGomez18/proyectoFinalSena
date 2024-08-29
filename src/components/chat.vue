@@ -31,7 +31,7 @@
 
       </main>
 
-      <form @submit.prevent="sendMessage">
+      <form @submit.prevent="sendMessage(newMessage)">
         <input type="text" v-model="newMessage" placeholder="Escribe tu mensaje aqui..." />
         <button>Enviar</button>
       </form>
