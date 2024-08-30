@@ -118,6 +118,7 @@ export default {
   z-index: 1000;
 }
 
+/* Contenedor de la barra de navegación */
 .navbar-container {
   display: flex;
   align-items: center;
@@ -169,6 +170,7 @@ export default {
   list-style: none;
   margin: 0;
   padding: 0;
+  transition: transform 0.3s ease;
 }
 
 /* Mostrar lista de enlaces en modo escritorio */
@@ -307,3 +309,4 @@ export default {
   background: #3a3b4c;
 }
 </style>
+
