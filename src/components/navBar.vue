@@ -1,45 +1,67 @@
 <template>
   <nav class="navbar">
     <div class="navbar-container">
-      <div class="navbar-logo">
-        <router-link to="/" class="navbar-logo-link">
-          <img src="@/assets/logo.png" alt="Logo" class="navbar-logo-image" />
-          PagiTours
-        </router-link>
-      </div>
-      <ul class="navbar-list" :class="{ 'navbar-list-open': isMenuOpen }">
-        <li class="navbar-item">
-          <router-link 
-            to="/" 
-            class="navbar-link" 
-            :class="{ active: isActive('/') }"
-          >Home</router-link>
-        </li>
-        <li class="navbar-item">
-          <router-link 
-            to="/exploraDest" 
-            class="navbar-link" 
-            :class="{ active: isActive('/exploraDest') }"
-          >Explora Destinos</router-link>
-        </li>
-        <li class="navbar-item">
-          <router-link 
-            to="/lugaresDesta" 
-            class="navbar-link" 
-            :class="{ active: isActive('/lugaresDesta') }"
-          >Lugares Destacados</router-link>
-        </li>
-        <li class="navbar-item">
-          <router-link 
-            to="/ciudades" 
-            class="navbar-link" 
-            :class="{ active: isActive('/ciudades') }"
-          >Ciudades</router-link>
-        </li>
-        <li class="navbar-item navbar-toggle" @click="toggleMenu">
+      <router-link to="/" class="navbar-logo-link">
+        <img src="@/assets/logo.png" alt="Logo" class="navbar-logo-image" />
+        PagiTours
+      </router-link>
+
+      <div class="navbar-controls">
+        <!-- Botón de menú de hamburguesa -->
+        <div class="navbar-toggle" @click="toggleMenu">
           <span class="navbar-toggle-icon">&#9776;</span>
-        </li>
-      </ul>
+        </div>
+
+        <!-- Menú de navegación desplegable -->
+        <ul class="navbar-list" :class="{ 'navbar-list-open': isMenuOpen }">
+          <li class="navbar-item">
+            <router-link
+              to="/"
+              class="navbar-link"
+              :class="{ active: isActive('/') }"
+            >Home</router-link>
+          </li>
+          <li class="navbar-item">
+            <router-link
+              to="/exploraDest"
+              class="navbar-link"
+              :class="{ active: isActive('/exploraDest') }"
+            >Explora Destinos</router-link>
+          </li>
+          <li class="navbar-item">
+            <router-link
+              to="/lugaresDesta"
+              class="navbar-link"
+              :class="{ active: isActive('/lugaresDesta') }"
+            >Lugares Destacados</router-link>
+          </li>
+          <li class="navbar-item">
+            <router-link
+              to="/ciudades"
+              class="navbar-link"
+              :class="{ active: isActive('/ciudades') }"
+            >Ciudades</router-link>
+          </li>
+        </ul>
+
+        <!-- Icono de usuario y menú desplegable -->
+        <div class="user-icon-container" @click="toggleUserMenu">
+          <img src="@/assets/logo.png" alt="User Icon" class="user-icon" />
+          <transition name="fade">
+            <div
+              class="user-menu"
+              v-if="isUserMenuOpen"
+              @click.stop
+            >
+              <ul>
+                <li><router-link to="/perfil">Perfil</router-link></li>
+                <li><a href="#" @click="logout">Cerrar sesión</a></li>
+                <li><router-link to="/configuracion">Configuración</router-link></li>
+              </ul>
+            </div>
+          </transition>
+        </div>
+      </div>
     </div>
   </nav>
 </template>
@@ -50,20 +72,41 @@ export default {
   data() {
     return {
       isMenuOpen: false,
+      isUserMenuOpen: false,
     };
   },
   methods: {
     toggleMenu() {
       this.isMenuOpen = !this.isMenuOpen;
     },
+    toggleUserMenu() {
+      this.isUserMenuOpen = !this.isUserMenuOpen;
+    },
     isActive(route) {
       return this.$route.path === route;
     },
+    handleClickOutside(event) {
+      if (!this.$el.contains(event.target)) {
+        this.isMenuOpen = false;
+        this.isUserMenuOpen = false;
+      }
+    },
+    logout() {
+      // Lógica para cerrar sesión
+      alert('Cerrar sesión');
+    }
+  },
+  mounted() {
+    document.addEventListener('click', this.handleClickOutside);
+  },
+  beforeDestroy() {
+    document.removeEventListener('click', this.handleClickOutside);
   },
 };
 </script>
 
 <style scoped>
+/* Estilos generales del navbar */
 .navbar {
   background: #1a283b;
   padding: 1rem 0;
@@ -77,13 +120,33 @@ export default {
 
 .navbar-container {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 1rem;
+  position: relative;
 }
 
+.navbar-controls {
+  display: flex;
+  align-items: center;
+}
+
+/* Estilos para el botón de menú de hamburguesa */
+.navbar-toggle {
+  display: none;
+  margin-right: 1rem;
+  z-index: 1100;
+}
+
+.navbar-toggle-icon {
+  font-size: 1.5rem;
+  color: var(--color-texto-claro);
+  cursor: pointer;
+}
+
+/* Estilos para el logo y el nombre */
 .navbar-logo-link {
   display: flex;
   align-items: center;
@@ -99,26 +162,80 @@ export default {
   margin-right: 0.5rem;
 }
 
+/* Estilos para la lista de enlaces en modo escritorio */
 .navbar-list {
   display: flex;
+  align-items: center;
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-.navbar-item {
-  margin-left: 1.5rem;
+/* Mostrar lista de enlaces en modo escritorio */
+@media (min-width: 769px) {
+  .navbar-list {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+  }
+
+  .navbar-toggle {
+    display: none;
+  }
+
+  .user-icon-container {
+    margin-left: 1rem;
+  }
 }
 
+/* Estilos para el menú desplegable en modo móvil */
+@media (max-width: 768px) {
+  .navbar-list {
+    display: flex;
+    align-items: center;
+    position: fixed;
+    top: 60px;
+    left: 0;
+    right: 0;
+    background: #2b2d42; /* Fondo del contenedor del menú desplegable */
+    padding: 1rem 0;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    transform: translateY(-100%);
+    opacity: 0;
+    z-index: 1000;
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out; /* Transición suavizada */
+    flex-direction: row;
+    justify-content: space-around;
+  }
+
+  .navbar-list-open {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  .navbar-toggle {
+    display: block;
+  }
+
+  .user-icon-container {
+    margin-left: 1rem;
+  }
+}
+
+/* Estilos para los enlaces de navegación */
 .navbar-link {
-  color: rgb(125 211 252);
+  color: rgb(125, 211, 252);
   text-decoration: none;
   font-size: 1rem;
   font-weight: 500;
   transition: color 0.3s ease, transform 0.3s ease;
   cursor: pointer;
+  margin: 0.5rem 1rem; /* Ajustar espaciado: vertical y horizontal */
 }
 
+/* Efecto de enlace activo y hover */
 .navbar-link.active {
   transform: translateY(-3px);
 }
@@ -128,46 +245,65 @@ export default {
   transform: translateY(-3px);
 }
 
-.navbar-toggle {
-  display: none;
-}
-
-.navbar-toggle-icon {
-  font-size: 1.5rem;
-  color: var(--color-texto-claro);
+/* Estilos para el contenedor del icono de usuario */
+.user-icon-container {
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  position: relative;
+  z-index: 1100;
 }
 
-@media (max-width: 768px) {
-  .navbar-list {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 1rem;
-    position: absolute;
-    top: 60px;
-    left: 0;
-    right: 0;
-    background: var(--color-gradiente-primario);
-    padding: 1rem 0;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-    transform: translateY(-100%);
-    transition: transform 0.3s ease;
-  }
+.user-icon {
+  width: 30px;
+  border-radius: 50%;
+  margin-right: 0.5rem;
+}
 
-  .navbar-list-open {
-    transform: translateY(0);
-  }
+/* Transición de desvanecimiento para el menú del usuario */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s;
+}
 
-  .navbar-item {
-    margin-left: 0;
-    margin-top: 1rem;
-  }
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
 
-  .navbar-toggle {
-    display: block;
-  }
+/* Estilos para el menú desplegable del usuario */
+.user-menu {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  background: #2b2d42;
+  color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  overflow: hidden;
+  z-index: 1200;
+  border: 1px solid #1a283b;
+  width: 200px;
+  transition: opacity 0.3s ease;
+}
+
+.user-menu ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.user-menu li {
+  padding: 0.75rem 1rem;
+}
+
+.user-menu li a {
+  text-decoration: none;
+  color: #fff;
+  display: block;
+}
+
+.user-menu li a:hover {
+  background: #3a3b4c;
 }
 </style>
