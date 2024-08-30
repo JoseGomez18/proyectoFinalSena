@@ -6,7 +6,11 @@ import ExploraDest from '@/components/exploraDest.vue'
 import LugaresDesta from '@/components/lugaresDesta.vue'
 import Ciudades from '@/components/ciudades.vue'
 import ScrollPrueba from '@/components/scrollPrueba.vue'
-//import LoadingSpinner from '@/components/loadingSpinner.vue'
+import Perfil from '@/components/perfil.vue'
+import CambiarPassword from '@/components/CambiarPassword.vue'
+import EditarPerfil from '@/components/EditarPerfil.vue'
+import Testimonials from '@/components/testimonials.vue'
+import Contacto from '@/components/contacto.vue'
 
 const routes = [
     {
@@ -38,7 +42,32 @@ const routes = [
     {
         path: '/pruebas',
         name: 'pruebas',
-        component:ScrollPrueba
+        component: ScrollPrueba
+    },
+    {
+        path: '/perfil',
+        name: 'perfil',
+        component: Perfil,
+    },
+    {
+        path: '/editarPerfil',
+        name: 'editarPerfil',
+        component: EditarPerfil
+    },
+    {
+        path: '/cambiarPassword',
+        name: 'cambiarPassword',
+        component: CambiarPassword,
+    },
+    {
+        path: '/testimonials',
+        name: 'testimonials',
+        component: Testimonials,
+    },
+    {
+        path: '/contacto',
+        name: 'contacto',
+        component: Contacto,
     },
 ]
 
@@ -48,3 +77,4 @@ const router = createRouter({
 })
 
 export default router
+
