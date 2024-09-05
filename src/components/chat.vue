@@ -130,6 +130,9 @@
   cambiarEstado(valEsta) {
     this[valEsta] = !this[valEsta];
   },
+
+  pagina(id){
+    this.$router.push({ name: 'DetallesLugar', params: { id } });      }
 },
     components:{
       LoadingSpinner

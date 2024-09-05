@@ -2,7 +2,7 @@
   <div>
     <navBar/>
     <homeVue/>
-    <exploraDestVue/>
+    <exploraDestVue id="destino"/>
     <lugaresDestaVue/>
     <testimonials/>
     <contacto/>

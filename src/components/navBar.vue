@@ -2,7 +2,7 @@
   <nav class="navbar">
     <div class="navbar-container">
       <router-link to="/" class="navbar-logo-link">
-        <img src="@/assets/logo.png" alt="Logo" class="navbar-logo-image" />
+        <img src="../assets/LogoTravel.jpg" alt="Logo" class="navbar-logo-image" />
         PagiTours
       </router-link>
 
@@ -15,11 +15,12 @@
         <!-- Menú de navegación desplegable -->
         <ul class="navbar-list" :class="{ 'navbar-list-open': isMenuOpen }">
           <li class="navbar-item">
-            <router-link
-              to="/"
+            <!-- <router-link
+              to="#destino"
               class="navbar-link"
               :class="{ active: isActive('/') }"
-            >Home</router-link>
+            >Home</router-link> -->
+            <a href="#destino">Home</a>
           </li>
           <li class="navbar-item">
             <router-link
