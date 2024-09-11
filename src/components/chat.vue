@@ -5,7 +5,7 @@
           <li v-for="(message, index) in messages" :key="index" :class="['message', message.type]">
               <!-- Burbujas de tipo de mensaje (GPT o Tú) -->
               <span class="message-bubble" :class="message.type">
-                  {{ message.type === 'bot' || message.type === 'card' ? 'GPT' : 'Tú' }}
+                  {{ message.type === 'bot' || message.type === 'card' ? 'IA' : 'Tú' }}
               </span>
               <!-- Texto del mensaje -->
               <p v-if="message.type !== 'card'" class="message-text" :class="message.type">{{ message.text }}</p>
@@ -154,8 +154,11 @@ export default {
 .chat-container {
   display: flex;
   flex-direction: column;
-  border: 1px solid rgb(2, 132, 199); /* Azul oscuro */
-  background-color: rgb(235, 247, 255);/* Fondo azul suave */
+  /* border: 1px solid rgb(2, 132, 199); /* Azul oscuro */
+  /* background-color: rgb(235, 247, 255); */
+
+  --tw-bg-opacity: 1;
+    background-color: rgb(31 41 55 / var(--tw-bg-opacity));
   border-radius: 5px;
   overflow: hidden;
   height: 70vh;
@@ -170,13 +173,15 @@ export default {
 }
 
 .messages-container {
+  --tw-bg-opacity: 1;
+  background-color: rgb(31 41 55 / var(--tw-bg-opacity));
   overflow-y: auto;
   padding: 10px;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
   scroll-behavior: smooth;
-  background-color: rgb(245, 248, 255); /* Fondo ligeramente más oscuro */
+  /* background-color: rgb(245, 248, 255); */
 }
 
 .custom-textarea {
@@ -237,12 +242,16 @@ export default {
 /* Puntita cuadrada para la burbuja */
 
 .message-bubble.bot {
-  background-color: rgb(2, 132, 199); /* Azul oscuro para mensajes del bot */
+  --tw-bg-opacity: 1;
+    background-color: rgb(7 89 133 / var(--tw-bg-opacity));
+  /* background-color: rgb(2, 132, 199);  */
   color: white; /* Texto blanco */
 }
 
 .message-bubble.user {
-  background-color: rgb(125, 211, 252); /* Azul claro para mensajes del usuario */
+  /* background-color: rgb(125, 211, 252); */
+  --tw-bg-opacity: 1;
+    background-color: rgb(2 132 199 / var(--tw-bg-opacity));
   color: white;
   margin-left: auto;
 }
@@ -262,16 +271,21 @@ export default {
 
 /* Quitar curvatura en la esquina inferior izquierda */
 .message-text.user {
-  background-color: rgb(125, 211, 252); /* Azul claro */
+  /* background-color: rgb(125, 211, 252);  */
+  --tw-bg-opacity: 1;
+    background-color: rgb(2 132 199 / var(--tw-bg-opacity));
   color: white; /* Texto blanco */
   border-radius: 20px 20px 0 20px;
   margin-left: auto;
 }
 
 .message-text.bot {
-  background-color: rgb(2, 132, 199); /* Azul oscuro */
+  /* background-color: rgb(2, 132, 199);  */
+  --tw-bg-opacity: 1;
+  background-color: rgb(7 89 133 / var(--tw-bg-opacity));
   color: white; /* Texto blanco */
   border-radius: 20px 20px 20px 0;
+  line-height: 20px;
 }
 
 /* Ajustar la forma del texto largo */
@@ -291,8 +305,10 @@ export default {
   display: flex;
   align-items: center;
   padding: 3px;
-  background-color: rgb(240, 240, 240); /* Fondo claro */
-  border-top: 1px solid rgb(2, 132, 199);
+  /* background-color: rgb(240, 240, 240);  */
+  /* border-top: 1px solid rgb(2, 132, 199); */
+  --tw-bg-opacity: 1;
+  background-color: rgb(31 41 55 / var(--tw-bg-opacity));
 }
 
 
@@ -331,14 +347,17 @@ export default {
 }
 
 .sugerencias button {
+  padding: 6px;
   border-style: solid;
   border-width: 1px;
   cursor: pointer;
-  border-color: rgb(191, 249, 217);
+  /* border-color: rgb(191, 249, 217); */
   /* Verde claro para el borde */
-  color: rgb(18, 18, 18);
+  color:white;
   /* Texto negro */
-  background-color: rgb(255, 255, 255);
+  /* background-color: rgb(255, 255, 255); */
+  background-color: rgb(26 40 59);
+
   /* Fondo blanco */
   border-radius: 50px;
 }
