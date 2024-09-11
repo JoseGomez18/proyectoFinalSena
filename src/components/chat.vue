@@ -81,12 +81,15 @@ export default {
                   this.cambiarEstado('isLoading');
                   this.messages.push({ type: 'bot', text: response.data.error });
               } else {
-                
-                  const botMessage = response.data.split('IDs:')[0].trim() || "No se encontraron resultados.";
-                  this.messages.push({ type: 'bot', text: botMessage });
+                  let botMessage = response.data.length > 0 ? response.data : this.messages.push({ type: 'bot', text: 'No se encontraron resultados.' });
+                  console.log(botMessage);
+                  
+                  
 
                   if (response.data) {
                       const ids = (response.data.match(/\[([0-9, ]+)\]/) || [])[1]?.split(',').map(Number) || 0;
+                      this.truncateText(botMessage);
+                      this.messages.push({ type: 'bot', text: botMessage });
 
                       if (ids !== 0) {
                           const response2 = await axios.post('http://localhost:3001/api/infoDestino', { id: ids });
@@ -131,8 +134,14 @@ export default {
           if (scrollHeight > textArea.clientHeight) {
               textArea.style.height = `${Math.max(minHeight, scrollHeight)}px`;
           }
+      },
+      truncateText(text) {
+      // Encuentra la posición del primer número en el texto
+      const index = text.search(/\d/);
 
-      }
+      // Si hay un número en el texto, corta el texto hasta esa posición
+      return index !== -1 ? text.slice(0, index).trim() : text;
+    }
   },
   components: {
       LoadingSpinner
