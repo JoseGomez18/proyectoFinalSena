@@ -22,31 +22,19 @@
             >Home</router-link>
           </li>
           <li class="navbar-item">
-            <router-link
-              to="/exploraDest"
-              class="navbar-link"
-              :class="{ active: isActive('/exploraDest') }"
-            >Explora Destinos</router-link>
+            <a href="#" class="navbar-link" @click.prevent="scrollTo('exploraDest')">Explora Destinos</a>
           </li>
           <li class="navbar-item">
-            <router-link
-              to="/lugaresDesta"
-              class="navbar-link"
-              :class="{ active: isActive('/lugaresDesta') }"
-            >Lugares Destacados</router-link>
+            <a href="#" class="navbar-link" @click.prevent="scrollTo('lugaresDesta')">Lugares Destacados</a>
           </li>
           <li class="navbar-item">
-            <router-link
-              to="/ciudades"
-              class="navbar-link"
-              :class="{ active: isActive('/ciudades') }"
-            >Ciudades</router-link>
+            <a href="#" class="navbar-link" @click.prevent="scrollTo('contacto')">Contacto</a>
           </li>
         </ul>
 
         <!-- Icono de usuario y menú desplegable -->
         <div class="user-icon-container" @click="toggleUserMenu">
-          <img src="@/assets/logo.png" alt="User Icon" class="user-icon" />
+          <img src="@/assets/images.jpeg" alt="User Icon" class="user-icon" />
           <transition name="fade">
             <div
               class="user-menu"
@@ -77,10 +65,35 @@ export default {
   },
   methods: {
     toggleMenu() {
+      // Cierra el menú de usuario si está abierto
+      if (this.isUserMenuOpen) {
+        this.isUserMenuOpen = false;
+      }
+      // Alterna el menú de navegación
       this.isMenuOpen = !this.isMenuOpen;
     },
     toggleUserMenu() {
+      // Cierra el menú de navegación si está abierto
+      if (this.isMenuOpen) {
+        this.isMenuOpen = false;
+      }
+      // Alterna el menú de usuario
       this.isUserMenuOpen = !this.isUserMenuOpen;
+    },
+    scrollTo(id) {
+      // Redirige a la ruta deseada
+      this.$router.push({ path: '/' }).then(() => {
+        // Una vez redirigido, realiza el desplazamiento
+        this.$nextTick(() => {
+          const element = document.getElementById(id);
+          if (element) {
+            window.scrollTo({
+              top: element.offsetTop - 60, // Ajusta aquí según la altura del navbar
+              behavior: 'smooth'
+            });
+          }
+        });
+      });
     },
     isActive(route) {
       return this.$route.path === route;
@@ -171,6 +184,7 @@ export default {
   margin: 0;
   padding: 0;
   transition: transform 0.3s ease;
+  pointer-events: none; /* Evita clics cuando está oculto en móvil */
 }
 
 /* Mostrar lista de enlaces en modo escritorio */
@@ -180,6 +194,7 @@ export default {
     align-items: center;
     margin: 0;
     padding: 0;
+    pointer-events: auto; /* Permite clics en modo escritorio */
   }
 
   .navbar-toggle {
@@ -197,24 +212,26 @@ export default {
     display: flex;
     align-items: center;
     position: fixed;
-    top: 60px;
+    top: 60px; /* Ajusta según la altura del navbar */
     left: 0;
     right: 0;
-    background: #2b2d42; /* Fondo del contenedor del menú desplegable */
+    background: #2b2d42;
     padding: 1rem 0;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
     transform: translateY(-100%);
     opacity: 0;
     z-index: 1000;
-    transition: transform 0.3s ease-out, opacity 0.3s ease-out; /* Transición suavizada */
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
     flex-direction: row;
     justify-content: space-around;
+    pointer-events: none; /* Evita clics cuando está oculto en móvil */
   }
 
   .navbar-list-open {
     transform: translateY(0);
     opacity: 1;
+    pointer-events: auto; /* Permite clics cuando está visible en móvil */
   }
 
   .navbar-toggle {
@@ -300,13 +317,12 @@ export default {
 }
 
 .user-menu li a {
-  text-decoration: none;
   color: #fff;
+  text-decoration: none;
   display: block;
 }
 
 .user-menu li a:hover {
-  background: #3a3b4c;
+  background: #1a283b;
 }
 </style>
-
