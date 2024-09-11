@@ -22,19 +22,18 @@ import navBar from '../components/navBar.vue';
 import Testimonials from '@/components/testimonials.vue';
 
 export default {
-  name: 'home',
+  name: 'HomeView',
   components: {
     navBar,
     homeVue,
     lugaresDestaVue,
-    ciudadesVue,
     exploraDestVue,
     Testimonials,
     Contacto,
     footerVue,
     Chat,
-  }
-}
+  },
+};
 </script>
 
 <style>

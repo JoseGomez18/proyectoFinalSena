@@ -3,92 +3,151 @@
       <h2>Lugares Destacados</h2>
       <div class="galeria">
         <div class="tarjeta" v-for="(lugar, indice) in lugares" :key="indice" :class="lugar.tamano">
-          <img :src="require(`@/assets/${lugar.imagen}`)" :alt="lugar.nombre" />
-          <h3 class="nombre-ciudad">{{ lugar.nombre }}</h3>
+          <img :src="lugar.imagen" :alt="lugar.nombre" />
+          <h3 class="nombre-ciudad">{{ lugar.nombre_lugar }}</h3>
           
         </div>
       </div>
     </div>
   </template>
 
-  <script>
-  export default {
-    name: 'lugaresDestaVue',
-    data() {
-      return {
-        lugares: [
-          { nombre: 'dubai', imagen: 'dubai.jpg', tamano: 'grande' },
-          { nombre: 'estambul', imagen: 'estambul.jpg', tamano: 'mediana' },
-          { nombre: 'londres', imagen: 'londres.jpg', tamano: 'grande' },
-          { nombre: 'paris', imagen: 'paris.jpg', tamano: 'pequena' },
-          { nombre: 'Medellin', imagen: 'medellin.jpg', tamano: 'pequena' },
-        ],
-      };
-    },
-  };
-  </script>
+<script>
+import axios from 'axios';
 
-  <style scoped>
-  .lugares-destacados {
-    padding: 2rem;
-    background: #2e4b63;
-  }
+export default {
+  name: 'lugaresDestaVue',
+  data() {
+    return {
+      lugares: [],
+      tamanosPredefinidos: ['grande', 'mediana', 'grande', 'pequena', 'pequena'], // Tamaños predefinidos
+    };
+  },
+  async created() {
+    try {
+      // IDs de los lugares específicos
+      const ids = [17, 2, 3, 4, 5];
 
-  .lugares-destacados h2 {
-    font-size: 2rem;
-    margin-bottom: 1.5rem;
-    text-align: center;
-    color: white;
-  }
+      // Hacer la solicitud a la API con los IDs
+      const response = await axios.post('http://localhost:3001/api/lugaresPorIds', { ids });
+      console.log('Datos recibidos de la API:', response.data);
 
-  .galeria {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-auto-rows: 140px;
-    gap: 0.7rem;
-  }
+      if (Array.isArray(response.data) && response.data.length > 0) {
+      // Asignar tamaños predefinidos a los lugares
+      this.lugares = response.data.map((lugar, index) => {
+        console.log('Lugar:', lugar); // Verifica que cada lugar tenga la propiedad nombre
+        return {
+          ...lugar,
+          tamano: this.tamanosPredefinidos[index % this.tamanosPredefinidos.length],  // Asignar tamaños en orden
+        };
+      });
+      } else {
+        console.error('Datos inesperados de la API:', response.data);
+      }
+    } catch (error) {
+      console.error('Error al obtener los lugares:', error);
+    }
+  },
+};
+</script>
+<style scoped>
+/* Contenedor principal */
+.lugares-destacados {
+  padding: 2rem;
+  background: #2e4b63;
+}
 
-  .tarjeta {
-    position: relative;
-    overflow: hidden;
-    border-radius: 10px;
-    transition: transform 0.3s ease;
-  }
+/* Título de la sección */
+.lugares-destacados h2 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  color: white;
+}
 
-  .tarjeta:hover {
-    transform: translateY(-5px);
-  }
+/* Galería de tarjetas */
+.galeria {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 140px;
+  gap: 0.7rem;
+}
 
-  .tarjeta img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 10px;
-  }
+/* Tarjeta individual */
+.tarjeta {
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  transition: transform 0.3s ease;
+}
 
-  .tarjeta.grande {
-    grid-column: span 2;
-    grid-row: span 2;
-  }
+/* Efecto de hover en la tarjeta */
+.tarjeta:hover {
+  transform: translateY(-5px);
+}
 
-  .tarjeta.mediana {
-    grid-column: span 2;
-    grid-row: span 1;
-  }
+/* Imagen dentro de la tarjeta */
+.tarjeta img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+  z-index: 1; /* Asegúrate de que la imagen esté detrás del texto */
+}
 
-  .tarjeta.pequena {
-    grid-column: span 1;
-    grid-row: span 1;
-  }
+/* Estilos específicos para tamaños de tarjetas */
+.tarjeta.grande {
+  grid-column: span 2;
+  grid-row: span 2;
+}
 
-  .nombre-ciudad {
-    position: absolute;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    color: var(--color-texto-claro);
-    font-size: 1.2rem;
-    font-weight: bold;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-  }
-  </style>
+.tarjeta.mediana {
+  grid-column: span 2;
+  grid-row: span 1;
+}
+
+.tarjeta.pequena {
+  grid-column: span 1;
+  grid-row: span 1;
+}
+
+/* Estilo para el nombre del lugar */
+.nombre-ciudad {
+  position: absolute;
+  bottom: 10px; /* Ajusta este valor según sea necesario */
+  left: 10px; /* Ajusta este valor según sea necesario */
+  color: white; /* Cambia a un color visible si es necesario */
+  font-weight: bold;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Agrega sombra para mejor visibilidad */
+  z-index: 10; /* Asegúrate de que el texto esté por encima de la imagen */
+  background: rgba(0, 0, 0, 0.5); /* Agrega un fondo semitransparente si el texto no es legible */
+  padding: 0.5rem; /* Espaciado alrededor del texto */
+  border-radius: 5px; /* Redondea las esquinas del fondo */
+  max-width: calc(100% - 20px); /* Asegúrate de que el texto no se salga de la tarjeta */
+  box-sizing: border-box; /* Incluye el padding en el ancho total */
+}
+
+/* Estilo para el nombre del lugar en tarjetas grandes */
+.tarjeta.grande .nombre-ciudad {
+  font-size: 1.5rem; /* Ajusta el tamaño del texto */
+  padding: 0.5rem; /* Ajusta el espaciado alrededor del texto */
+  bottom: 10px; /* Ajusta la posición desde la parte inferior */
+  left: 10px; /* Ajusta la posición desde el lado izquierdo */
+}
+
+/* Estilo para el nombre del lugar en tarjetas medianas */
+.tarjeta.mediana .nombre-ciudad {
+  font-size: 1rem; /* Ajusta el tamaño del texto */
+  padding: 0.3rem; /* Ajusta el espaciado alrededor del texto */
+  bottom: 5px; /* Ajusta la posición desde la parte inferior */
+  left: 5px; /* Ajusta la posición desde el lado izquierdo */
+}
+
+/* Estilo para el nombre del lugar en tarjetas pequeñas */
+.tarjeta.pequena .nombre-ciudad {
+  font-size: 0.8rem; /* Ajusta el tamaño del texto */
+  padding: 0.2rem; /* Ajusta el espaciado alrededor del texto */
+  bottom: 5px; /* Ajusta la posición desde la parte inferior */
+  left: 5px; /* Ajusta la posición desde el lado izquierdo */
+}
+
+</style>
