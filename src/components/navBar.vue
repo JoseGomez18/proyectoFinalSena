@@ -3,7 +3,7 @@
     <div class="navbar-container">
       <router-link to="/" class="navbar-logo-link">
         <img src="../assets/LogoTravel.jpg" alt="Logo" class="navbar-logo-image" />
-        PagiTours
+        TravelSeek
       </router-link>
 
       <div class="navbar-controls">
