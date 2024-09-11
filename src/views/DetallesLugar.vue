@@ -23,7 +23,7 @@
           
           <p class="descripcion">{{ lugar.descripcion || 'Descripción no disponible' }}</p>
 
-          <button class="btn-explorar">Explorar con IA</button>
+          <button @click="chat()" class="btn-explorar">Volver al chat</button>
         </div>
       </div>
       
@@ -64,6 +64,11 @@ export default {
     id: {
       type: Number,
       required: true
+    }
+  },
+  methods:{
+    chat(){
+      this.$router.push({ name: 'home' });      
     }
   },
   async created() {

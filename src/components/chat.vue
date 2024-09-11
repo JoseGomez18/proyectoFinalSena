@@ -68,12 +68,23 @@ export default {
           this.messages.push({ type: 'user', text: userMessage }); // Añadir mensaje del usuario
           this.newMessage = ''; // Limpiar el input
 
+          this.saveMessagesToLocalStorage(); // Guardar los mensajes en localStorage
+
           this.$nextTick(() => {
               this.scrollToBottom();
           })
           this.isLoading = true;
           await this.botResponse(userMessage); // Obtener respuestas del bot
       },
+      saveMessagesToLocalStorage() {
+        localStorage.setItem('chatMessages', JSON.stringify(this.messages));
+    },
+    loadMessagesFromLocalStorage() {
+        const savedMessages = localStorage.getItem('chatMessages');
+        if (savedMessages) {
+            this.messages = JSON.parse(savedMessages);
+        }
+    },
       async botResponse(userInput) {
           try {
               const response = await axios.post(`${process.env.VUE_APP_RUTA_API}/api/busquedaIA `, { input: userInput });
@@ -100,6 +111,7 @@ export default {
                   }
                   
                   this.cambiarEstado('isLoading');
+                  this.saveMessagesToLocalStorage(); // Guardar los mensajes en localStorage
               }
           } catch (error) {
               this.cambiarEstado('isLoading');
@@ -147,6 +159,10 @@ export default {
         this.$router.push({ name: 'DetallesLugar', params: { id } });      
     }
   },
+  mounted() {
+    this.loadMessagesFromLocalStorage(); // Cargar el historial al montar el componente
+    this.scrollToBottom();
+},
     components:{
       LoadingSpinner
   }
