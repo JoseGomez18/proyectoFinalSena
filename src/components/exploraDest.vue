@@ -34,10 +34,11 @@
       <div class="tarjetas-horizontales" ref="horizontalContainer">
         <!-- Tarjetas de destinos -->
         <div class="tarjeta" v-for="(destino, index) in destinosFiltrados" :key="index">
-          <img :src="require(`@/assets/${destino.imagen}`)" :alt="destino.nombre" />
-          <div class="info-overlay">
+          <div class="tarjeta-imagen">
+            <img :src="destino.imagen" :alt="destino.nombre_lugar" />
+          </div>
+          <div class="tarjeta-info">
             <h3>{{ destino.nombre }}</h3>
-           <!-- <p>Descripción breve del lugar.</p>-->
           </div>
         </div>
       </div>
@@ -51,6 +52,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   name: 'CategoriasDestinos',
   data() {
@@ -67,17 +70,39 @@ export default {
       ],
       // Datos de destinos
       destinos: [
-        { nombre: 'Destino 1', imagen: 'dubai.jpg', categorias: ['turismo', 'fiesta', 'city'] },
-        { nombre: 'Destino 2', imagen: 'estambul.jpg', categorias: ['bosque', 'relax'] },
-        { nombre: 'Destino 3', imagen: 'imgPrueba.jpg', categorias: ['playa', 'city'] },
-        { nombre: 'Destino 4', imagen: 'londres.jpg', categorias: ['turismo', 'fiesta', 'city'] },
-        { nombre: 'Destino 5', imagen: 'paris.jpg', categorias: ['bosque', 'relax'] },
-        { nombre: 'Destino 6', imagen: 'imgPrueba.jpg', categorias: ['playa', 'city'] },
+        // { nombre: 'Destino 1', imagen: 'images.jpeg', categorias: ['turismo', 'fiesta', 'city'] },
+        // { nombre: 'Destino 2', imagen: 'images.jpeg', categorias: ['bosque', 'relax'] },
+        // { nombre: 'Destino 3', imagen: 'images.jpeg', categorias: ['playa', 'city'] },
+        // { nombre: 'Destino 4', imagen: 'images.jpeg', categorias: ['turismo', 'fiesta', 'city'] },
+        // { nombre: 'Destino 5', imagen: 'images.jpeg', categorias: ['bosque', 'relax'] },
+        // { nombre: 'Destino 6', imagen: 'images.jpeg', categorias: ['playa', 'city'] },
       ],
       categoriaSeleccionada: null,
       scrollStep: 300,
     };
   },
+
+  async created(){
+    try {
+      const response = await axios.post(`http://localhost:3001/api/detallesCard/`,{limit:70});
+      console.log('Datos recibidos de la API:', response.data);
+
+      if (Array.isArray(response.data) && response.data.length > 0) {
+        response.data.forEach(lugar => {
+          this.destinos.push({ nombre: lugar.nombre_lugar, imagen: lugar.imagen });
+        });
+      } else {
+        console.error('Datos inesperados de la API:', response.data);
+        this.error = 'Datos inesperados recibidos de la API.';
+      }
+    } catch (error) {
+      this.error = 'Error al obtener los detalles del lugar: ' + error.message;
+      console.error('Error al obtener los detalles del lugar:', error);
+    } finally {
+      this.loading = false;
+    }
+  },
+
   computed: {
     // Filtrar destinos según la categoría seleccionada
     destinosFiltrados() {
@@ -85,6 +110,7 @@ export default {
       return this.destinos.filter(destino => destino.categorias.includes(this.categoriaSeleccionada));
     },
   },
+
   methods: {
     // Cambiar categoría seleccionada y reiniciar el scroll
     seleccionarCategoria(filtro) {
@@ -122,7 +148,7 @@ export default {
 /* Contenedor principal */
 .categorias-destinos {
   padding: 1.5rem;
-  background-color: #263f58; /* Color de fondo */
+  background: #2e4b63; /* Gradiente que se desvanece */
 }
 
 /* Estilo del título */
@@ -143,7 +169,6 @@ export default {
   justify-content: flex-start; /* Alinear los botones al inicio */
   position: relative; /* Añadido para el z-index */
   z-index: 2; /* Asegurar que esté por encima de las tarjetas */
-  background-color: #263f58; /* Fondo para asegurar visibilidad */
 }
 
 /* Estilo de los botones de categorías */
@@ -182,7 +207,7 @@ export default {
 .contenedor-tarjetas {
   position: relative;
   overflow: hidden;
-  height: 164px; /* Altura fija del contenedor */
+  height: 166px; /* Ajustado para las tarjetas de mayor tamaño */
 }
 
 /* Contenedor horizontal para las tarjetas */
@@ -197,7 +222,7 @@ export default {
 
 /* Estilo de las tarjetas */
 .tarjeta {
-  flex: 0 0 250px; /* Tamaño fijo de las tarjetas */
+  flex: 0 0 300px; /* Tamaño fijo de las tarjetas */
   background: white;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -209,40 +234,37 @@ export default {
   align-items: center;
 }
 
+/* Contenedor de la imagen dentro de la tarjeta */
+.tarjeta-imagen {
+  width: 100%;
+}
+
 /* Estilo de las imágenes dentro de las tarjetas */
-.tarjeta img {
+.tarjeta-imagen img {
   width: 100%;
   height: 150px; /* Altura fija de las imágenes */
   object-fit: cover;
 }
 
-/* Contenedor de la superposición de información */
-.info-overlay {
+/* Contenedor de la información debajo de la imagen */
+.tarjeta-info {
+  width: 100%;
+  background: #ffffff; /* Fondo blanco */
+  padding: 0.5rem;
+  text-align: center;
   position: absolute;
-  bottom: 0;
+  bottom: 0; /* Posiciona el nombre en la parte inferior */
   left: 0;
   right: 0;
-  background: rgba(0, 0, 0, 0.7);
-  color: white;
-  padding: 1rem;
-  transform: translateY(100%);
-  transition: transform 0.3s ease;
+  border-top: 1px solid #ddd; /* Borde superior gris claro */
 }
 
-/* Mostrar la superposición cuando se pasa el mouse sobre la tarjeta */
-.tarjeta:hover .info-overlay {
-  transform: translateY(0);
-}
-
-/* Estilo del texto en la superposición */
-.info-overlay h3 {
+/* Estilo del texto en la información */
+.tarjeta-info h3 {
   margin: 0;
   font-size: 1.2rem;
-}
-
-.info-overlay p {
-  margin: 0.5rem 0 0;
-  font-size: 0.9rem;
+  color: #333; /* Color del texto */
+  font-weight: 600;
 }
 
 /* Controles de navegación (izquierda y derecha) */
@@ -286,7 +308,7 @@ export default {
 @media (max-width: 768px) {
   /* Ajustar el tamaño de las tarjetas */
   .tarjeta {
-    flex: 0 0 200px;
+    flex: 0 0 250px;
   }
 
   /* Ajustar el tamaño de los botones de navegación */
@@ -311,7 +333,7 @@ export default {
 @media (max-width: 480px) {
   /* Ajustar el tamaño de las tarjetas */
   .tarjeta {
-    flex: 0 0 150px;
+    flex: 0 0 200px;
   }
 
   /* Ajustar el tamaño de los botones de navegación */

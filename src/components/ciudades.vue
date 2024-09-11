@@ -24,16 +24,16 @@ export default {
   data() {
     return {
       ciudades: [
-        { nombre: 'Ciudad 1', imagen: 'imgPrueba.jpg' },
+        { nombre: 'Ciudad 1', imagen: 'images.jpeg' },
         { nombre: 'Ciudad 2', imagen: 'images.jpeg' },
         { nombre: 'Ciudad 3', imagen: 'images.jpeg' },
-        { nombre: 'Ciudad 4', imagen: 'imgPrueba.jpg' },
+        { nombre: 'Ciudad 4', imagen: 'images.jpeg' },
         { nombre: 'Ciudad 5', imagen: 'images.jpeg' },
-        { nombre: 'Ciudad 6', imagen: 'imgPrueba.jpg' },
+        { nombre: 'Ciudad 6', imagen: 'images.jpeg' },
         { nombre: 'Ciudad 7', imagen: 'images.jpeg' },
-        { nombre: 'Ciudad 8', imagen: 'imgPrueba.jpg' },
+        { nombre: 'Ciudad 8', imagen: 'images.jpeg' },
         { nombre: 'Ciudad 9', imagen: 'images.jpeg' },
-        { nombre: 'Ciudad 10', imagen: 'imgPrueba.jpg' },
+        { nombre: 'Ciudad 10', imagen: 'images.jpeg' },
       ],
       scrollStep: 300,
     };

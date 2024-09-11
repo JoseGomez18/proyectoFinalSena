@@ -1,12 +1,12 @@
 <template>
   <div>
-    <navBar/>
-    <homeVue/>
-    <exploraDestVue/>
-    <lugaresDestaVue/>
-    <testimonials/>
-    <contacto/>
-    <footerVue/>
+    <navBar />
+    <homeVue id="home" />
+    <exploraDestVue id="exploraDest" />
+    <lugaresDestaVue id="lugaresDesta" />
+    <testimonials id="testimonials" />
+    <contacto id="contacto" />
+    <footerVue />
   </div>
 </template>
 
@@ -22,19 +22,18 @@ import navBar from '../components/navBar.vue';
 import Testimonials from '@/components/testimonials.vue';
 
 export default {
-  name: 'home',
+  name: 'HomeView',
   components: {
     navBar,
     homeVue,
     lugaresDestaVue,
-    ciudadesVue,
     exploraDestVue,
     Testimonials,
     Contacto,
     footerVue,
     Chat,
-  }
-}
+  },
+};
 </script>
 
 <style>
