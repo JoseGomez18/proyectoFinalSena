@@ -150,7 +150,7 @@ export default {
 .botones-categorias button {
   background-color: transparent; /* Fondo transparente */
   color: white; /* Texto blanco */
-  border: 1px solid #ffffff; /* Borde blanco */
+  border: 1px solid #2d5173; /* Borde blanco */
   padding: 0.5rem 1rem;
   cursor: pointer;
   border-radius: 20px;

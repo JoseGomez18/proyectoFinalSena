@@ -142,12 +142,15 @@ export default {
       // Si hay un número en el texto, corta el texto hasta esa posición
       return index !== -1 ? text.slice(0, index).trim() : text;
     },
-    
+
+    pagina(id){
+        this.$router.push({ name: 'DetallesLugar', params: { id } });      
+    }
   },
     components:{
       LoadingSpinner
   }
-};
+}
 </script>
 
 <style scoped>
@@ -314,7 +317,7 @@ export default {
 
 .input-container button {
   padding: 10px;
-  background-color: rgb(125, 211, 252); /* Azul claro */
+  background-color: rgb(7 89 133);
   color: white;
   border: none;
   border-radius: 50%;
@@ -370,7 +373,7 @@ export default {
   /* height: 201px; */
 }
 
-.cardL h2{
+.cardL h3{
   padding: 0px 5px;
   color: black
 }
@@ -384,6 +387,14 @@ export default {
   width: 100%;
   border-radius: 9px 9px 0 0;
   object-fit: cover;
+}
+.cardL button{
+  background: #1a283b;
+    border: none;
+    color: white;
+    margin-bottom: 7px;
+    border-radius: 6px;
+    padding: 8px;
 }
 
 @media (max-width: 768px) {
