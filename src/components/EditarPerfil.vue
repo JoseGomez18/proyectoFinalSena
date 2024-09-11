@@ -6,7 +6,7 @@
   
         <!-- Sección de edición de perfil -->
         <section class="edit-profile-info">
-          <img src="@/assets/logo.png" alt="Logo de la página" class="profile-logo" />
+          <img src="@/assets/images.jpeg" alt="Logo de la página" class="profile-logo" />
           <h1 class="edit-title">Editar Perfil</h1>
   
           <form @submit.prevent="submitForm">
@@ -26,10 +26,6 @@
               <label for="phone">Número de Teléfono:</label>
               <input type="tel" id="phone" v-model="formData.phone" placeholder="Ingresa tu número de teléfono" />
             </div>
-            <div class="form-group">
-              <label for="address">Dirección de Envío:</label>
-              <input type="text" id="address" v-model="formData.address" placeholder="Ingresa tu dirección de envío" />
-            </div>
             <button type="submit" class="save-btn">Guardar Cambios</button>
           </form>
         </section>
@@ -46,8 +42,7 @@
           name: '',
           email: '',
           confirmEmail: '',
-          phone: '',
-          address: ''
+          phone: ''
         }
       };
     },

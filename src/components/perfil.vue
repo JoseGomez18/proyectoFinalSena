@@ -6,7 +6,7 @@
   
         <!-- Sección de información del usuario -->
         <section class="profile-info">
-          <img src="@/assets/logo.png" alt="Logo de la página" class="profile-logo" />
+          <img src="@/assets/images.jpeg" alt="Logo de la página" class="profile-logo" />
           <div class="profile-details">
             <h2 class="profile-name">Santiago Madrid</h2>
             <p class="profile-email">santiagom@gmail.com</p>
