@@ -165,6 +165,7 @@ export default {
 @media (max-width: 768px) {
   .home-container {
     flex-direction: column; /* Vertical en móvil */
+    height: auto;
   }
   
   .text-section {

@@ -1,297 +1,437 @@
 <template>
-  <div class="chat-container">
-  <main ref="chatContainer" >
-    
-    <h2>CHAT</h2>
-    <ul>
-      <div class="sugerencias">
-        <button v-for="(sugerencia, index) in sugerencias" :key="index" @click="sendMessage(sugerencia.text)">{{ sugerencia.text }}</button>
-      </div>
-      
-      <li v-for="(message, index) in messages" :key="index" :class="['message', message.type]">
-        <span>{{ message.type === 'bot' || message.type === 'card' ? 'GPT' : 'Tú' }}</span>
-        <p v-if="message.type !== 'card'">{{ message.text }}</p>
-        <div v-else class="cardL">
-          <img :src="message.lugar.imagen"  alt="Imagen del lugar">
-          <h2>{{ message.lugar.nombre_lugar }}</h2>
-          <p id="cardLp">Clima: {{message.lugar.clima}}</p>
-          <p id="cardLp">Descripción: {{ message.lugar.descripcion }}</p>
-          <button @click="pagina(message.lugar.id)">Seleccionar</button>
-          <!-- <p>{{ message.lugar.nombre_lugar }}</p>
-          <p>{{ message.lugar.clima }}</p> -->
-        </div>
-      </li>
-    </ul>
-    <!-- <div v-for="(lugar,index) in lugares" :key="index" class="cardL message bot ">
-      <p id="cardLp">{{lugar.nombre_lugar}}</p>
-      <p id="cardLp">{{lugar.clima}}</p>
-      <p>hhh</p>
-    </div> -->
-    <!-- v-for="(lugar,index) in lugares" :key="index" -->
-  <!-- <LoadingSpinner :loading="loading"></LoadingSpinner> -->
-  <transition
-  name ="backLeft"
-  enter-active-class="animate_animated animatebackInLeft animate_faster"
-  leave-active-class="animate_animated animatebackOutLeft animate_faster"
-  >
-    <LoadingSpinner :loading="isLoading"/>
-  </transition>
-  </main>
+  <section class="chat-container">
+      <ul class="messages-container" ref="messagesContainer">
+          <h2 class="chat-title">Chat</h2>
+          <li v-for="(message, index) in messages" :key="index" :class="['message', message.type]">
+              <!-- Burbujas de tipo de mensaje (GPT o Tú) -->
+              <span class="message-bubble" :class="message.type">
+                  {{ message.type === 'bot' || message.type === 'card' ? 'IA' : 'Tú' }}
+              </span>
+              <!-- Texto del mensaje -->
+              <p v-if="message.type !== 'card'" class="message-text" :class="message.type">{{ message.text }}</p>
+              <section v-else class="cardL">
+                  <img :src="message.lugar.imagen" alt="Imagen del lugar">
+                  <h3>{{ message.lugar.nombre_lugar }}</h3>
+                  <p id="cardLp">Clima: {{ message.lugar.clima }}</p>
+                  <p id="cardLp">Descripcion: {{ message.lugar.descripcion }}</p>
+                  <button @click="pagina(message.lugar.id)">Seleccionar</button>
+              </section>
+              <article class="sugerencias">
+                  <button v-for="(sugerencia, index) in message.sugerencias" :key="index"
+                      @click="sendMessage(sugerencia.text)">{{ sugerencia.text }}</button>
+              </article>
+          </li>
+          <transition name="backLeft" enter-active-class="animate__animated animate__backInLeft animate__faster"
+              leave-active-class="animate__animated animate__backOutLeft animate__faster">
+              <LoadingSpinner :loading="isLoading" />
+          </transition>
+      </ul>
 
-  <form @submit.prevent="sendMessage(newMessage)">
-    <input type="text" v-model="newMessage" placeholder="Escribe tu mensaje aqui..." />
-    <button>Enviar</button>
-  </form>
-
-  <template id="message-template">
-    <li class="message">
-      <span></span>
-      <p></p>
-    </li>
-  </template>
-</div>
-<!-- <div>
-<h1>hola</h1>
-</div> -->
+      <form @submit.prevent="sendMessage(newMessage)" class="input-container">
+          <textarea v-model="newMessage" placeholder="Escribe un mensaje..." class="custom-textarea"
+              @input="autoResize"></textarea>
+          <button :disabled="isLoading"></button>
+      </form>
+  </section>
 </template>
+
 
 <script>
 import axios from 'axios';
 import LoadingSpinner from './loadingSpinner.vue';
+import { nextTick } from 'vue';
 
 export default {
-name: 'chat',
-data() {
-  return {
-    messages: [
-      { type: 'bot', text: '¿Tienes en mente algún país al que te gustaría viajar o prefieres que te sugiera un tipo de destino según tus preferencias? (por ejemplo, una ciudad vibrante, una playa tranquila, una montaña para escalar, etc.)"' },
-    ],
-    sugerencias: [
-      {text: "Quiero ir a Italia"},
-      {text: "Lugares historicos en Francia"},
-      {text: "Playas tranquilas y economicas"},
-      // {text: "Busco una ciudad con mucha vida nocturna"},
-      // {text: "Quiero un lugar relajado en la playa"},
-    ],
-    newMessage: '',
-    lugares: '',
-    isLoading: false,
-    process: true,
-  };
-},
-methods: {
-async sendMessage(message) {
-const userMessage = message || this.newMessage.trim();
-if (userMessage === '') return; // Evitar mensajes vacíos
+  name:'chat',
+  data() {
+      return {
+          messages: [
+              {
+                  type: 'bot', text: '¿Tienes en mente algún país al que te gustaría viajar o prefieres que te sugiera un tipo de destino según tus preferencias? (por ejemplo, una ciudad vibrante, una playa tranquila, una montaña para escalar, etc.)',
+                  sugerencias: [
+                      { text: "Quiero ir a Italia" },
+                      { text: "Lugares históricos en Francia" },
+                      { text: "Playas tranquilas y económicas" },
+                  ]
+              }
+          ],
+          newMessage: '',
+          lugares: '',
+          isLoading: false,
+      };
+  },
+  methods: {
+      async sendMessage(message) {
+          const userMessage = message || this.newMessage.trim();
+          if (userMessage === '') return; // Evita mensajes vacíos
 
-this.messages.push({ type: 'user', text: userMessage }); // Añadir el mensaje del usuario
-this.newMessage = ''; // Limpiar el input
-this.isLoading = true;
-await this.botResponse(userMessage); // Obtener respuesta del bot
+          this.messages.push({ type: 'user', text: userMessage }); // Añadir mensaje del usuario
+          this.newMessage = ''; // Limpiar el input
 
-// Esperar a que el DOM se actualice y luego hacer scroll
-this.$nextTick(() => {
-  const chatContainer = this.$refs.chatContainer;
-  if (chatContainer) {
-    chatContainer.scrollTop = chatContainer.scrollHeight; // Desplazar al final del contenedor
-  }
-});
-},
+          this.$nextTick(() => {
+              this.scrollToBottom();
+          })
+          this.isLoading = true;
+          await this.botResponse(userMessage); // Obtener respuestas del bot
+      },
+      async botResponse(userInput) {
+          try {
+              const response = await axios.post(`${process.env.VUE_APP_RUTA_API}/api/busquedaIA `, { input: userInput });
+              if (response.data.error) {
+                  this.cambiarEstado('isLoading');
+                  this.messages.push({ type: 'bot', text: response.data.error });
+              } else {
+                  let botMessage = response.data.length > 0 ? response.data : this.messages.push({ type: 'bot', text: 'No se encontraron resultados.' });
+                  console.log(botMessage);
+                  
+                  
 
-async botResponse(userInput) {
-try {
-  const response = await axios.post('http://localhost:3001/api/busquedaIA', { input: userInput });
-  if (response.data.error) {
-    this.messages.push({ type: 'bot', text: response.data.error });
-  } else {
-    this.cambiarEstado('isLoading');
-    const botMessage = response.data.length > 0 ? response.data : "No se encontraron resultados.";
-    this.messages.push({ type: 'bot', text: botMessage });
+                  if (response.data) {
+                      const ids = (response.data.match(/\[([0-9, ]+)\]/) || [])[1]?.split(',').map(Number) || 0;
+                      this.truncateText(botMessage);
+                      this.messages.push({ type: 'bot', text: botMessage });
 
-    if (response.data) {
-      const ids = (response.data.match(/\[([0-9, ]+)\]/) || [])[1]?.split(',').map(Number) || 0;
+                      if (ids !== 0) {
+                          const response2 = await axios.post(`${process.env.VUE_APP_RUTA_API}/api/infoDestino `, { id: ids });
+                          response2.data.forEach(lugar => {
+                              this.messages.push({ type: 'card', lugar });
+                          });
+                      }
+                  }
+                  
+                  this.cambiarEstado('isLoading');
+              }
+          } catch (error) {
+              this.cambiarEstado('isLoading');
+              setTimeout(() => {
+                  this.messages.push({ type: 'bot', text: "Hubo un error al procesar tu solicitud" });
+              }, 700);
+          }
 
-      if (ids !== 0) {
-        const response2 = await axios.post('http://localhost:3001/api/infoDestino', { id: ids });
-        response2.data.forEach(lugar => {
-          this.messages.push({ type: 'card', lugar });
-        });
-      }
+          // Esperar a que el DOM se actualice y luego hacer scroll
+          this.$nextTick(() => {
+              // Usa setTimeout para asegurarte de que el scroll se realice después de que el DOM se haya actualizado completamente
+              setTimeout(() => {
+                  this.scrollToBottom();
+              }, 701); // Ajusta el tiempo si es necesario
+          });
+      },
+      scrollToBottom() {
+          const messagesContainer = this.$refs.messagesContainer;
+          if (messagesContainer) {
+              messagesContainer.scrollTop = messagesContainer.scrollHeight; // Desplazar al final del contenedor
+          }
+      },
+      cambiarEstado(valEsta) {
+          this[valEsta] = !this[valEsta];
+      },
+      autoResize(event) {
+          const textArea = event.target;
+          const minHeight = 25;
+          const scrollHeight = textArea.scrollHeight;
+
+          // Ajusta la altura solo si el contenido desborda el ancho del textarea
+          if (scrollHeight > textArea.clientHeight) {
+              textArea.style.height = `${Math.max(minHeight, scrollHeight)}px`;
+          }
+      },
+      truncateText(text) {
+      // Encuentra la posición del primer número en el texto
+      const index = text.search(/\d/);
+
+      // Si hay un número en el texto, corta el texto hasta esa posición
+      return index !== -1 ? text.slice(0, index).trim() : text;
+    },
+
+    pagina(id){
+        this.$router.push({ name: 'DetallesLugar', params: { id } });      
     }
+  },
+    components:{
+      LoadingSpinner
   }
-} catch (error) {
-  this.cambiarEstado('isLoading');
-  setTimeout(() => {
-    this.messages.push({ type: 'bot', text: "Hubo un error al procesar tu solicitud." });
-  }, 600);
 }
-},
-
-cambiarEstado(valEsta) {
-this[valEsta] = !this[valEsta];
-},
-
-pagina(id){
-this.$router.push({ name: 'DetallesLugar', params: { id } });      }
-},
-components:{
-  LoadingSpinner
-}
-};
-
-
 </script>
 
 <style scoped>
 .chat-container {
-/* background: white;
-display: grid;
-place-content: center; */
-height: 100vh;
-height: 100dvh; /* dynamic vh */
-margin-top: 90px;
+  display: flex;
+  flex-direction: column;
+  /* border: 1px solid rgb(2, 132, 199); /* Azul oscuro */
+  /* background-color: rgb(235, 247, 255); */
+
+  --tw-bg-opacity: 1;
+    background-color: rgb(31 41 55 / var(--tw-bg-opacity));
+  border-radius: 5px;
+  overflow: hidden;
+  height: 70vh;
 }
 
-main {
-width: 500px;
-max-width: 100%;
-height: 70vh; /* Altura fija para permitir el scroll */
-background: rgb(31 41 55);
-border: 1px solid #ccc;
-border-radius: 4px;
-padding: 8px;
-margin-bottom: 16px;
-overflow-y: auto; /* Permitir el scroll vertical */
+.chat-title {
+  text-align: center;
+  color: rgb(125, 211, 252); /* Azul claro para el título */
+  padding: 1%;
+  margin: 0;
+  font-size: 1.5rem;
 }
 
-ul {
-position: relative;
-display: flex;
-flex-direction: column;
-list-style: none;
-padding: 0;
+.messages-container {
+  --tw-bg-opacity: 1;
+  background-color: rgb(31 41 55 / var(--tw-bg-opacity));
+  overflow-y: auto;
+  padding: 10px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  scroll-behavior: smooth;
+  /* background-color: rgb(245, 248, 255); */
+}
+
+.custom-textarea {
+  width: 100%;
+  height: 25px;
+  padding: 5px;
+  border: 1px solid rgb(125, 211, 252); /* Azul claro */
+  border-radius: 30px;
+  resize: none;
+  font-size: 14px;
+  font-family: inherit;
+  line-height: 1.5;
+  background-color: rgb(255, 255, 255);
+  color: rgb(18, 18, 18);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: height 0.2s ease, box-shadow 0.3s ease;
+  margin-bottom: 10px;
+}
+
+
+.custom-textarea:focus {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  /* Sombra más fuerte al hacer focus */
+  outline: none;
+  /* Eliminar el borde de enfoque predeterminado */
+}
+
+
+.chat-title {
+  text-align: center;
+  color: white;
+  padding: 10px;
+  margin: 0;
+  font-size: 1.5rem;
+  margin-bottom: 1%;
+  /* No necesita position: fixed o sticky */
 }
 
 .message {
-display: flex;
-flex-direction: column;
-gap: 4px;
-margin: 4px 0;
-padding: 4px 8px;
-text-align: start;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 1%;
 }
 
-.message span {
-width: 36px;
-height: 36px;
-font-weight: 500;
-display: flex;
-justify-content: center;
-align-items: center;
-border-radius: 999999px;
+.message-bubble {
+  width: 36px;
+  height: 36px;
+  font-weight: 500;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 999999px;
+  position: relative;
+  /* Asegúrate de que esto esté aquí para los ::after */
 }
 
-.message p {
-padding: 4px 8px;
-border-radius: 4px;
+/* Puntita cuadrada para la burbuja */
+
+.message-bubble.bot {
+  --tw-bg-opacity: 1;
+    background-color: rgb(7 89 133 / var(--tw-bg-opacity));
+  /* background-color: rgb(2, 132, 199);  */
+  color: white; /* Texto blanco */
 }
 
-.user {
-align-self: flex-end;
-align-items: flex-end;
+.message-bubble.user {
+  /* background-color: rgb(125, 211, 252); */
+  --tw-bg-opacity: 1;
+    background-color: rgb(2 132 199 / var(--tw-bg-opacity));
+  color: white;
+  margin-left: auto;
 }
 
-.user p,
-.user span {
-background: #314a80 !important;
-color: white;
+.message-text {
+ background-color: rgb(255, 255, 255);  /* Fondo gris claro */
+  color: rgb(18, 18, 18); /* Texto negro */
+  padding: 10px;
+  font-size: 15px;
+  border-radius: 20px;
+  margin-top: 10px;
+  max-width: 80%;
+  word-wrap: break-word;
+  text-align: left;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.user p{
-padding: 12px;
-border-radius: 24px 24px 4px;
+/* Quitar curvatura en la esquina inferior izquierda */
+.message-text.user {
+  /* background-color: rgb(125, 211, 252);  */
+  --tw-bg-opacity: 1;
+    background-color: rgb(2 132 199 / var(--tw-bg-opacity));
+  color: white; /* Texto blanco */
+  border-radius: 20px 20px 0 20px;
+  margin-left: auto;
 }
 
-.bot {
-align-self: flex-start;
+.message-text.bot {
+  /* background-color: rgb(2, 132, 199);  */
+  --tw-bg-opacity: 1;
+  background-color: rgb(7 89 133 / var(--tw-bg-opacity));
+  color: white; /* Texto blanco */
+  border-radius: 20px 20px 20px 0;
+  line-height: 20px;
 }
 
-.bot p,
-.bot span {
-color: black;
-border: 1px solid #80808038;
-background: #f0f8ff8f !important;
+/* Ajustar la forma del texto largo */
+.message-text::before {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: -10px;
+  width: 15px;
+  height: 15px;
+  background-color: #f0f0f0;
+  clip-path: polygon(0 100%, 100% 100%, 50% 0);
 }
 
-.bot p{
-border-radius: 24px 24px 24px 4px;
-padding: 12px;
+
+.input-container {
+  display: flex;
+  align-items: center;
+  padding: 3px;
+  /* background-color: rgb(240, 240, 240);  */
+  /* border-top: 1px solid rgb(2, 132, 199); */
+  --tw-bg-opacity: 1;
+  background-color: rgb(31 41 55 / var(--tw-bg-opacity));
 }
 
-form {
-display: flex;
+
+.input-container button {
+  padding: 10px;
+  background-color: rgb(7 89 133);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  margin-left: 10px;
+  width: 30px;
+  height: 30px;
+  font-size: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+.input-container button::before {
+  content: '↑';
+  font-size: 20px; /* Tamaño de la flecha */
 }
 
-form input {
-border-radius: 99999px;
-flex-grow: 1;
-border: 0;
-padding: 8px;
-margin-right: 8px;
-border: 1px solid #ccc;
+.input-container button:hover {
+  background-color: rgb(2, 132, 199);  /* Verde claro al hacer hover */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Sombra más fuerte */
 }
 
-form button {
-background: #354f88;
-border: 0;
-color: white;
-border-radius: 6px;
-cursor: pointer;
-padding: 8px;
+.sugerencias {
+  display: flex;
+  align-items: center;
+  padding: 1%;
+  flex-wrap: wrap;
 }
+
+.sugerencias button {
+  padding: 6px;
+  border-style: solid;
+  border-width: 1px;
+  cursor: pointer;
+  /* border-color: rgb(191, 249, 217); */
+  /* Verde claro para el borde */
+  color:white;
+  /* Texto negro */
+  /* background-color: rgb(255, 255, 255); */
+  background-color: rgb(26 40 59);
+
+  /* Fondo blanco */
+  border-radius: 50px;
+}
+
 
 .cardL{
-background: white;
-/* padding: 5px; */
-border-radius: 9px;
-/* height: 201px; */
+  background: white;
+  /* padding: 5px; */
+  border-radius: 9px;
+  /* height: 201px; */
 }
 
-.cardL h2{
-padding: 0px 5px;
-color: black
+.cardL h3{
+  padding: 0px 5px;
+  color: black
 }
 
 #cardLp{
-background: none !important;
-color: #7f8d89;
+  background: none !important;
+  color: #7f8d89;
 }
 
 .cardL img{
-width: 100%;
-border-radius: 9px 9px 0 0;
-object-fit: cover;
+  width: 100%;
+  border-radius: 9px 9px 0 0;
+  object-fit: cover;
+}
+.cardL button{
+  background: #1a283b;
+    border: none;
+    color: white;
+    margin-bottom: 7px;
+    border-radius: 6px;
+    padding: 8px;
 }
 
-.sugerencias{
-position: absolute;
-top: 160px;
-display: flex;
-flex-wrap: wrap;
-gap: 1px;
+@media (max-width: 768px) {
+  .chat-container {
+    font-size: 0.9rem; /* Disminuye el tamaño de letra */
+    height: 60vh; /* Ajusta el tamaño total del chat */
+  }
+
+  .chat-title {
+    font-size: 1.2rem; /* Reduce el tamaño del título */
+  }
+
+  .custom-textarea {
+    font-size: 13px; /* Reduce el tamaño de la fuente */
+    height: 20px; /* Reduce la altura de la caja de texto */
+    padding: 5px;
+  }
+
+  .input-container button {
+    width: 28px;
+    height: 28px;
+    font-size: 16px;
+  }
+
+  .message-text {
+    font-size: 14px; /* Reduce el tamaño del texto del mensaje */
+  }
+
+  .messages-container {
+    padding: 8px; /* Reducir el padding del contenedor */
+  }
+
+  .message-bubble {
+    width: 30px; /* Reduce las burbujas de los mensajes */
+    height: 30px;
+    font-size: 12px;
+  }
 }
 
-.sugerencias button{
-margin-top: 0.8rem;
-border-style: solid;
-border-width: 1px;
-   cursor: pointer;
-border-color: rgb(194 202 200);
-padding: 4px;
---tw-text-opacity: 1;
-color: rgb(72 91 87 / var(--tw-text-opacity));
---tw-bg-opacity: 1;
-background-color: rgb(255 255 255 / var(--tw-bg-opacity));
-border-radius: 50px;
-}
 </style>

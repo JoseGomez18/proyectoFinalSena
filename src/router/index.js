@@ -1,6 +1,7 @@
 //import { createRouter, createWebHashHistory } from 'vue-router'
 import { createWebHashHistory, createRouter } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import LoginView from '../views/LoginView.vue'
 import DetallesLugar from '@/views/DetallesLugar.vue'
 import ExploraDest from '@/components/exploraDest.vue'
 import LugaresDesta from '@/components/lugaresDesta.vue'
@@ -68,6 +69,10 @@ const routes = [
         path: '/contacto',
         name: 'contacto',
         component: Contacto,
+    }, {
+        path: '/login',
+        name: 'login',
+        component: LoginView,
     },
 ]
 

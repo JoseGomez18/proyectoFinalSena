@@ -1,5 +1,5 @@
 <template>
-  <div class="categorias-destinos">
+  <div ref="destino" class="categorias-destinos">
     <!-- Título de la sección -->
     <h2>Categorías de Destinos</h2>
 
@@ -175,7 +175,7 @@ export default {
 .botones-categorias button {
   background-color: transparent; /* Fondo transparente */
   color: white; /* Texto blanco */
-  border: 1px solid #ffffff; /* Borde blanco */
+  border: 1px solid #2d5173; /* Borde blanco */
   padding: 0.5rem 1rem;
   cursor: pointer;
   border-radius: 20px;
