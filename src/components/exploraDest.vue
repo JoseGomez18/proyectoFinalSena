@@ -1,5 +1,5 @@
 <template>
-  <div class="categorias-destinos">
+  <div ref="destino" class="categorias-destinos">
     <!-- Título de la sección -->
     <h2>Categorías de Destinos</h2>
 

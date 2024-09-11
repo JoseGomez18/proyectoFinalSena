@@ -143,7 +143,7 @@ export default {
       return index !== -1 ? text.slice(0, index).trim() : text;
     }
   },
-  components: {
+    components:{
       LoadingSpinner
   }
 };
