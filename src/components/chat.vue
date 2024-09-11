@@ -76,24 +76,27 @@ export default {
       },
       async botResponse(userInput) {
           try {
-              const response = await axios.post('http://localhost:3001/api/busqueda', { input: userInput });
+              const response = await axios.post('http://localhost:3001/api/busquedaIA', { input: userInput });
               if (response.data.error) {
+                  this.cambiarEstado('isLoading');
                   this.messages.push({ type: 'bot', text: response.data.error });
               } else {
-                  this.cambiarEstado('isLoading');
-                  const botMessage = response.data.length > 0 ? response.data : "No se encontraron resultados.";
+                
+                  const botMessage = response.data.split('IDs:')[0].trim() || "No se encontraron resultados.";
                   this.messages.push({ type: 'bot', text: botMessage });
 
                   if (response.data) {
                       const ids = (response.data.match(/\[([0-9, ]+)\]/) || [])[1]?.split(',').map(Number) || 0;
 
                       if (ids !== 0) {
-                          const response2 = await axios.post('https://localhost:3001/api/infoDestino', { id: ids });
+                          const response2 = await axios.post('http://localhost:3001/api/infoDestino', { id: ids });
                           response2.data.forEach(lugar => {
                               this.messages.push({ type: 'card', lugar });
                           });
                       }
                   }
+                  
+                  this.cambiarEstado('isLoading');
               }
           } catch (error) {
               this.cambiarEstado('isLoading');
@@ -328,6 +331,30 @@ export default {
   background-color: rgb(255, 255, 255);
   /* Fondo blanco */
   border-radius: 50px;
+}
+
+
+.cardL{
+  background: white;
+  /* padding: 5px; */
+  border-radius: 9px;
+  /* height: 201px; */
+}
+
+.cardL h2{
+  padding: 0px 5px;
+  color: black
+}
+
+#cardLp{
+  background: none !important;
+  color: #7f8d89;
+}
+
+.cardL img{
+  width: 100%;
+  border-radius: 9px 9px 0 0;
+  object-fit: cover;
 }
 
 @media (max-width: 768px) {
