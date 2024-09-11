@@ -76,7 +76,7 @@ export default {
       },
       async botResponse(userInput) {
           try {
-              const response = await axios.post('http://localhost:3001/api/busquedaIA', { input: userInput });
+              const response = await axios.post(`${process.env.VUE_APP_RUTA_API}/api/busquedaIA `, { input: userInput });
               if (response.data.error) {
                   this.cambiarEstado('isLoading');
                   this.messages.push({ type: 'bot', text: response.data.error });
@@ -92,7 +92,7 @@ export default {
                       this.messages.push({ type: 'bot', text: botMessage });
 
                       if (ids !== 0) {
-                          const response2 = await axios.post('http://localhost:3001/api/infoDestino', { id: ids });
+                          const response2 = await axios.post(`${process.env.VUE_APP_RUTA_API}/api/infoDestino `, { id: ids });
                           response2.data.forEach(lugar => {
                               this.messages.push({ type: 'card', lugar });
                           });
@@ -141,7 +141,8 @@ export default {
 
       // Si hay un número en el texto, corta el texto hasta esa posición
       return index !== -1 ? text.slice(0, index).trim() : text;
-    }
+    },
+    
   },
     components:{
       LoadingSpinner

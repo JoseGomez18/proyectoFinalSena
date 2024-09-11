@@ -15,12 +15,11 @@
         <!-- Menú de navegación desplegable -->
         <ul class="navbar-list" :class="{ 'navbar-list-open': isMenuOpen }">
           <li class="navbar-item">
-            <!-- <router-link
+            <router-link
               to="#destino"
               class="navbar-link"
               :class="{ active: isActive('/') }"
-            >Home</router-link> -->
-            <a href="#destino">Home</a>
+            >Home</router-link>
           </li>
           <li class="navbar-item">
             <router-link
