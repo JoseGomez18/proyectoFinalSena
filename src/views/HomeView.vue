@@ -1,11 +1,11 @@
 <template>
   <div>
     <navBar/>
-    <homeVue/>
-    <exploraDestVue id="destino"/>
-    <lugaresDestaVue/>
-    <testimonials/>
-    <contacto/>
+    <homeVue id="home"/>
+    <exploraDestVue id="exploraDest"/>
+    <lugaresDestaVue id="lugaresDesta"/>
+    <testimonials id="exploraDest"/>
+    <contacto id="contacto"/>
     <footerVue/>
   </div>
 </template>

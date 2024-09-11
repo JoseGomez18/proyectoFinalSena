@@ -15,11 +15,7 @@
         <!-- Menú de navegación desplegable -->
         <ul class="navbar-list" :class="{ 'navbar-list-open': isMenuOpen }">
           <li class="navbar-item">
-            <router-link
-              to="#destino"
-              class="navbar-link"
-              :class="{ active: isActive('/') }"
-            >Home</router-link>
+            <a href="#" class="navbar-link" @click.prevent="scrollTo('home')">Home</a>
           </li>
           <li class="navbar-item">
             <a href="#" class="navbar-link" @click.prevent="scrollTo('exploraDest')">Explora Destinos</a>
