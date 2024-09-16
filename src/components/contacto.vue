@@ -63,7 +63,7 @@
   }
   
   .input, .textarea {
-    width: 100%;
+    width: 95%;
     padding: 0.75rem; /* Espaciado interno de los inputs */
     border: 1px solid #4caf50; /* Color de borde acorde con la paleta */
     border-radius: 4px;

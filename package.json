@@ -8,9 +8,11 @@
   },
   "dependencies": {
     "animate.css": "^4.1.1",
+    "aos": "^2.3.4",
     "axios": "^1.7.2",
     "core-js": "^3.8.3",
     "vue": "^3.2.13",
+    "vue-intersection-observer": "^0.1.9",
     "vue-router": "^4.4.3"
   },
   "devDependencies": {

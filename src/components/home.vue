@@ -103,6 +103,7 @@ export default {
   justify-content: center;
   align-items: center;
   padding-right: 2rem;
+  padding-top: 16px;
 }
 
 .text-section h1 {
