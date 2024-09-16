@@ -40,6 +40,21 @@
           </div>
         </div>
       </div>
+
+      <div class="actividades">
+        <h3 class="titulo-actividades">Hoteles</h3>
+        <div class="grid-actividades">
+          <div v-for="hotel in hoteles" :key="hotel.id" class="card-actividad">
+            <a :href="hotel.enlace">
+              <img :src="hotel.imagen || '/placeholder.svg?height=200&width=300'" alt="Imagen de la actividad"  class="imagen-actividad" />
+              <div class="card-header">
+                  <h4 class="titulo-actividad">{{ hotel.nombre_hotel || 'Nombre de la actividad' }}</h4>
+                  <p>{{ hotel.precio }}</p>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
     <div v-else-if="loading" class="loading">Cargando...</div>
     <div v-else class="error">{{ error || 'Error al cargar los detalles del lugar' }}</div>
@@ -56,6 +71,7 @@ export default {
   data() {
     return {
       lugar: null,
+      hoteles: null,
       loading: true,
       error: null
     };
@@ -74,7 +90,17 @@ export default {
   async created() {
     try {
       const response = await axios.post(`${process.env.VUE_APP_RUTA_API}/api/detallesLugar `, { id: this.id });
+      const hoteles = await axios.post(`${process.env.VUE_APP_RUTA_API}/api/hotelesLugar `, { id: this.id });
+
       console.log('Datos recibidos de la API:', response.data);
+
+      if(hoteles){
+        console.log(hoteles)
+        this.hoteles = hoteles.data
+      }else{
+        console.error('Datos inesperados de la API:', hoteles.data);
+        this.error = 'Datos inesperados recibidos de la API.';
+      }
 
       if (Array.isArray(response.data) && response.data.length > 0) {
         this.lugar = response.data[0];
