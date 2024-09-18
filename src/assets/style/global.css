@@ -9,3 +9,6 @@
   --color-acento-claro: #FFD700;
 }
 
+*{
+  box-sizing: border-box;
+}

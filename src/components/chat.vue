@@ -1,37 +1,42 @@
 <template>
   <section class="chat-container">
-      <ul class="messages-container" ref="messagesContainer">
-          <h2 class="chat-title">Chat</h2>
-          <li v-for="(message, index) in messages" :key="index" :class="['message', message.type]">
-              <!-- Burbujas de tipo de mensaje (GPT o Tú) -->
-              <span class="message-bubble" :class="message.type">
-                  {{ message.type === 'bot' || message.type === 'card' ? 'IA' : 'Tú' }}
-              </span>
-              <!-- Texto del mensaje -->
-              <p v-if="message.type !== 'card'" class="message-text" :class="message.type">{{ message.text }}</p>
-              <section v-else class="cardL">
-                  <img :src="message.lugar.imagen" alt="Imagen del lugar">
-                  <h3>{{ message.lugar.nombre_lugar }}</h3>
-                  <p id="cardLp">Clima: {{ message.lugar.clima }}</p>
-                  <p id="cardLp">Descripcion: {{ message.lugar.descripcion }}</p>
-                  <button @click="pagina(message.lugar.id)">Seleccionar</button>
-              </section>
-              <article class="sugerencias">
-                  <button v-for="(sugerencia, index) in message.sugerencias" :key="index"
-                      @click="sendMessage(sugerencia.text)">{{ sugerencia.text }}</button>
-              </article>
-          </li>
-          <transition name="backLeft" enter-active-class="animate__animated animate__backInLeft animate__faster"
-              leave-active-class="animate__animated animate__backOutLeft animate__faster">
-              <LoadingSpinner :loading="isLoading" />
-          </transition>
-      </ul>
+    <ul class="messages-container" ref="messagesContainer">
+      <h2 class="chat-title">Chat</h2>
+      <li v-for="(message, index) in messages" :key="index" :class="['message', message.type]">
+        <!-- Burbujas de tipo de mensaje (GPT o Tú) -->
+        <span class="message-bubble" :class="message.type">
+          {{ message.type === 'bot' || message.type === 'card' ? 'IA' : 'Tú' }}
+        </span>
+        <!-- Texto del mensaje -->
+        <p v-if="message.type !== 'card'" class="message-text" :class="message.type">{{ message.text }}</p>
+        <section v-else class="cards-container">
+          <article v-for="(lugar, index) in message.lugares" :key="index" class="cardL">
+            <img :src="lugar.imagen" alt="Imagen del lugar">
+            <h3 class="place-title">{{ lugar.nombre_lugar }}</h3>
+            <p id="cardLp">Clima: {{ lugar.clima }}</p>
+            
+            <!-- <p class="description-text">Descripción: {{ lugar.descripcion }}</p>  -->
 
-      <form @submit.prevent="sendMessage(newMessage)" class="input-container">
-          <textarea v-model="newMessage" placeholder="Escribe un mensaje..." class="custom-textarea"
-              @input="autoResize"></textarea>
-          <button :disabled="isLoading"></button>
-      </form>
+            
+            <button @click="pagina(lugar.id)">Seleccionar</button>
+          </article>
+        </section>
+        <article class="sugerencias">
+          <button :disabled="isLoading" v-for="(sugerencia, index) in message.sugerencias" :key="index"
+            @click="sendMessage(sugerencia.text)">{{ sugerencia.text }}</button>
+        </article>
+      </li>
+      <transition name="backLeft" enter-active-class="animate__animated animate__backInLeft animate__faster"
+        leave-active-class="animate__animated animate__backOutLeft animate__faster">
+        <LoadingSpinner :loading="isLoading" />
+      </transition>
+    </ul>
+
+    <form @submit.prevent="sendMessage(newMessage)" class="input-container">
+      <textarea v-model="newMessage" placeholder="Escribe un mensaje..." class="custom-textarea"
+        @input="autoResize"></textarea>
+      <button :disabled="isLoading"></button>
+    </form>
   </section>
 </template>
 
@@ -42,129 +47,146 @@ import LoadingSpinner from './loadingSpinner.vue';
 import { nextTick } from 'vue';
 
 export default {
-  name:'chat',
+  name: 'chat',
   data() {
-      return {
-          messages: [
-              {
-                  type: 'bot', text: '¿Tienes en mente algún país al que te gustaría viajar o prefieres que te sugiera un tipo de destino según tus preferencias? (por ejemplo, una ciudad vibrante, una playa tranquila, una montaña para escalar, etc.)',
-                  sugerencias: [
-                      { text: "Quiero ir a Italia" },
-                      { text: "Lugares históricos en Francia" },
-                      { text: "Playas tranquilas y económicas" },
-                  ]
-              }
-          ],
-          newMessage: '',
-          lugares: '',
-          isLoading: false,
-      };
+    return {
+      messages: [
+        {
+          type: 'bot', text: '¿Tienes en mente algún país al que te gustaría viajar o prefieres que te sugiera un tipo de destino según tus preferencias? (por ejemplo, una ciudad vibrante, una playa tranquila, una montaña para escalar, etc.)',
+          sugerencias: [
+            { text: "Quiero ir a Italia" },
+            { text: "Lugares históricos en Francia" },
+            { text: "Playas tranquilas y económicas" },
+          ]
+        }
+      ],
+      newMessage: '',
+      lugares: '',
+      isLoading: false,
+    };
   },
   methods: {
-      async sendMessage(message) {
-          const userMessage = message || this.newMessage.trim();
-          if (userMessage === '') return; // Evita mensajes vacíos
+    async sendMessage(message) {
+      const userMessage = message || this.newMessage.trim();
+      if (userMessage === '') return; // Evita mensajes vacíos
 
-          this.messages.push({ type: 'user', text: userMessage }); // Añadir mensaje del usuario
-          this.newMessage = ''; // Limpiar el input
+      this.messages.push({ type: 'user', text: userMessage }); // Añadir mensaje del usuario
+      this.newMessage = ''; // Limpiar el input
 
-          this.saveMessagesToLocalStorage(); // Guardar los mensajes en localStorage
+      this.saveMessagesToLocalStorage(); // Guardar los mensajes en localStorage
 
-          this.$nextTick(() => {
-              this.scrollToBottom();
-          })
-          this.isLoading = true;
-          await this.botResponse(userMessage); // Obtener respuestas del bot
-      },
-      saveMessagesToLocalStorage() {
-        localStorage.setItem('chatMessages', JSON.stringify(this.messages));
+      this.$nextTick(() => {
+        this.scrollToBottom();
+      })
+      this.isLoading = true;
+      await this.botResponse(userMessage); // Obtener respuestas del bot
+    },
+    saveMessagesToLocalStorage() {
+      localStorage.setItem('chatMessages', JSON.stringify(this.messages));
     },
     loadMessagesFromLocalStorage() {
-        const savedMessages = localStorage.getItem('chatMessages');
-        if (savedMessages) {
-            this.messages = JSON.parse(savedMessages);
+      const savedMessages = localStorage.getItem('chatMessages');
+      if (savedMessages) {
+        this.messages = JSON.parse(savedMessages);
+      }
+    },
+    async botResponse(userInput) {
+      try {
+        const response = await axios.post(`${process.env.VUE_APP_RUTA_API}/api/busquedaIA `, { input: userInput });
+        if (response.data.error) {
+          this.cambiarEstado('isLoading');
+          this.messages.push({ type: 'bot', text: response.data.error });
+          console.log("ErrorCogido");
+
+        } else {
+          let botMessage = response.data.length > 0 ? response.data : this.messages.push({ type: 'bot', text: 'No se encontraron resultados.' });
+
+
+
+          if (response.data) {
+            const ids = (response.data.match(/\[([0-9, ]+)\]/) || [])[1]?.split(',').map(Number) || 0;
+            botMessage = this.truncateText(botMessage);
+            console.log(botMessage);
+            
+            this.messages.push({ type: 'bot', text: botMessage });
+
+            if (ids !== 0) {
+              const response2 = await axios.post(`${process.env.VUE_APP_RUTA_API}/api/infoDestino `, { id: ids });
+
+              let lugares = response2.data.map(lugar => ({
+                nombre_lugar: lugar.nombre_lugar,
+                clima: lugar.clima,
+                descripcion: lugar.descripcion,
+                imagen: lugar.imagen,
+                id: lugar.id
+              }))
+
+
+              this.messages.push({ type: 'card', lugares });
+              console.log(this.messages);
+
+            }
+          }
+
+          this.cambiarEstado('isLoading');
+          this.saveMessagesToLocalStorage(); // Guardar los mensajes en localStorage
         }
+      } catch (error) {
+        this.cambiarEstado('isLoading');
+        setTimeout(() => {
+          this.messages.push({ type: 'bot', text: "Hubo un error al procesar tu solicitud" });
+        }, 700);
+      }
+
+      // Esperar a que el DOM se actualice y luego hacer scroll
+      this.$nextTick(() => {
+        // Usa setTimeout para asegurarte de que el scroll se realice después de que el DOM se haya actualizado completamente
+        setTimeout(() => {
+          this.scrollToBottom();
+        }, 701); // Ajusta el tiempo si es necesario
+      });
     },
-      async botResponse(userInput) {
-          try {
-              const response = await axios.post(`${process.env.VUE_APP_RUTA_API}/api/busquedaIA `, { input: userInput });
-              if (response.data.error) {
-                  this.cambiarEstado('isLoading');
-                  this.messages.push({ type: 'bot', text: response.data.error });
-              } else {
-                  let botMessage = response.data.length > 0 ? response.data : this.messages.push({ type: 'bot', text: 'No se encontraron resultados.' });
-                  console.log(botMessage);
-                  
-                  
-
-                  if (response.data) {
-                      const ids = (response.data.match(/\[([0-9, ]+)\]/) || [])[1]?.split(',').map(Number) || 0;
-                      this.truncateText(botMessage);
-                      this.messages.push({ type: 'bot', text: botMessage });
-
-                      if (ids !== 0) {
-                          const response2 = await axios.post(`${process.env.VUE_APP_RUTA_API}/api/infoDestino `, { id: ids });
-                          response2.data.forEach(lugar => {
-                              this.messages.push({ type: 'card', lugar });
-                          });
-                      }
-                  }
-                  
-                  this.cambiarEstado('isLoading');
-                  this.saveMessagesToLocalStorage(); // Guardar los mensajes en localStorage
-              }
-          } catch (error) {
-              this.cambiarEstado('isLoading');
-              setTimeout(() => {
-                  this.messages.push({ type: 'bot', text: "Hubo un error al procesar tu solicitud" });
-              }, 700);
-          }
-
-          // Esperar a que el DOM se actualice y luego hacer scroll
-          this.$nextTick(() => {
-              // Usa setTimeout para asegurarte de que el scroll se realice después de que el DOM se haya actualizado completamente
-              setTimeout(() => {
-                  this.scrollToBottom();
-              }, 701); // Ajusta el tiempo si es necesario
-          });
-      },
-      scrollToBottom() {
-          const messagesContainer = this.$refs.messagesContainer;
-          if (messagesContainer) {
-              messagesContainer.scrollTop = messagesContainer.scrollHeight; // Desplazar al final del contenedor
-          }
-      },
-      cambiarEstado(valEsta) {
-          this[valEsta] = !this[valEsta];
-      },
-      autoResize(event) {
-          const textArea = event.target;
-          const minHeight = 25;
-          const scrollHeight = textArea.scrollHeight;
-
-          // Ajusta la altura solo si el contenido desborda el ancho del textarea
-          if (scrollHeight > textArea.clientHeight) {
-              textArea.style.height = `${Math.max(minHeight, scrollHeight)}px`;
-          }
-      },
-      truncateText(text) {
+    scrollToBottom() {
+      const messagesContainer = this.$refs.messagesContainer;
+      if (messagesContainer) {
+        messagesContainer.scrollTop = messagesContainer.scrollHeight; // Desplazar al final del contenedor
+      }
+    },
+    cambiarEstado(valEsta) {
+      this[valEsta] = !this[valEsta];
+    },
+    autoResize(event) {
+      const textArea = event.target;
+      const minHeight = 35; // Altura mínima deseada
+      const newHeight = parseFloat((textArea.scrollHeight + minHeight) / 2);
+      // Ajusta la altura del textarea
+      textArea.style.height = `${newHeight}px`;
+    },
+    truncateText(texto) {
       // Encuentra la posición del primer número en el texto
-      const index = text.search(/\d/);
+      const regex = /\d+\./;
+    const match = texto.match(regex);
 
-      // Si hay un número en el texto, corta el texto hasta esa posición
-      return index !== -1 ? text.slice(0, index).trim() : text;
+    // Si encuentra el patrón, corta el texto hasta la posición del número
+    if (match) {
+      const index = match.index;
+      return texto.slice(0, index).trim();
+    }
+
+      // Si no encuentra ningún número, devuelve el texto original
+      return texto;
     },
 
-    pagina(id){
-        this.$router.push({ name: 'DetallesLugar', params: { id } });      
+    pagina(id) {
+      this.$router.push({ name: 'DetallesLugar', params: { id } });
     }
   },
   mounted() {
     this.loadMessagesFromLocalStorage(); // Cargar el historial al montar el componente
     this.scrollToBottom();
-},
-    components:{
-      LoadingSpinner
+  },
+  components: {
+    LoadingSpinner
   }
 }
 </script>
@@ -177,7 +199,7 @@ export default {
   /* background-color: rgb(235, 247, 255); */
 
   --tw-bg-opacity: 1;
-    background-color: rgb(31 41 55 / var(--tw-bg-opacity));
+  background-color: rgb(31 41 55 / var(--tw-bg-opacity));
   border-radius: 5px;
   overflow: hidden;
   height: 70vh;
@@ -185,16 +207,19 @@ export default {
 
 .chat-title {
   text-align: center;
-  color: rgb(125, 211, 252); /* Azul claro para el título */
+  color: rgb(125, 211, 252);
+  /* Azul claro para el título */
   padding: 1%;
   margin: 0;
   font-size: 1.5rem;
 }
 
 .messages-container {
+  width: 100%;
   --tw-bg-opacity: 1;
   background-color: rgb(31 41 55 / var(--tw-bg-opacity));
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 10px;
   flex-grow: 1;
   display: flex;
@@ -205,11 +230,16 @@ export default {
 
 .custom-textarea {
   width: 100%;
-  height: 25px;
-  padding: 5px;
-  border: 1px solid rgb(125, 211, 252); /* Azul claro */
+  height: 30px;
+  padding: 1%;
+  box-sizing: border-box;
+  border: 1px solid rgb(125, 211, 252);
   border-radius: 30px;
-  resize: none;
+  overflow: hidden;
+  overflow-y: scroll;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  white-space: normal;
   font-size: 14px;
   font-family: inherit;
   line-height: 1.5;
@@ -218,14 +248,18 @@ export default {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: height 0.2s ease, box-shadow 0.3s ease;
   margin-bottom: 10px;
+  min-height: 30px;
+  max-height: 80px;
+}
+
+.custom-textarea::-webkit-scrollbar {
+  display: none;
 }
 
 
 .custom-textarea:focus {
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-  /* Sombra más fuerte al hacer focus */
   outline: none;
-  /* Eliminar el borde de enfoque predeterminado */
 }
 
 
@@ -262,22 +296,25 @@ export default {
 
 .message-bubble.bot {
   --tw-bg-opacity: 1;
-    background-color: rgb(7 89 133 / var(--tw-bg-opacity));
+  background-color: rgb(7 89 133 / var(--tw-bg-opacity));
   /* background-color: rgb(2, 132, 199);  */
-  color: white; /* Texto blanco */
+  color: white;
+  /* Texto blanco */
 }
 
 .message-bubble.user {
   /* background-color: rgb(125, 211, 252); */
   --tw-bg-opacity: 1;
-    background-color: rgb(2 132 199 / var(--tw-bg-opacity));
+  background-color: rgb(2 132 199 / var(--tw-bg-opacity));
   color: white;
   margin-left: auto;
 }
 
 .message-text {
- background-color: rgb(255, 255, 255);  /* Fondo gris claro */
-  color: rgb(18, 18, 18); /* Texto negro */
+  background-color: rgb(255, 255, 255);
+  /* Fondo gris claro */
+  color: rgb(18, 18, 18);
+  /* Texto negro */
   padding: 10px;
   font-size: 15px;
   border-radius: 20px;
@@ -292,8 +329,9 @@ export default {
 .message-text.user {
   /* background-color: rgb(125, 211, 252);  */
   --tw-bg-opacity: 1;
-    background-color: rgb(2 132 199 / var(--tw-bg-opacity));
-  color: white; /* Texto blanco */
+  background-color: rgb(2 132 199 / var(--tw-bg-opacity));
+  color: white;
+  /* Texto blanco */
   border-radius: 20px 20px 0 20px;
   margin-left: auto;
 }
@@ -302,7 +340,8 @@ export default {
   /* background-color: rgb(2, 132, 199);  */
   --tw-bg-opacity: 1;
   background-color: rgb(7 89 133 / var(--tw-bg-opacity));
-  color: white; /* Texto blanco */
+  color: white;
+  /* Texto blanco */
   border-radius: 20px 20px 20px 0;
   line-height: 20px;
 }
@@ -324,8 +363,6 @@ export default {
   display: flex;
   align-items: center;
   padding: 3px;
-  /* background-color: rgb(240, 240, 240);  */
-  /* border-top: 1px solid rgb(2, 132, 199); */
   --tw-bg-opacity: 1;
   background-color: rgb(31 41 55 / var(--tw-bg-opacity));
 }
@@ -348,14 +385,18 @@ export default {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
+
 .input-container button::before {
   content: '↑';
-  font-size: 20px; /* Tamaño de la flecha */
+  font-size: 20px;
+  /* Tamaño de la flecha */
 }
 
 .input-container button:hover {
-  background-color: rgb(2, 132, 199);  /* Verde claro al hacer hover */
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Sombra más fuerte */
+  background-color: rgb(2, 132, 199);
+  /* Verde claro al hacer hover */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  /* Sombra más fuerte */
 }
 
 .sugerencias {
@@ -372,7 +413,7 @@ export default {
   cursor: pointer;
   /* border-color: rgb(191, 249, 217); */
   /* Verde claro para el borde */
-  color:white;
+  color: white;
   /* Texto negro */
   /* background-color: rgb(255, 255, 255); */
   background-color: rgb(26 40 59);
@@ -380,52 +421,106 @@ export default {
   /* Fondo blanco */
   border-radius: 50px;
 }
-
-
-.cardL{
-  background: white;
-  /* padding: 5px; */
-  border-radius: 9px;
-  /* height: 201px; */
-}
-
-.cardL h3{
-  padding: 0px 5px;
-  color: black
-}
-
-#cardLp{
-  background: none !important;
-  color: #7f8d89;
-}
-
-.cardL img{
+.cards-container {
+  display: flex;
+  overflow-x: auto;
+  flex-wrap: nowrap;
+  white-space: nowrap;
   width: 100%;
-  border-radius: 9px 9px 0 0;
+  padding: 10px;
+  gap: 15px;
+  justify-content: flex-start;
+}
+
+.cards-container::-webkit-scrollbar {
+  display: none; /* Opcional: oculta la barra de desplazamiento horizontal */
+}
+
+.cardL {
+  flex: 0 0 auto;
+  width: 220px;
+  padding: 15px;
+  margin-bottom: 20px;
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: 12px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.cardL:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.cardL img {
+  width: 100%;
+  height: 160px;
+  border-radius: 12px 12px 0 0;
   object-fit: cover;
 }
-.cardL button{
-  background: #1a283b;
-    border: none;
-    color: white;
-    margin-bottom: 7px;
-    border-radius: 6px;
-    padding: 8px;
+
+.cardL h3 {
+  margin: 10px 0;
+  padding: 0px 10px;
+  color: #2c3e50;
+  font-size: 1.4rem;
+  text-align: center;
+  font-weight: 600;
+  white-space: normal;
+  word-wrap: break-word;
 }
 
+#cardLp {
+  background: none !important;
+  color: #7f8d89;
+  padding: 0px 10px;
+  margin-bottom: 10px;
+  text-align: center;
+  font-size: 0.9rem;
+  word-wrap: break-word;
+}
+
+.cardL button {
+  background: linear-gradient(135deg, #6dd5ed, #2193b0);
+  border: none;
+  color: white;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  margin-top: 10px;
+  text-transform: uppercase;
+}
+
+.cardL button:hover {
+  background-color: #2980b9;
+  transform: scale(1.05);
+}
 @media (max-width: 768px) {
   .chat-container {
-    font-size: 0.9rem; /* Disminuye el tamaño de letra */
-    height: 60vh; /* Ajusta el tamaño total del chat */
+    font-size: 0.9rem;
+    /* Disminuye el tamaño de letra */
+    height: 60vh;
+    /* Ajusta el tamaño total del chat */
   }
 
   .chat-title {
-    font-size: 1.2rem; /* Reduce el tamaño del título */
+    font-size: 1.2rem;
+    /* Reduce el tamaño del título */
   }
 
   .custom-textarea {
-    font-size: 13px; /* Reduce el tamaño de la fuente */
-    height: 20px; /* Reduce la altura de la caja de texto */
+    font-size: 13px;
+    /* Reduce el tamaño de la fuente */
+    height: 25px;
+    /* Reduce la altura de la caja de texto */
     padding: 5px;
   }
 
@@ -436,18 +531,20 @@ export default {
   }
 
   .message-text {
-    font-size: 14px; /* Reduce el tamaño del texto del mensaje */
+    font-size: 14px;
+    /* Reduce el tamaño del texto del mensaje */
   }
 
   .messages-container {
-    padding: 8px; /* Reducir el padding del contenedor */
+    padding: 8px;
+    /* Reducir el padding del contenedor */
   }
 
   .message-bubble {
-    width: 30px; /* Reduce las burbujas de los mensajes */
+    width: 30px;
+    /* Reduce las burbujas de los mensajes */
     height: 30px;
     font-size: 12px;
   }
 }
-
 </style>

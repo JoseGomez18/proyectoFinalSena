@@ -57,7 +57,23 @@ export default {
     }
   },
   mounted(){
-    // this.$refs.video.classList.add('animate__animated', 'animate__zoomIn');
+    if (this.$route.query.showVideo !== undefined) {
+      this.showVideo = this.$route.query.showVideo === 'true';
+    }
+    if (this.$route.query.showChat !== undefined) {
+      this.showChat = this.$route.query.showChat === 'true';
+    }
+  },
+  watch: {
+    // Observa los cambios en la ruta y actualiza los datos si cambia
+    '$route.query'(newQuery) {
+      if (newQuery.showVideo !== undefined) {
+        this.showVideo = newQuery.showVideo === 'true';
+      }
+      if (newQuery.showChat !== undefined) {
+        this.showChat = newQuery.showChat === 'true';
+      }
+    }
   },
   methods: {
     activar() {

@@ -84,7 +84,7 @@ export default {
   },
   methods:{
     chat(){
-      this.$router.push({ name: 'home' });      
+      this.$router.push({ name: 'home', query: { showVideo: false, showChat: true }  });      
     }
   },
   async created() {
