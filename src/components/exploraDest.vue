@@ -13,7 +13,7 @@
       </button>
       
       <!-- Botones para categorías individuales -->
-      <button disabled
+      <button 
         v-for="(categoria, index) in categorias" 
         :key="index" 
         @click="seleccionarCategoria(categoria.filtro)" 
@@ -60,36 +60,27 @@ export default {
     return {
       // Datos de categorías
       categorias: [
-        { nombre: 'Turismo', filtro: 'turismo', emoji: '🌄' },
-        { nombre: 'Fiesta', filtro: 'fiesta', emoji: '🎉' },
-        { nombre: 'Bosque', filtro: 'bosque', emoji: '🌳' },
-        { nombre: 'Relax', filtro: 'relax', emoji: '😌' },
-        { nombre: 'Playa', filtro: 'playa', emoji: '🏖️' },
-        { nombre: 'City', filtro: 'city', emoji: '🌆' },
-        { nombre: 'Romance', filtro: 'romance', emoji: '❤️' },
+        { nombre: 'Turismo', filtro: 'Turismo', emoji: '🌄' },
+        { nombre: 'Fiesta', filtro: 'Fiesta', emoji: '🎉' },
+        { nombre: 'Relax', filtro: 'Relax', emoji: '😌' },
+        { nombre: 'Playa', filtro: 'Playa', emoji: '🏖️' },
+        { nombre: 'Romance', filtro: 'Romance', emoji: '❤️' },
       ],
       // Datos de destinos
-      destinos: [
-        // { nombre: 'Destino 1', imagen: 'images.jpeg', categorias: ['turismo', 'fiesta', 'city'] },
-        // { nombre: 'Destino 2', imagen: 'images.jpeg', categorias: ['bosque', 'relax'] },
-        // { nombre: 'Destino 3', imagen: 'images.jpeg', categorias: ['playa', 'city'] },
-        // { nombre: 'Destino 4', imagen: 'images.jpeg', categorias: ['turismo', 'fiesta', 'city'] },
-        // { nombre: 'Destino 5', imagen: 'images.jpeg', categorias: ['bosque', 'relax'] },
-        // { nombre: 'Destino 6', imagen: 'images.jpeg', categorias: ['playa', 'city'] },
-      ],
+      destinos: [],
       categoriaSeleccionada: null,
       scrollStep: 300,
     };
   },
 
-  async created(){
+  async created() {
     try {
-      const response = await axios.post(`${process.env.VUE_APP_RUTA_API}/api/detallesCard`,{limit:70});
+      const response = await axios.post(`${process.env.VUE_APP_RUTA_API}/api/detallesCard`, { limit: 120 });
       console.log('Datos recibidos de la API:', response.data);
 
       if (Array.isArray(response.data) && response.data.length > 0) {
         response.data.forEach(lugar => {
-          this.destinos.push({ id: lugar.id,nombre: lugar.nombre_lugar, imagen: lugar.imagen });
+          this.destinos.push({ id: lugar.id, nombre: lugar.nombre_lugar, imagen: lugar.imagen, categorias: lugar.categoria });
         });
       } else {
         console.error('Datos inesperados de la API:', response.data);
@@ -107,18 +98,22 @@ export default {
     // Filtrar destinos según la categoría seleccionada
     destinosFiltrados() {
       if (!this.categoriaSeleccionada) return this.destinos;
-      return this.destinos.filter(destino => destino.categorias.includes(this.categoriaSeleccionada));
+      
+      // Asegurarse de que 'categorias' está definida antes de usar 'includes'
+      return this.destinos.filter(destino => destino.categorias && destino.categorias.includes(this.categoriaSeleccionada));
     },
   },
 
   methods: {
     // Cambiar categoría seleccionada y reiniciar el scroll
     seleccionarCategoria(filtro) {
-      this.categoriaSeleccionada = filtro;
-      this.$refs.horizontalContainer.scrollLeft = 0;
-    },
-    pagina(id){
-        this.$router.push({ name: 'DetallesLugar', params: { id } });      
+  console.log('Categoría seleccionada:', filtro); // Verifica la categoría seleccionada
+  this.categoriaSeleccionada = filtro;
+  this.$refs.horizontalContainer.scrollLeft = 0;
+  },
+
+    pagina(id) {
+      this.$router.push({ name: 'DetallesLugar', params: { id } });
     },
     // Navegar horizontalmente en el contenedor de tarjetas
     scrollHorizontal(direction) {
@@ -131,7 +126,6 @@ export default {
       function animateScroll(currentTime) {
         let timeElapsed = currentTime - startTime;
         let progress = Math.min(timeElapsed / 300, 1); // 300ms para la animación
-
         container.scrollLeft = start + (end - start) * progress;
 
         if (progress < 1) {
@@ -148,10 +142,15 @@ export default {
 </script>
 
 <style scoped>
+/* Agregar el mismo estilo que ya tenías */
+</style>
+
+<style scoped>
 /* Contenedor principal */
 .categorias-destinos {
   padding: 1.5rem;
   background: #2e4b63; /* Gradiente que se desvanece */
+  overflow: visible;
 }
 
 /* Estilo del título */
@@ -209,8 +208,8 @@ export default {
 /* Contenedor de tarjetas */
 .contenedor-tarjetas {
   position: relative;
-  overflow: hidden;
-  height: 166px; /* Ajustado para las tarjetas de mayor tamaño */
+  overflow: hidden; /* Oculta el scrollbar */
+  height: auto; /* Ajustado para las tarjetas de mayor tamaño */
 }
 
 /* Contenedor horizontal para las tarjetas */
@@ -218,16 +217,28 @@ export default {
   display: flex;
   gap: 1rem;
   padding-bottom: 1rem;
-  overflow-x: auto; /* Permitir desplazamiento horizontal */
+  overflow-x: scroll; /* Permitir desplazamiento horizontal */
   scroll-behavior: smooth; /* Desplazamiento suave */
   -webkit-overflow-scrolling: touch; /* Desplazamiento suave en dispositivos táctiles */
 }
 
+/* Ocultar scrollbar en navegadores WebKit */
+.tarjetas-horizontales::-webkit-scrollbar {
+  display: none;
+}
+
+/* Ocultar scrollbar en Internet Explorer y Firefox */
+.tarjetas-horizontales {
+  -ms-overflow-style: none;  /* IE */
+  scrollbar-width: none;  /* Firefox */
+}
+
 /* Estilo de las tarjetas */
 .tarjeta {
+  height: auto;
   cursor: pointer;
   flex: 0 0 300px; /* Tamaño fijo de las tarjetas */
-  background: white;
+  background: #1a283b;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
@@ -241,34 +252,37 @@ export default {
 /* Contenedor de la imagen dentro de la tarjeta */
 .tarjeta-imagen {
   width: 100%;
+  height: 147px;
 }
 
 /* Estilo de las imágenes dentro de las tarjetas */
 .tarjeta-imagen img {
   width: 100%;
-  height: 150px; /* Altura fija de las imágenes */
+  height: 144px; /* Altura fija de las imágenes */
   object-fit: cover;
 }
 
 /* Contenedor de la información debajo de la imagen */
 .tarjeta-info {
   width: 100%;
-  background: #ffffff; /* Fondo blanco */
+  background: #1a283b;
   padding: 0.5rem;
   text-align: center;
   position: absolute;
   bottom: 0; /* Posiciona el nombre en la parte inferior */
   left: 0;
   right: 0;
-  border-top: 1px solid #ddd; /* Borde superior gris claro */
+  display: flex;
+  justify-content: flex-start;
 }
 
 /* Estilo del texto en la información */
 .tarjeta-info h3 {
   margin: 0;
-  font-size: 1.2rem;
-  color: #333; /* Color del texto */
+  font-size: 1.0rem;
+  color: #ffffff; /* Color del texto */
   font-weight: 600;
+  text-align: start;
 }
 
 /* Controles de navegación (izquierda y derecha) */
@@ -358,5 +372,4 @@ export default {
     padding: 0.3rem 0.6rem;
   }
 }
-
 </style>

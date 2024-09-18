@@ -40,21 +40,30 @@
           </div>
         </div>
       </div>
-
-      <div class="actividades">
-        <h3 class="titulo-actividades">Hoteles</h3>
-        <div class="grid-actividades">
-          <div v-for="hotel in hoteles" :key="hotel.id" class="card-actividad">
-            <a :href="hotel.enlace">
-              <img :src="hotel.imagen || '/placeholder.svg?height=200&width=300'" alt="Imagen de la actividad"  class="imagen-actividad" />
-              <div class="card-header">
-                  <h4 class="titulo-actividad">{{ hotel.nombre_hotel || 'Nombre de la actividad' }}</h4>
+      
+      <div class="container_hoteles">
+        <h3>Hoteles sugeridos</h3>
+        <div class="carousel-container">
+          <button class="carousel-btn left" @click="scrollLeft">
+            ←
+          </button>
+          <div class="carousel">
+            <div class="carousel-item" v-for="hotel in hoteles" :key="hotel.id">
+              <a :href="hotel.enlace">
+                <img :src="hotel.imagen || '/placeholder.svg?height=200&width=300'" alt="Imagen del hotel" />
+                <div>
+                  <h4>{{ hotel.nombre_hotel || 'Nombre del hotel' }}</h4>
                   <p>{{ hotel.precio }}</p>
-              </div>
-            </a>
+                </div>
+              </a>
+            </div>
           </div>
+          <button class="carousel-btn right" @click="scrollRight">
+            →
+          </button>
         </div>
       </div>
+
     </div>
     <div v-else-if="loading" class="loading">Cargando...</div>
     <div v-else class="error">{{ error || 'Error al cargar los detalles del lugar' }}</div>
@@ -84,7 +93,15 @@ export default {
   },
   methods:{
     chat(){
-      this.$router.push({ name: 'home', query: { showVideo: false, showChat: true }  });      
+      this.$router.push({ name: 'home', query: { showVideo: false, showChat: true }  });          
+    },
+    scrollLeft() {
+      const carousel = this.$el.querySelector('.carousel');
+      carousel.scrollBy({ left: -300, behavior: 'smooth' });
+    },
+    scrollRight() {
+      const carousel = this.$el.querySelector('.carousel');
+      carousel.scrollBy({ left: 300, behavior: 'smooth' });
     }
   },
   async created() {
@@ -263,6 +280,94 @@ export default {
 
 .descripcion-actividad {
   color: #a3b3c7;
+}
+
+/* Contenedor del carrusel */
+.carousel-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+.carousel {
+  display: flex;
+  gap: 1rem;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  padding: 1rem 0;
+  width: 100%;
+}
+
+.carousel-item {
+  flex: 0 0 30%;
+  background-color: #2d3c4e;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 1.1);
+}
+
+.carousel-item img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.carousel-item h4 {
+  color: #ffffff;
+  font-size: 1.25rem;
+  margin: 0.5rem 0;
+  padding: 0 1rem;
+}
+
+.carousel-item p {
+  color: #acabab;
+  font-size: 1rem;
+  padding: 0 1rem 1rem;
+}
+
+.carousel-item a{
+  text-decoration: none;
+}
+
+/* Botones de navegación */
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-size: 2rem;
+  z-index: 1;
+  transition: background-color 0.3s;
+}
+
+.carousel-btn:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.carousel-btn.left {
+  left: -1rem;
+}
+
+.carousel-btn.right {
+  right: -1rem;
+}
+
+/* Animaciones de hover en las tarjetas */
+.carousel-item:hover {
+  transform: scale(1.05);
+}
+
+.container_hoteles h3 {
+  font-size: 1.75rem;
+  margin-bottom: 1rem;
+  color: #ffffff;
+    text-align: center;
 }
 
 /* Mensaje de carga */
