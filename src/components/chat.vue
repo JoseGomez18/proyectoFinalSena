@@ -13,6 +13,7 @@
           <article v-for="(lugar, index) in message.lugares" :key="index" class="cardL">
             <img :src="lugar.imagen" alt="Imagen del lugar">
             <h3 class="place-title">{{ lugar.nombre_lugar }}</h3>
+            <!-- <p id="cardLp">{{ lugar.descripcion }}</p> -->
             <p id="cardLp">Clima: {{ lugar.clima }}</p>
             
             <!-- <p class="description-text">Descripción: {{ lugar.descripcion }}</p>  -->
@@ -92,60 +93,68 @@ export default {
     },
     async botResponse(userInput) {
       try {
-        const response = await axios.post(`${process.env.VUE_APP_RUTA_API}/api/busquedaIA `, { input: userInput });
+        // Enviar solicitud al backend para obtener la respuesta del bot
+        const response = await axios.post(`${process.env.VUE_APP_RUTA_API}/api/busquedaIA`, { input: userInput });
+
+        // Manejo de errores
         if (response.data.error) {
           this.cambiarEstado('isLoading');
           this.messages.push({ type: 'bot', text: response.data.error });
-          console.log("ErrorCogido");
-
-        } else {
-          let botMessage = response.data.length > 0 ? response.data : this.messages.push({ type: 'bot', text: 'No se encontraron resultados.' });
-
-
-
-          if (response.data) {
-            const ids = (response.data.match(/\[([0-9, ]+)\]/) || [])[1]?.split(',').map(Number) || 0;
-            botMessage = this.truncateText(botMessage);
-            console.log(botMessage);
-            
-            this.messages.push({ type: 'bot', text: botMessage });
-
-            if (ids !== 0) {
-              const response2 = await axios.post(`${process.env.VUE_APP_RUTA_API}/api/infoDestino `, { id: ids });
-
-              let lugares = response2.data.map(lugar => ({
-                nombre_lugar: lugar.nombre_lugar,
-                clima: lugar.clima,
-                descripcion: lugar.descripcion,
-                imagen: lugar.imagen,
-                id: lugar.id
-              }))
-
-
-              this.messages.push({ type: 'card', lugares });
-              console.log(this.messages);
-
-            }
-          }
-
-          this.cambiarEstado('isLoading');
-          this.saveMessagesToLocalStorage(); // Guardar los mensajes en localStorage
+          console.error("Error: ", response.data.error);
+          return;
         }
+
+        // Procesar respuesta del bot
+        let botMessage = response.data.length > 0 ? response.data : 'No se encontraron resultados.';
+        
+        // Extraer lugares exactos de la respuesta
+        const lugaresExactos = (botMessage.match(/\["([^"]+)"(?:, "([^"]+)")*\]/) || [])[0]?.match(/"([^"]+)"/g)?.map(l => l.replace(/"/g, '')) || [];
+
+        // Mostrar el mensaje del bot
+        botMessage = this.truncateText(botMessage);
+        this.messages.push({ type: 'bot', text: botMessage });
+        this.$nextTick(() => {
+            this.scrollToBottom();
+          })
+
+        // Verificar y procesar lugares exactos
+        if (lugaresExactos.length > 0) {
+          try {
+            const response2 = await axios.post(`${process.env.VUE_APP_RUTA_API}/api/infoDestino`, { id: lugaresExactos });
+
+            if (response2.data.error) {
+              this.messages.push({ type: 'bot', text: 'Intenta con otra solicitud' });
+              return;
+            }
+
+            // Procesar información de lugares
+            const lugares = response2.data.map(lugar => ({
+              nombre_lugar: lugar.nombre_lugar,
+              clima: lugar.clima,
+              descripcion: lugar.descripcion,
+              imagen: lugar.imagen,
+              id: lugar.id
+            }));
+
+            this.messages.push({ type: 'card', lugares });
+            this.$nextTick(() => {
+            this.scrollToBottom();
+          })
+          } catch (error) {
+            this.messages.push({ type: 'bot', text: 'Error al obtener detalles de los lugares.' });
+            console.error("Error en infoDestino: ", error);
+          }
+        }
+        
       } catch (error) {
         this.cambiarEstado('isLoading');
-        setTimeout(() => {
-          this.messages.push({ type: 'bot', text: "Hubo un error al procesar tu solicitud" });
-        }, 700);
+        this.messages.push({ type: 'bot', text: 'Error en la solicitud al servidor.' });
+        console.error("Error en busquedaIA: ", error);
+      } finally {
+        this.cambiarEstado('isLoading');
+        this.saveMessagesToLocalStorage(); // Guardar los mensajes en localStorage
       }
-
-      // Esperar a que el DOM se actualice y luego hacer scroll
-      this.$nextTick(() => {
-        // Usa setTimeout para asegurarte de que el scroll se realice después de que el DOM se haya actualizado completamente
-        setTimeout(() => {
-          this.scrollToBottom();
-        }, 701); // Ajusta el tiempo si es necesario
-      });
-    },
+},
     scrollToBottom() {
       const messagesContainer = this.$refs.messagesContainer;
       if (messagesContainer) {
