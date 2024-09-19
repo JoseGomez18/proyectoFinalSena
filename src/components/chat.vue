@@ -19,7 +19,7 @@
             <!-- <p class="description-text">Descripción: {{ lugar.descripcion }}</p>  -->
 
             
-            <button @click="pagina(lugar.id)">Seleccionar</button>
+            <button @click="pagina(lugar.id)">Ver más</button>
           </article>
         </section>
         <article class="sugerencias">
