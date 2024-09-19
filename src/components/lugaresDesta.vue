@@ -35,7 +35,7 @@ async created() {
     const ids = [17, 2, 3, 4, 5];
 
     // Hacer la solicitud a la API con los IDs
-    const response = await axios.post(`http://localhost:3001/api/lugaresPorIds`, { ids });
+    const response = await axios.post(`${process.env.VUE_APP_RUTA_API}/api/lugaresPorIds`, { ids });
     console.log('Datos recibidos de la API:', response.data);
 
     if (Array.isArray(response.data) && response.data.length > 0) {
