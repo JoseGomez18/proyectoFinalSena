@@ -2,6 +2,7 @@
   <section class="chat-container">
     <ul class="messages-container" ref="messagesContainer">
       <h2 class="chat-title">Chat</h2>
+      <button @click="deleteMessagesToLocalStorage" class="reset"><i class="fa-solid fa-arrows-rotate icono"></i>Reiniciar chat</button>
       <li v-for="(message, index) in messages" :key="index" :class="['message', message.type]">
         <!-- Burbujas de tipo de mensaje (GPT o Tú) -->
         <span class="message-bubble" :class="message.type">
@@ -36,7 +37,7 @@
     <form @submit.prevent="sendMessage(newMessage)" class="input-container">
       <textarea v-model="newMessage" placeholder="Escribe un mensaje..." class="custom-textarea"
         @input="autoResize"></textarea>
-      <button :disabled="isLoading"></button>
+      <button :disabled="isLoading"><i class="fa-solid fa-arrow-up"></i></button>
     </form>
   </section>
 </template>
@@ -53,11 +54,11 @@ export default {
     return {
       messages: [
         {
-          type: 'bot', text: '¿Tienes en mente algún país al que te gustaría viajar o prefieres que te sugiera un tipo de destino según tus preferencias? (por ejemplo, una ciudad vibrante, una playa tranquila, una montaña para escalar, etc.)',
+          type: 'bot', text: '¡Hola! ¿Buscas el destino perfecto? Cuéntame si tienes un país en mente o prefieres que te sugiera algo según tus gustos: una escapada a la playa, una ciudad vibrante o un rincón lleno de aventura. ¡Estoy aquí para ayudarte!',
           sugerencias: [
             { text: "Quiero ir a Italia" },
             { text: "Lugares históricos en Francia" },
-            { text: "Playas tranquilas y económicas" },
+            { text: "Playas Hermosas en Colombia" },
           ]
         }
       ],
@@ -84,6 +85,11 @@ export default {
     },
     saveMessagesToLocalStorage() {
       localStorage.setItem('chatMessages', JSON.stringify(this.messages));
+    },
+    deleteMessagesToLocalStorage(){
+      localStorage.removeItem('chatMessages');
+      window.location.reload();
+      this.$router.push({ name: 'home', query: { showVideo: false, showChat: true }  });          
     },
     loadMessagesFromLocalStorage() {
       const savedMessages = localStorage.getItem('chatMessages');
@@ -212,6 +218,22 @@ export default {
   border-radius: 5px;
   overflow: hidden;
   height: 70vh;
+  position: relative;
+}
+
+.reset{
+  width: 136px;
+    position: absolute;
+    top: 9px;
+    font-size: 13px;
+    height: 33px;
+    border-radius: 13px;
+    right: 24px;
+    border: none;
+    z-index: 9999;
+    color: white;
+    background: rgb(55 65 81 / 1);
+    cursor: pointer;
 }
 
 .chat-title {
@@ -352,7 +374,7 @@ export default {
   color: white;
   /* Texto blanco */
   border-radius: 20px 20px 20px 0;
-  line-height: 20px;
+  line-height: 21px;
 }
 
 /* Ajustar la forma del texto largo */
@@ -370,7 +392,7 @@ export default {
 
 .input-container {
   display: flex;
-  align-items: center;
+  /* align-items: center; */
   padding: 3px;
   --tw-bg-opacity: 1;
   background-color: rgb(31 41 55 / var(--tw-bg-opacity));
@@ -382,7 +404,7 @@ export default {
   background-color: rgb(7 89 133);
   color: white;
   border: none;
-  border-radius: 50%;
+  border-radius: 9px;
   cursor: pointer;
   margin-left: 10px;
   width: 30px;
@@ -395,17 +417,21 @@ export default {
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.input-container button::before {
+/* .input-container button::before {
   content: '↑';
   font-size: 20px;
   /* Tamaño de la flecha */
-}
+
 
 .input-container button:hover {
   background-color: rgb(2, 132, 199);
   /* Verde claro al hacer hover */
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
   /* Sombra más fuerte */
+}
+
+.icono{
+  margin-right: 8px;
 }
 
 .sugerencias {
@@ -425,7 +451,7 @@ export default {
   color: white;
   /* Texto negro */
   /* background-color: rgb(255, 255, 255); */
-  background-color: rgb(26 40 59);
+  background-color: rgb(0 0 0 / 25%);
 
   /* Fondo blanco */
   border-radius: 50px;
@@ -448,7 +474,7 @@ export default {
 .cardL {
   flex: 0 0 auto;
   width: 220px;
-  padding: 15px;
+  /* padding: 15px; */
   margin-bottom: 20px;
   position: relative;
   box-sizing: border-box;
@@ -499,6 +525,7 @@ export default {
   border: none;
   color: white;
   border-radius: 8px;
+  margin: 8px;
   padding: 10px;
   font-size: 0.9rem;
   font-weight: 600;
