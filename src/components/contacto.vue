@@ -1,6 +1,6 @@
 <template>
     <section class="contact-section">
-      <div class="container">
+      <div class="container" data-aos="flip-up">
         <h2 class="title">Contáctanos</h2>
         <form class="contact-form">
           <div class="form-group">

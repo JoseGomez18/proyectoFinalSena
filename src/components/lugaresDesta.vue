@@ -1,7 +1,7 @@
 <template>
   <div class="lugares-destacados">
     <h2>Lugares Destacados</h2>
-    <div class="galeria">
+    <div class="galeria" data-aos="flip-left">
       <div @click="pagina(lugar.id)" class="tarjeta" v-for="(lugar, indice) in lugares" :key="indice" :class="lugar.tamano">
         <img :src="lugar.imagen" :alt="lugar.nombre" />
         <h3 class="nombre-ciudad">{{ lugar.nombre_lugar }}</h3>

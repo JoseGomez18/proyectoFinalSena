@@ -1,5 +1,5 @@
 <template>
-  <div ref="destino" class="categorias-destinos">
+  <div ref="destino" class="categorias-destinos" >
     <!-- Título de la sección -->
     <h2>Categorías de Destinos</h2>
 
@@ -24,7 +24,7 @@
     </div>
 
     <!-- Contenedor de tarjetas con destinos -->
-    <div class="contenedor-tarjetas">
+    <div class="contenedor-tarjetas" data-aos="fade-right">
       <!-- Controles de navegación a la izquierda -->
       <div class="control-left">
         <button class="btn-prev" @click="scrollHorizontal('left')">←</button>
@@ -140,10 +140,6 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-/* Agregar el mismo estilo que ya tenías */
-</style>
 
 <style scoped>
 /* Contenedor principal */

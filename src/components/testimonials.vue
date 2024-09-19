@@ -1,6 +1,6 @@
 <template>
     <section class="testimonials py-12 px-4 md:px-6">
-      <div class="container mx-auto">
+      <div class="container mx-auto" data-aos="flip-up">
         <h2 class="text-2xl font-bold mb-8">Lo que dicen nuestros clientes</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           <div class="testimonial-card bg-background rounded-lg shadow-md p-6" v-for="(testimonial, index) in testimonials" :key="index">
