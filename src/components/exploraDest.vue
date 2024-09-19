@@ -86,7 +86,7 @@ export default {
   async created() {
     this.loading = true;
     try {
-      const response = await axios.post(`${process.env.VUE_APP_RUTA_API}/api/detallesCard`, { limit: 120 });
+      const response = await axios.post(`http://localhost:3001/api/detallesCard`, { limit: 120 });
       console.log('Datos recibidos de la API:', response.data);
 
       if (Array.isArray(response.data) && response.data.length > 0) {

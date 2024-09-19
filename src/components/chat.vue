@@ -100,7 +100,7 @@ export default {
     async botResponse(userInput) {
       try {
         // Enviar solicitud al backend para obtener la respuesta del bot
-        const response = await axios.post(`${process.env.VUE_APP_RUTA_API}/api/busquedaIA`, { input: userInput });
+        const response = await axios.post(`http://localhost:3001/api/busquedaIA`, { input: userInput });
 
         // Manejo de errores
         if (response.data.error) {
@@ -126,10 +126,12 @@ export default {
         // Verificar y procesar lugares exactos
         if (lugaresExactos.length > 0) {
           try {
-            const response2 = await axios.post(`${process.env.VUE_APP_RUTA_API}/api/infoDestino`, { id: lugaresExactos });
-
+            const response2 = await axios.post(`http://localhost:3001/api/infoDestino`, { id: lugaresExactos });
+            console.log(response2)
             if (response2.data.error) {
-              this.messages.push({ type: 'bot', text: 'Intenta con otra solicitud' });
+              console.log("llego al error")
+              this.botResponse("No hay estos lugares en la db, devuelve lugares que si esten en la db")
+              this.cambiarEstado("isLoading")
               return;
             }
 
@@ -161,6 +163,9 @@ export default {
         this.saveMessagesToLocalStorage(); // Guardar los mensajes en localStorage
       }
 },
+  botResponse2(){
+
+  },
     scrollToBottom() {
       const messagesContainer = this.$refs.messagesContainer;
       if (messagesContainer) {

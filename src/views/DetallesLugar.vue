@@ -113,8 +113,8 @@ export default {
   },
   async created() {
     try {
-      const response = await axios.post(`${process.env.VUE_APP_RUTA_API}/api/detallesLugar `, { id: this.id });
-      const hoteles = await axios.post(`${process.env.VUE_APP_RUTA_API}/api/hotelesLugar `, { id: this.id });
+      const response = await axios.post(`http://localhost:3001/api/detallesLugar `, { id: this.id });
+      const hoteles = await axios.post(`http://localhost:3001/api/hotelesLugar `, { id: this.id });
 
       console.log('Datos recibidos de la API:', response.data);
 
