@@ -1,7 +1,10 @@
 <template>
   <div class="lugares-destacados">
     <h2>Lugares Destacados</h2>
-    <div class="galeria">
+    <div v-if="loading">
+      <loading-spinner-destinos :loading="loading"/>
+    </div>
+    <div v-else class="galeria">
       <div @click="pagina(lugar.id)" class="tarjeta" v-for="(lugar, indice) in lugares" :key="indice" :class="lugar.tamano">
         <img :src="lugar.imagen" :alt="lugar.nombre" />
         <h3 class="nombre-ciudad">{{ lugar.nombre_lugar }}</h3>
@@ -12,16 +15,21 @@
 
 <script>
 import axios from 'axios';
+import loadingSpinner from './loadingSpinner.vue';
+import LoadingSpinnerDestinos from './loadingSpinnerDestinos.vue';
 
 export default {
+  components: { loadingSpinner, LoadingSpinnerDestinos },
 name: 'lugaresDestaVue',
 data() {
   return {
     lugares: [],
     tamanosPredefinidos: ['grande', 'mediana', 'grande', 'pequena', 'pequena'], // Tamaños predefinidos
+    loading: true
   };
 },
 async created() {
+  this.loading=true
   try {
     // IDs de los lugares específicos
     const ids = [17, 2, 3, 4, 5];
@@ -44,6 +52,9 @@ async created() {
     }
   } catch (error) {
     console.error('Error al obtener los lugares:', error);
+  }
+  finally{
+    this.loading=false
   }
 },
 methods:{

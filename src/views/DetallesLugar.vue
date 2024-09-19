@@ -1,7 +1,10 @@
 <template>
   <div class="detalles-lugar">
     <navBar></navBar>
-    <div class="container" v-if="!loading && lugar">
+    <div v-if="isLoading" class="loading">
+      <loadingSpinnerPantalla :disabled="isLoading" />
+    </div>
+    <div class="container" v-else>
       <h1 class="titulo">Detalles del lugar</h1>
 
       <div class="contenido">
@@ -65,14 +68,15 @@
       </div>
 
     </div>
-    <div v-else-if="loading" class="loading">Cargando...</div>
-    <div v-else class="error">{{ error || 'Error al cargar los detalles del lugar' }}</div>
+    <!-- <div v-else class="error">{{ error || 'Error al cargar los detalles del lugar' }}</div> -->
   </div>
 </template>
 
 <script>
 import axios from 'axios';
 import navBar from '../components/navBar.vue';
+import loadingSpinnerPantalla from '@/components/loadingSpinnerPantalla.vue';
+
 
 export default {
   components: { navBar },
@@ -81,8 +85,8 @@ export default {
     return {
       lugar: null,
       hoteles: null,
-      loading: true,
-      error: null
+      error: null,
+      isLoading: true,
     };
   },
   props: {
@@ -92,6 +96,9 @@ export default {
     }
   },
   methods:{
+    cambiarEstado(valEsta) {
+      this[valEsta] = !this[valEsta];
+    },
     chat(){
       this.$router.push({ name: 'home', query: { showVideo: false, showChat: true }  });          
     },
@@ -121,6 +128,7 @@ export default {
 
       if (Array.isArray(response.data) && response.data.length > 0) {
         this.lugar = response.data[0];
+        this.isLoading = false
       } else {
         console.error('Datos inesperados de la API:', response.data);
         this.error = 'Datos inesperados recibidos de la API.';
@@ -129,8 +137,11 @@ export default {
       this.error = 'Error al obtener los detalles del lugar: ' + error.message;
       console.error('Error al obtener los detalles del lugar:', error);
     } finally {
-      this.loading = false;
+      this.isLoading = false
     }
+  },
+  components: {
+    loadingSpinnerPantalla
   }
 };
 </script>
