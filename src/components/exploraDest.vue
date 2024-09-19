@@ -25,36 +25,45 @@
 
     <!-- Contenedor de tarjetas con destinos -->
     <div class="contenedor-tarjetas">
-      <!-- Controles de navegación a la izquierda -->
-      <div class="control-left">
-        <button class="btn-prev" @click="scrollHorizontal('left')">←</button>
+      <div v-if="loading" class="loading-spinner">
+        <loading-spinner-destinos :loading="loading"/>
+        <!-- O usa un spinner si prefieres -->
+        <!-- <div class="spinner"></div> -->
       </div>
 
-      <!-- Contenedor horizontal para tarjetas -->
-      <div class="tarjetas-horizontales" ref="horizontalContainer">
-        <!-- Tarjetas de destinos -->
-        <div @click="pagina(destino.id)" class="tarjeta" v-for="(destino, index) in destinosFiltrados" :key="index">
-          <div class="tarjeta-imagen">
-            <img :src="destino.imagen" :alt="destino.nombre_lugar" />
+      <!-- Controles de navegación a la izquierda -->
+       <div v-else>
+         <div class="control-left">
+           <button class="btn-prev" @click="scrollHorizontal('left')">←</button>
+         </div>
+          <!-- Contenedor horizontal para tarjetas -->
+         <div class="tarjetas-horizontales" ref="horizontalContainer">
+           <!-- Tarjetas de destinos -->
+           <div @click="pagina(destino.id)" class="tarjeta" v-for="(destino, index) in destinosFiltrados" :key="index">
+             <div class="tarjeta-imagen">
+               <img :src="destino.imagen" :alt="destino.nombre_lugar" />
+             </div>
+             <div class="tarjeta-info">
+               <h3>{{ destino.nombre }}</h3>
+              </div>
+            </div>
           </div>
-          <div class="tarjeta-info">
-            <h3>{{ destino.nombre }}</h3>
+          <!-- Controles de navegación a la derecha -->
+          <div class="control-right">
+            <button class="btn-next" @click="scrollHorizontal('right')">→</button>
           </div>
-        </div>
-      </div>
-      
-      <!-- Controles de navegación a la derecha -->
-      <div class="control-right">
-        <button class="btn-next" @click="scrollHorizontal('right')">→</button>
-      </div>
+       </div>
     </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
+import loadingSpinner from './loadingSpinner.vue';
+import LoadingSpinnerDestinos from './loadingSpinnerDestinos.vue';
 
 export default {
+  components: { loadingSpinner, LoadingSpinnerDestinos },
   name: 'CategoriasDestinos',
   data() {
     return {
@@ -70,10 +79,12 @@ export default {
       destinos: [],
       categoriaSeleccionada: null,
       scrollStep: 300,
+      loading: true, // Estado de carga
     };
   },
 
   async created() {
+    this.loading = true;
     try {
       const response = await axios.post(`http://localhost:3001/api/detallesCard`, { limit: 120 });
       console.log('Datos recibidos de la API:', response.data);
