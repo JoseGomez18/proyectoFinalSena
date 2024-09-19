@@ -127,9 +127,11 @@ export default {
         if (lugaresExactos.length > 0) {
           try {
             const response2 = await axios.post(`http://localhost:3001/api/infoDestino`, { id: lugaresExactos });
-
+            console.log(response2)
             if (response2.data.error) {
-              this.messages.push({ type: 'bot', text: 'Intenta con otra solicitud' });
+              console.log("llego al error")
+              this.botResponse("No hay estos lugares en la db, devuelve lugares que si esten en la db")
+              this.cambiarEstado("isLoading")
               return;
             }
 
@@ -161,6 +163,9 @@ export default {
         this.saveMessagesToLocalStorage(); // Guardar los mensajes en localStorage
       }
 },
+  botResponse2(){
+
+  },
     scrollToBottom() {
       const messagesContainer = this.$refs.messagesContainer;
       if (messagesContainer) {
