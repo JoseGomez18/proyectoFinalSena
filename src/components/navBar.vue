@@ -2,7 +2,7 @@
   <nav class="navbar">
     <div class="navbar-container">
       <router-link to="/" class="navbar-logo-link">
-        <img src="../assets/WhatsApp Image 2024-09-05 at 8.12.47 PM.jpeg" alt="Logo" class="navbar-logo-image" />
+        <img src="../../public/favicon.jpeg" alt="Logo" class="navbar-logo-image" />
         TravelSeek
       </router-link>
 
