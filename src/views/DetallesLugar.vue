@@ -47,23 +47,32 @@
       <div class="container_hoteles">
         <h3>Hoteles sugeridos</h3>
         <div class="carousel-container">
-          <button class="carousel-btn left" @click="scrollLeft">
+          <!-- <button class="carousel-btn left" @click="scrollLeft">
             ←
-          </button>
+          </button> -->
+          <div class="control-left">
+           <button class="btn-prev" @click="scrollLeft">←</button>
+         </div>
           <div class="carousel">
             <div class="carousel-item" v-for="hotel in hoteles" :key="hotel.id">
               <a :href="hotel.enlace">
                 <img :src="hotel.imagen || '/placeholder.svg?height=200&width=300'" alt="Imagen del hotel" />
                 <div>
                   <h4>{{ hotel.nombre_hotel || 'Nombre del hotel' }}</h4>
-                  <p>{{ hotel.precio }}</p>
+                  <i class="fa-solid fa-star color"></i><i class="fa-solid fa-star color"></i><i class="fa-solid fa-star color"></i>
+                  <p>2 noches por: ${{ hotel.precio }} COP</p>
                 </div>
               </a>
             </div>
           </div>
-          <button class="carousel-btn right" @click="scrollRight">
+          
+
+          <!-- <button class="carousel-btn right" @click="scrollRight">
             →
-          </button>
+          </button> -->
+          <div class="control-right">
+            <button class="btn-next" @click="scrollRight">→</button>
+          </div>
         </div>
       </div>
 
@@ -304,19 +313,26 @@ export default {
 .carousel {
   display: flex;
   gap: 1rem;
-  overflow-x: hidden;
+  overflow-x: scroll; /* Habilitar desplazamiento horizontal */
   scroll-behavior: smooth;
   padding: 1rem 0;
   width: 100%;
+  scrollbar-width: none; /* Firefox */
 }
 
-.carousel-item {
-  flex: 0 0 30%;
+.carousel::-webkit-scrollbar {
+  display: none; /* Chrome, Safari y otros navegadores WebKit */
+}
+
+.carousel-item { 
+  flex: 0 0 auto; /* Permite que los elementos se ajusten automáticamente */
+  width: 350px; 
   background-color: #2d3c4e;
   border-radius: 0.75rem;
   overflow: hidden;
   transition: transform 0.3s ease;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 1.1);
+
 }
 
 .carousel-item img {
@@ -333,7 +349,7 @@ export default {
 }
 
 .carousel-item p {
-  color: #acabab;
+  color: #c0c0c0;
   font-size: 1rem;
   padding: 0 1rem 1rem;
 }
@@ -395,6 +411,45 @@ export default {
   margin-top: 2rem;
 }
 
+/* Controles de navegación (izquierda y derecha) */
+.control-left, .control-right {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1; /* Asegurar que estén sobre las tarjetas */
+}
+
+/* Botones de navegación a la izquierda */
+.control-left {
+  left: 0;
+}
+
+/* Botones de navegación a la derecha */
+.control-right {
+  right: 0;
+}
+
+/* Estilo de los botones de navegación */
+.control-left .btn-prev, .control-right .btn-next {
+  background-color: #1e40af; /* Fondo azul */
+  color: white; /* Texto blanco */
+  border: none; /* Sin borde */
+  width: 40px;
+  height: 40px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background-color 0.3s ease, transform 0.2s;
+}
+
+/* Efecto hover en los botones de navegación */
+.control-left .btn-prev:hover, .control-right .btn-next:hover {
+  background-color: #374151; /* Color secundario */
+  transform: scale(1.1);
+}
+.color{
+  color: #f3f301f0;
+}
 /* Responsividad */
 @media (min-width: 768px) {
   .contenido {
@@ -435,5 +490,7 @@ export default {
   .titulo-actividad {
     font-size: 1.125rem;
   }
+
+  
 }
 </style>
