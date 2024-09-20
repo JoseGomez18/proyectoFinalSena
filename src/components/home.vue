@@ -24,7 +24,7 @@
           playsinline
           class="background-video"
         >
-          <source src="../assets/VideoChat.mp4" type="video/mp4" />
+          <source src="../assets/Sin título.mp4" type="video/mp4" />
           Tu navegador no soporta el elemento de video.
         </video>
       </transition>
