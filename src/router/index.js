@@ -45,21 +45,21 @@ const routes = [
         name: 'pruebas',
         component: ScrollPrueba
     },
-    {
-        path: '/perfil',
-        name: 'perfil',
-        component: Perfil,
-    },
-    {
-        path: '/editarPerfil',
-        name: 'editarPerfil',
-        component: EditarPerfil
-    },
-    {
-        path: '/cambiarPassword',
-        name: 'cambiarPassword',
-        component: CambiarPassword,
-    },
+    // {
+    //     path: '/perfil',
+    //     name: 'perfil',
+    //     component: Perfil,
+    // },
+    // {
+    //     path: '/editarPerfil',
+    //     name: 'editarPerfil',
+    //     component: EditarPerfil
+    // },
+    // {
+    //     path: '/cambiarPassword',
+    //     name: 'cambiarPassword',
+    //     component: CambiarPassword,
+    // },
     {
         path: '/testimonials',
         name: 'testimonials',

@@ -29,7 +29,7 @@
         </ul>
 
         <!-- Icono de usuario y menú desplegable -->
-        <div class="user-icon-container" @click="toggleUserMenu">
+        <!-- <div class="user-icon-container" @click="toggleUserMenu">
           <img src="@/assets/images.jpeg" alt="User Icon" class="user-icon" />
           <transition name="fade">
             <div
@@ -44,7 +44,7 @@
               </ul>
             </div>
           </transition>
-        </div>
+        </div> -->
       </div>
     </div>
   </nav>
