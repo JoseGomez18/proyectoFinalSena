@@ -88,7 +88,6 @@ import loadingSpinnerPantalla from '@/components/loadingSpinnerPantalla.vue';
 
 
 export default {
-  components: { navBar },
   name: 'DetallesLugar',
   data() {
     return {
@@ -150,7 +149,7 @@ export default {
     }
   },
   components: {
-    loadingSpinnerPantalla
+    loadingSpinnerPantalla,navBar
   }
 };
 </script>

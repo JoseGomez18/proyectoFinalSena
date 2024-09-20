@@ -2,7 +2,7 @@
   <div class="lugares-destacados">
     <h2>Lugares Destacados</h2>
     <div v-if="loading">
-      <loading-spinner-destinos :loading="loading"/>
+      <LoadingSpinnerDestinos :loading="loading"/>
     </div>
     <div v-else class="galeria">
       <div @click="pagina(lugar.id)" class="tarjeta" v-for="(lugar, indice) in lugares" :key="indice" :class="lugar.tamano">
