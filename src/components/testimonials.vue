@@ -1,6 +1,6 @@
 <template>
     <section class="testimonials py-12 px-4 md:px-6">
-      <div class="container mx-auto">
+      <div class="container mx-auto" data-aos="flip-up">
         <h2 class="text-2xl font-bold mb-8">Lo que dicen nuestros clientes</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           <div class="testimonial-card bg-background rounded-lg shadow-md p-6" v-for="(testimonial, index) in testimonials" :key="index">
@@ -21,15 +21,15 @@
       return {
         testimonials: [
           {
-            text: "¡Nuestro viaje a Bali fue una experiencia increíble! Los organizadores se encargaron de todo y pudimos disfrutar al máximo.",
+            text: "¡Nuestro viaje a Bali fue una experiencia increíble! pudimos disfrutar al máximo.",
             author: "María, México",
           },
           {
-            text: "La ruta por Irlanda superó todas nuestras expectativas. Los paisajes eran impresionantes y la atención al detalle fue excelente.",
+            text: "La ruta por Irlanda superó todas nuestras expectativas. Los paisajes eran impresionantes",
             author: "Juan, España",
           },
           {
-            text: "Nuestra aventura en Patagonia fue una de las mejores experiencias de nuestras vidas. ¡Gracias por hacer que todo fuera tan fácil!",
+            text: "Nuestra aventura en Argentina fue una de las mejores experiencias de nuestras vidas. ¡Gracias por recomenarnos este lugar!",
             author: "Ana, Argentina",
           },
         ],

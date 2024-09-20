@@ -24,7 +24,7 @@
     </div>
 
     <!-- Contenedor de tarjetas con destinos -->
-    <div class="contenedor-tarjetas">
+    <div class="contenedor-tarjetas" data-aos="fade-right">
       <div v-if="loading" class="loading-spinner">
         <LoadingSpinnerDestinos :loading="loading"/>
         <!-- O usa un spinner si prefieres -->
