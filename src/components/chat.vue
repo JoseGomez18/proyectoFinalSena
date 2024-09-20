@@ -2,7 +2,8 @@
   <section class="chat-container">
     <ul class="messages-container" ref="messagesContainer">
       <h2 class="chat-title">Chat</h2>
-      <button @click="deleteMessagesToLocalStorage" class="reset"><i class="fa-solid fa-arrows-rotate icono"></i>Reiniciar chat</button>
+      <button @click="deleteMessagesToLocalStorage" class="reset"><i
+          class="fa-solid fa-arrows-rotate icono"></i>Reiniciar chat</button>
       <li v-for="(message, index) in messages" :key="index" :class="['message', message.type]">
         <!-- Burbujas de tipo de mensaje (GPT o Tú) -->
         <span class="message-bubble" :class="message.type">
@@ -16,16 +17,16 @@
             <h3 class="place-title">{{ lugar.nombre_lugar }}</h3>
             <!-- <p id="cardLp">{{ lugar.descripcion }}</p> -->
             <p id="cardLp">Clima: {{ lugar.clima }}</p>
-            
+
             <!-- <p class="description-text">Descripción: {{ lugar.descripcion }}</p>  -->
 
-            
+
             <button @click="pagina(lugar.id)">Ver más</button>
           </article>
         </section>
         <article class="sugerencias">
           <button :disabled="isLoading" v-for="(sugerencia, index) in message.sugerencias" :key="index"
-            @click="sendMessage(sugerencia.text)">{{ sugerencia.text }}</button>
+            @click="sendMessage(sugerencia.text)" > {{ sugerencia.text }}</button>
         </article>
       </li>
       <transition name="backLeft" enter-active-class="animate__animated animate__backInLeft animate__faster"
@@ -36,7 +37,7 @@
 
     <form @submit.prevent="sendMessage(newMessage)" class="input-container">
       <textarea v-model="newMessage" placeholder="Escribe un mensaje..." class="custom-textarea"
-        @input="autoResize"></textarea>
+        @input="autoResize" @keydown.enter="sendMessage(newMessage)" ></textarea>
       <button :disabled="isLoading"><i class="fa-solid fa-arrow-up"></i></button>
     </form>
   </section>
@@ -72,6 +73,10 @@ export default {
       const userMessage = message || this.newMessage.trim();
       if (userMessage === '') return; // Evita mensajes vacíos
 
+      // Verifica si el mensaje ya existe en la lista de mensajes
+      const messageExists = this.messages.some(msg => msg.text === userMessage);
+      if (messageExists) return; // Evita añadir mensajes duplicados
+
       this.messages.push({ type: 'user', text: userMessage }); // Añadir mensaje del usuario
       this.newMessage = ''; // Limpiar el input
 
@@ -86,10 +91,10 @@ export default {
     saveMessagesToLocalStorage() {
       localStorage.setItem('chatMessages', JSON.stringify(this.messages));
     },
-    deleteMessagesToLocalStorage(){
+    deleteMessagesToLocalStorage() {
       localStorage.removeItem('chatMessages');
       window.location.reload();
-      this.$router.push({ name: 'home', query: { showVideo: false, showChat: true }  });          
+      this.$router.push({ name: 'home', query: { showVideo: false, showChat: true } });
     },
     loadMessagesFromLocalStorage() {
       const savedMessages = localStorage.getItem('chatMessages');
@@ -112,7 +117,7 @@ export default {
 
         // Procesar respuesta del bot
         let botMessage = response.data.length > 0 ? response.data : 'No se encontraron resultados.';
-        
+
         // Extraer lugares exactos de la respuesta
         const lugaresExactos = (botMessage.match(/\["([^"]+)"(?:, "([^"]+)")*\]/) || [])[0]?.match(/"([^"]+)"/g)?.map(l => l.replace(/"/g, '')) || [];
 
@@ -120,8 +125,8 @@ export default {
         botMessage = this.truncateText(botMessage);
         this.messages.push({ type: 'bot', text: botMessage });
         this.$nextTick(() => {
-            this.scrollToBottom();
-          })
+          this.scrollToBottom();
+        })
 
         // Verificar y procesar lugares exactos
         if (lugaresExactos.length > 0) {
@@ -146,14 +151,14 @@ export default {
 
             this.messages.push({ type: 'card', lugares });
             this.$nextTick(() => {
-            this.scrollToBottom();
-          })
+              this.scrollToBottom();
+            })
           } catch (error) {
             this.messages.push({ type: 'bot', text: 'Error al obtener detalles de los lugares.' });
             console.error("Error en infoDestino: ", error);
           }
         }
-        
+
       } catch (error) {
         this.cambiarEstado('isLoading');
         this.messages.push({ type: 'bot', text: 'Error en la solicitud al servidor.' });
@@ -162,10 +167,10 @@ export default {
         this.cambiarEstado('isLoading');
         this.saveMessagesToLocalStorage(); // Guardar los mensajes en localStorage
       }
-},
-  botResponse2(){
+    },
+    botResponse2() {
 
-  },
+    },
     scrollToBottom() {
       const messagesContainer = this.$refs.messagesContainer;
       if (messagesContainer) {
@@ -185,13 +190,13 @@ export default {
     truncateText(texto) {
       // Encuentra la posición del primer número en el texto
       const regex = /\d+\./;
-    const match = texto.match(regex);
+      const match = texto.match(regex);
 
-    // Si encuentra el patrón, corta el texto hasta la posición del número
-    if (match) {
-      const index = match.index;
-      return texto.slice(0, index).trim();
-    }
+      // Si encuentra el patrón, corta el texto hasta la posición del número
+      if (match) {
+        const index = match.index;
+        return texto.slice(0, index).trim();
+      }
 
       // Si no encuentra ningún número, devuelve el texto original
       return texto;
@@ -226,19 +231,19 @@ export default {
   position: relative;
 }
 
-.reset{
+.reset {
   width: 136px;
-    position: absolute;
-    top: 9px;
-    font-size: 13px;
-    height: 33px;
-    border-radius: 13px;
-    right: 24px;
-    border: none;
-    z-index: 9999;
-    color: white;
-    background: rgb(55 65 81 / 1);
-    cursor: pointer;
+  position: absolute;
+  top: 9px;
+  font-size: 13px;
+  height: 33px;
+  border-radius: 13px;
+  right: 24px;
+  border: none;
+  z-index: 9999;
+  color: white;
+  background: rgb(55 65 81 / 1);
+  cursor: pointer;
 }
 
 .chat-title {
@@ -435,7 +440,7 @@ export default {
   /* Sombra más fuerte */
 }
 
-.icono{
+.icono {
   margin-right: 8px;
 }
 
@@ -461,6 +466,7 @@ export default {
   /* Fondo blanco */
   border-radius: 50px;
 }
+
 .cards-container {
   display: flex;
   overflow-x: auto;
@@ -473,7 +479,8 @@ export default {
 }
 
 .cards-container::-webkit-scrollbar {
-  display: none; /* Opcional: oculta la barra de desplazamiento horizontal */
+  display: none;
+  /* Opcional: oculta la barra de desplazamiento horizontal */
 }
 
 .cardL {
@@ -544,6 +551,7 @@ export default {
   background-color: #2980b9;
   transform: scale(1.05);
 }
+
 @media (max-width: 768px) {
   .chat-container {
     font-size: 0.9rem;
