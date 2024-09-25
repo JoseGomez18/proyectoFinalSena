@@ -173,7 +173,7 @@ export default {
     },
     async addFav(id){
       try {
-        const response = await axios.post('http://localhost:3001/api/insertFav',{idUser:1,idLugar:id}) 
+        const response = await axios.post(`${process.env.VUE_APP_RUTA_API}/api/insertFav`,{idUser:1,idLugar:id}) 
         if(response.data.existe){
           alert("ya lo habias guardado como fav")
           return;
