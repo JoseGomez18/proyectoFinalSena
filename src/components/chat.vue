@@ -13,6 +13,9 @@
         <p v-if="message.type !== 'card'" class="message-text" :class="message.type">{{ message.text }}</p>
         <section v-else class="cards-container">
           <article v-for="(lugar, index) in message.lugares" :key="index" class="cardL">
+          <div @click="addFav(lugar.id)" class="container-fav">
+            <i class="fa-regular fa-heart"></i>
+          </div>
             <img :src="lugar.imagen" alt="Imagen del lugar">
             <h3 class="place-title">{{ lugar.nombre_lugar }}</h3>
             <!-- <p id="cardLp">{{ lugar.descripcion }}</p> -->
@@ -168,9 +171,20 @@ export default {
         this.saveMessagesToLocalStorage(); // Guardar los mensajes en localStorage
       }
     },
-    botResponse2() {
+    async addFav(id){
+      try {
+        const response = await axios.post('http://localhost:3001/api/insertFav',{idUser:1,idLugar:id}) 
+        if(response.data.existe){
+          alert("ya lo habias guardado como fav")
+          return;
+        } 
+        console.log(response.data)
 
-    },
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    ,
     scrollToBottom() {
       const messagesContainer = this.$refs.messagesContainer;
       if (messagesContainer) {
@@ -550,6 +564,20 @@ export default {
 .cardL button:hover {
   background-color: #2980b9;
   transform: scale(1.05);
+}
+
+.container-fav{
+  position: absolute;
+    border-radius: 50%;
+    width: 27px;
+    display: flex;
+    height: 24px;
+    background: #078cab;
+    right: 4px;
+    cursor: pointer;
+    top: 4px;
+    justify-content: center;
+    align-items: center;
 }
 
 @media (max-width: 768px) {
