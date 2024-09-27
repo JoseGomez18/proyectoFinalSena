@@ -47,7 +47,7 @@
             <div class="small-card-content">
               <h4 class="small-place-name">{{ lugares.nombre_lugar }}</h4>
               <!-- Botón de eliminar mejorado -->
-              <button @click="eliminar()" class="delete-button">❌</button>
+              <button @click="eliminar(lugares.lugar_id)" class="delete-button">❌</button>
             </div>
           </div>
         </div>
@@ -95,8 +95,23 @@ export default {
     setCurrentIndex(index) {
       this.currentIndex = index;
     },
-    eliminar() {
-      // Lógica para eliminar el favorito
+    async eliminar(idLugar) {
+      try {
+        const response = await axios.post(`${process.env.VUE_APP_RUTA_API}/api/eliminarFav`, { idUser: 1, idLugar:idLugar });
+          // Verifica si la respuesta es exitosa antes de actualizar la lista local
+    if (response.status === 200) {
+      // Elimina el lugar del array local
+      this.favoritePlaces = this.favoritePlaces.filter(lugar => lugar.lugar_id !== idLugar);
+      
+      // Si el lugar eliminado es el que estaba siendo mostrado, actualiza el índice
+      if (this.currentIndex >= this.favoritePlaces.length) {
+        this.currentIndex = this.favoritePlaces.length - 1; // Asegúrate de no salir del rango
+      }
+    }
+        console.log(response)
+      } catch (error) {
+        console.log(error)
+      }
     }
   },
   components: {
