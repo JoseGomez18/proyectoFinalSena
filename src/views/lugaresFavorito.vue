@@ -270,7 +270,7 @@ export default {
 
 /* Estilo mejorado para el botón de eliminar */
 .delete-button {
-  background-color: #e53e3e;
+  background-color: #000000;
   border: none;
   color: white;
   font-size: 1rem;
