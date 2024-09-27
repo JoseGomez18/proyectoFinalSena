@@ -12,6 +12,7 @@ import CambiarPassword from '@/components/CambiarPassword.vue'
 import EditarPerfil from '@/components/EditarPerfil.vue'
 import Testimonials from '@/components/testimonials.vue'
 import Contacto from '@/components/contacto.vue'
+import lugaresFavorito from '@/views/lugaresFavorito.vue'
 
 const routes = [
     {
@@ -73,6 +74,11 @@ const routes = [
         path: '/login',
         name: 'login',
         component: LoginView,
+    },
+    {
+        path: '/lugaresFavorito',
+        name: 'lugaresFavorito',
+        component: lugaresFavorito,
     },
 ]
 

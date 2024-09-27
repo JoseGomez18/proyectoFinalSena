@@ -24,6 +24,12 @@
             <a href="#" class="navbar-link" @click.prevent="scrollTo('lugaresDesta')">Lugares Destacados</a>
           </li>
           <li class="navbar-item">
+            <router-link to="/lugaresFavorito" class="navbar-logo-link">
+        
+              <a class="navbar-link">Favoritos</a>
+      </router-link>
+          </li>
+          <li class="navbar-item">
             <a href="#" class="navbar-link" @click.prevent="scrollTo('contacto')">Contacto</a>
           </li>
         </ul>
