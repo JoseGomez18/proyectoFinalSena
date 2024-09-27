@@ -13,17 +13,12 @@
         <p v-if="message.type !== 'card'" class="message-text" :class="message.type">{{ message.text }}</p>
         <section v-else class="cards-container">
           <article v-for="(lugar, index) in message.lugares" :key="index" class="cardL">
-          <div @click="addFav(lugar.id)" class="container-fav">
-            <i class="fa-regular fa-heart"></i>
-          </div>
+            <div @click="lugar.isFav ? eliminarfav(lugar.id) : addFav(lugar.id, index)" class="container-fav">
+              <i :class="lugar.isFav ? 'fa-solid fa-heart' : 'fa-regular fa-heart'"></i>
+            </div>
             <img :src="lugar.imagen" alt="Imagen del lugar">
             <h3 class="place-title">{{ lugar.nombre_lugar }}</h3>
-            <!-- <p id="cardLp">{{ lugar.descripcion }}</p> -->
             <p id="cardLp">Clima: {{ lugar.clima }}</p>
-
-            <!-- <p class="description-text">Descripción: {{ lugar.descripcion }}</p>  -->
-
-
             <button @click="pagina(lugar.id)">Ver más</button>
           </article>
         </section>
@@ -143,14 +138,30 @@ export default {
               return;
             }
 
+             // Obtener los lugares favoritos del usuario
+        const idUser = 1; // Hardcodeado por ahora
+        const favoritosResponse = await axios.post(`${process.env.VUE_APP_RUTA_API}/api/obtenerFav`, { idUser });
+        const favoritos = favoritosResponse.data.lugares.map(fav => fav.lugar_id); // IDs de los lugares favoritos
+
+        // Procesar información de lugares y marcar como favoritos si están en la lista
+        const lugares = response2.data.map(lugar => ({
+          nombre_lugar: lugar.nombre_lugar,
+          clima: lugar.clima,
+          descripcion: lugar.descripcion,
+          imagen: lugar.imagen,
+          id: lugar.id,
+          isFav: favoritos.includes(lugar.id) // Marcar como favorito si está en la lista
+        }));
+
             // Procesar información de lugares
-            const lugares = response2.data.map(lugar => ({
-              nombre_lugar: lugar.nombre_lugar,
-              clima: lugar.clima,
-              descripcion: lugar.descripcion,
-              imagen: lugar.imagen,
-              id: lugar.id
-            }));
+            // const lugares = response2.data.map(lugar => ({
+            //   nombre_lugar: lugar.nombre_lugar,
+            //   clima: lugar.clima,
+            //   descripcion: lugar.descripcion,
+            //   imagen: lugar.imagen,
+            //   id: lugar.id,
+            //   isFav: false 
+            // }));
 
             this.messages.push({ type: 'card', lugares });
             this.$nextTick(() => {
@@ -171,20 +182,46 @@ export default {
         this.saveMessagesToLocalStorage(); // Guardar los mensajes en localStorage
       }
     },
-    async addFav(id){
+    async addFav(id,index){
+         // Busca el lugar por su ID y actualiza isFav
+         this.messages.forEach(message => {
+        if (message.type === 'card') {
+          const lugar = message.lugares.find(l => l.id === id);
+          if (lugar) lugar.isFav = true; // Solo si el lugar existe
+        }
+      });
       try {
         const response = await axios.post(`${process.env.VUE_APP_RUTA_API}/api/insertFav`,{idUser:1,idLugar:id}) 
         if(response.data.existe){
           alert("ya lo habias guardado como fav")
           return;
         } 
-        console.log(response.data)
-
+        // this.favButton = true
+        // console.log(response.data)
+        
+      
+        
+        console.log("lugar guardado correctamente")
       } catch (error) {
         console.log(error)
       }
     }
     ,
+    async eliminarfav(id){
+      this.messages.forEach(message => {
+        if (message.type === 'card') {
+          const lugar = message.lugares.find(l => l.id === id);
+          if (lugar) lugar.isFav = false; // Solo si el lugar existe
+        }
+      });
+      try {
+        const response = await axios.post(`${process.env.VUE_APP_RUTA_API}/api/eliminarFav`,{idUser:1,idLugar:id}) 
+        console.log(response)
+        console.log("eliminao")
+      } catch (error) {
+        console.log(error)
+      }
+    },
     scrollToBottom() {
       const messagesContainer = this.$refs.messagesContainer;
       if (messagesContainer) {
@@ -572,12 +609,16 @@ export default {
     width: 27px;
     display: flex;
     height: 24px;
-    background: #078cab;
+    background: #1a283b;
     right: 4px;
     cursor: pointer;
     top: 4px;
     justify-content: center;
     align-items: center;
+}
+
+.container-fav:hover{
+  background: #000000;
 }
 
 @media (max-width: 768px) {
