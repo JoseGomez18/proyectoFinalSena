@@ -46,7 +46,8 @@ const routes = [
     {
         path: '/pruebas',
         name: 'pruebas',
-        component: ScrollPrueba
+        component: ScrollPrueba,
+        meta:{ requiresAuth: true}
     },
     
     // {
@@ -101,6 +102,17 @@ const router = createRouter({
     routes
 })
 
+
+router.beforeEach((to, from, next) => {
+    const token = document.cookie.split('; ').find(row => row.startsWith('token=')); // Verificar si hay un token en las cookies
+
+    if (to.matched.some(record => record.meta.requiresAuth) && !token) {
+        // Si la ruta requiere autenticación y no hay token, redirigir al login
+        next('/login');
+    } else {
+        next(); // Permitir el acceso
+    }
+});
 
 
 export default router
