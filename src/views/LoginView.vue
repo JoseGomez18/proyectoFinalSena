@@ -19,7 +19,7 @@
                     <div class="slider-tab"></div>
                 </div>
                 <div class="form-inner">
-                    <form action="" v-if="selectedTab === 'login'" class="login" @submit.prevent="loginSubmit">
+                    <form action="#" v-if="selectedTab === 'login'" class="login" @submit.prevent="loginSubmit">
                         <div class="field">
                             <input type="email" placeholder="Correo electronico" v-model="correoL" required>
                         </div>
@@ -81,18 +81,16 @@ export default {
     methods: {
         async loginSubmit() {
             try {
+                console.log("Sirve");
+                
                 const response = await axios.post(`${process.env.VUE_APP_RUTA_API}/api/login`, { user: this.correoL, password: this.contraL }, {withCredentials:true})
-
+                console.log("Da vuelta el response");
+                
                 if (response.data.validacion) {
 
-                    // actualizar estados
-                    // this.$store.commit('actualizarFotico', `http://localhost:3000${responsee.data.foto}`);
-                    // this.$store.commit('actualizarValidado', responsee.data.validacion);
-                    // this.$store.commit('actualizarNombre', responsee.data.nombre);
-                    // this.$store.commit('actualizarCorreo', responsee.data.correo);
 
                     //redireccionar al home
-                    this.$router.push('/pruebas')
+                    this.$router.push('/')
                 } else {
                     console.log("error en login ")
                     this.error = responsee.data.message
