@@ -1,12 +1,11 @@
 <template>
   <footer class="footer">
     <div class="inner">
-      <!-- Sección de Contacto -->
       <div class="footer-section">
         <h3>Contacto</h3>
-        <p> 
-          <a 
-            href="https://mail.google.com/mail/?view=cm&fs=1&to=customerservicetraveelseek@gmail.com&su=Consulta%20TraveelSeek&body=Hola%20equipo%20TraveelSeek," 
+        <p>
+          <a
+            href="https://mail.google.com/mail/?view=cm&fs=1&to=customerservicetraveelseek@gmail.com&su=Consulta%20TraveelSeek&body=Hola%20equipo%20TraveelSeek,"
             target="_blank"
             rel="noopener noreferrer">
             <i class="fab fa-google"></i> customerservicetraveelseek@gmail.com
@@ -14,26 +13,19 @@
         </p>
         <p>Teléfono: +57 3044576630</p>
       </div>
-
-      <!-- Sección de Redes Sociales -->
       <div class="footer-section">
         <h3>Redes Sociales</h3>
         <ul>
-          <!-- Facebook -->
           <li>
             <a href="https://www.facebook.com/profile.php?id=61566109181784" target="_blank" rel="noopener noreferrer">
               <i class="fab fa-facebook-square"></i> Facebook
             </a>
           </li>
-          
-          <!-- Twitter -->
           <li>
             <a href="https://twitter.com/Travel_Seek" target="_blank" rel="noopener noreferrer">
               <i class="fab fa-twitter"></i> Twitter
             </a>
           </li>
-          
-          <!-- Instagram -->
           <li>
             <a href="https://www.instagram.com/travelseek10" target="_blank" rel="noopener noreferrer">
               <i class="fab fa-instagram"></i> Instagram
@@ -41,27 +33,19 @@
           </li>
         </ul>
       </div>
-
-      <!-- Sección de Enlaces -->
       <div class="footer-section">
         <h3>Enlaces</h3>
         <ul>
-          <li><a href="#">Acerca de nosotros</a></li>
-          <li><a href="#">Política de privacidad</a></li>
-          <li><a href="#">Términos y condiciones</a></li>
+          <li><router-link to="/politica-privacidad">Política de privacidad</router-link></li>
+          <li><router-link to="/terminos-condiciones">Términos y condiciones</router-link></li>
         </ul>
       </div>
     </div>
-
-    <!-- Barra Inferior -->
     <div class="bottom-bar">
       <p>&copy; {{ new Date().getFullYear() }} Travel Seek Oficial - Todos los derechos reservados</p>
     </div>
   </footer>
 </template>
-
-
-
 
 <script>
 export default {

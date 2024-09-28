@@ -1,5 +1,4 @@
 //import { createRouter, createWebHashHistory } from 'vue-router'
-import { createWebHashHistory, createRouter } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
 import DetallesLugar from '@/views/DetallesLugar.vue'
@@ -13,6 +12,9 @@ import EditarPerfil from '@/components/EditarPerfil.vue'
 import Testimonials from '@/components/testimonials.vue'
 import Contacto from '@/components/contacto.vue'
 import lugaresFavorito from '@/views/lugaresFavorito.vue'
+import { createRouter, createWebHistory } from 'vue-router';
+import PrivacyPolicy from '../components/PrivacyPolicy.vue';
+import TermsAndConditions from '../components/TermsAndConditions.vue';
 
 const routes = [
     {
@@ -46,6 +48,7 @@ const routes = [
         name: 'pruebas',
         component: ScrollPrueba
     },
+    
     // {
     //     path: '/perfil',
     //     name: 'perfil',
@@ -80,12 +83,25 @@ const routes = [
         name: 'lugaresFavorito',
         component: lugaresFavorito,
     },
-]
+
+    {
+        path: '/politica-privacidad',
+        name: 'PrivacyPolicy',
+        component: PrivacyPolicy,
+      },
+      {
+        path: '/terminos-condiciones',
+        name: 'TermsAndConditions',
+        component: TermsAndConditions,
+      },
+];
 
 const router = createRouter({
-    history: createWebHashHistory(),
+    history: createWebHistory(process.env.BASE_URL),
     routes
 })
+
+
 
 export default router
 
