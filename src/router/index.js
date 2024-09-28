@@ -12,7 +12,7 @@ import EditarPerfil from '@/components/EditarPerfil.vue'
 import Testimonials from '@/components/testimonials.vue'
 import Contacto from '@/components/contacto.vue'
 import lugaresFavorito from '@/views/lugaresFavorito.vue'
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHashHistory } from 'vue-router';
 import PrivacyPolicy from '../components/PrivacyPolicy.vue';
 import TermsAndConditions from '../components/TermsAndConditions.vue';
 
@@ -97,7 +97,7 @@ const routes = [
 ];
 
 const router = createRouter({
-    history: createWebHistory(process.env.BASE_URL),
+    history: createWebHashHistory(process.env.BASE_URL),
     routes
 })
 
