@@ -1,4 +1,5 @@
 <template>
+
     <body class="cuerpo">
         <div class="wrapper">
             <div class="title-text">
@@ -60,8 +61,74 @@
         </div>
     </body>
 </template>
-  
-<style  scoped>
+
+<script>
+import axios from 'axios';
+
+export default {
+    name: "RegistroView",
+    data() {
+        return {
+            nombre: "",
+            correoL: "",
+            contraL: "",
+            correo: "",
+            contra: "",
+            selectedTab: "login",
+            error: ""
+        };
+    },
+    methods: {
+        async loginSubmit() {
+            try {
+                const response = await axios.post(`${process.env.VUE_APP_RUTA_API}/api/login`, { user: this.correoL, password: this.contraL }, {withCredentials:true})
+
+                if (response.data.validacion) {
+
+                    // actualizar estados
+                    // this.$store.commit('actualizarFotico', `http://localhost:3000${responsee.data.foto}`);
+                    // this.$store.commit('actualizarValidado', responsee.data.validacion);
+                    // this.$store.commit('actualizarNombre', responsee.data.nombre);
+                    // this.$store.commit('actualizarCorreo', responsee.data.correo);
+
+                    //redireccionar al home
+                    this.$router.push('/pruebas')
+                } else {
+                    console.log("error en login ")
+                    this.error = responsee.data.message
+
+                    // reiniciar inputs
+                    this.correoL = ""
+                    this.contraL = ""
+                }
+
+            } catch (error) {
+                console.log("Error en login", error);
+                this.error = "Error al iniciar sesión.";
+            }
+        },
+        async signupSubmit() {
+            try {
+                const response2 = await axios.post(`${process.env.VUE_APP_RUTA_API}/api/registro`, { nombre: this.nombre, user: this.correo, password: this.contra })
+                console.log(response2.data.ok);
+                
+                if (response2.data.ok) {
+                    console.log("Formulario de registro enviado");
+                    this.selectedTab = 'login'
+                    this.$router.push('/')
+                }
+                console.log(response2)
+
+            } catch (error) {
+                console.error("Jum Hubo un error " + error)
+            }
+        }
+    }
+};
+</script>
+
+
+<style scoped>
 @import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
 
 * {
@@ -288,61 +355,3 @@ form .btn input[type="submit"] {
     text-align: center;
 }
 </style>
-  
-<script>
-import axios from 'axios';
-
-export default {
-    name: "RegistroView",
-    data() {
-        return {
-            nombre: "",
-            correoL: "",
-            contraL: "",
-            correo: "",
-            contra: "",
-            selectedTab: "login",
-            error: ""
-        };
-    },
-    methods: {
-        async loginSubmit() {
-            const responsee = await axios.post('http://localhost:3001/api/login', { user: this.correoL, password: this.contraL })
-
-            if (responsee.data.validacion) {
-
-                // actualizar estados
-                // this.$store.commit('actualizarFotico', `http://localhost:3000${responsee.data.foto}`);
-                // this.$store.commit('actualizarValidado', responsee.data.validacion);
-                // this.$store.commit('actualizarNombre', responsee.data.nombre);
-                // this.$store.commit('actualizarCorreo', responsee.data.correo);
-
-                //redireccionar al home
-                this.$router.push('/')
-            } else {
-                console.log("error en login ")
-                this.error = responsee.data.message
-
-                // reiniciar inputs
-                this.correoL = ""
-                this.contraL = ""
-            }
-        },
-        async signupSubmit() {
-            try{
-                const response2 = await axios.post('http://localhost:3001/api/registro', {nombre: this.nombre,user: this.correo, password: this.contra})
-
-                if(response2.data.ok){
-                    console.log("Formulario de registro enviado");
-                    this.selectedTab = 'login'
-                }
-                console.log( response2)
-
-            }catch(error){
-                console.error("Jum Hubo un error " +  error)
-            }
-        }
-    }
-};
-</script>
-  
