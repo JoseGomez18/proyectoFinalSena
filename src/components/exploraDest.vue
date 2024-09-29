@@ -1,5 +1,15 @@
 <template>
   <div ref="destino" class="categorias-destinos">
+    <div class="ad-container">
+    <p class="ad-label">Anuncio</p>
+    <div class="ad-content">
+      <p class="ad-text">Descubre ofertas exclusivas para tu próximo viaje</p>
+      <button class="ad-button" @click="verOfertas">
+        Ver ofertas
+        <span class="icon-arrow"></span> <!-- Reemplaza icono importado -->
+      </button>
+    </div>
+  </div>
     <!-- Título de la sección -->
     <h2>Categorías de Destinos</h2>
 
@@ -153,7 +163,86 @@ export default {
 </script>
 
 <style scoped>
-/* Agregar el mismo estilo que ya tenías */
+.ad-container {
+  margin: 3rem 0;
+  padding: 1rem;
+  background-color: #2c4356;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.ad-label {
+  font-size: 0.875rem;
+  color: #b0b0b0;
+  margin-bottom: 0.5rem;
+}
+
+.ad-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Mantiene el espacio entre elementos */
+}
+
+.ad-text {
+  font-size: 1.125rem;
+  color: white;
+  margin-right: 1rem; /* Espacio entre el texto y el botón */
+}
+
+.ad-button {
+  display: flex; /* Permite alinear el contenido dentro del botón */
+  justify-content: center; /* Centra el contenido horizontalmente */
+  align-items: center; /* Centra el contenido verticalmente */
+  width: 130px; /* Ancho del botón */
+  height: 35px; /* Altura del botón */
+  background-color: #4db6ac;
+  color: white;
+  padding: 0.5rem 1rem; /* Opcional: ajusta el padding según tus necesidades */
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.ad-button:hover {
+  background-color: #3a8f88;
+}
+
+.icon {
+  margin-left: 0.5rem;
+  height: 1rem;
+  width: 1rem;
+}
+
+/* Estilos Responsivos */
+@media (max-width: 768px) {
+  .ad-container {
+    margin: 2rem 0; /* Reduce el margen en pantallas pequeñas */
+    padding: 0.5rem; /* Reduce el padding en pantallas pequeñas */
+  }
+
+  .ad-label {
+    font-size: 0.75rem; /* Tamaño de fuente más pequeño para la etiqueta */
+  }
+
+  .ad-text {
+    font-size: 1rem; /* Tamaño de fuente más pequeño para el texto */
+    margin-right: 0; /* Elimina el margen derecho en pantalla pequeña */
+    margin-bottom: 0.5rem; /* Añade espacio debajo del texto */
+  }
+
+  .ad-content {
+    flex-direction: column; /* Organiza el contenido en columna */
+    align-items: center; 
+    justify-content: flex-start; /* Alinea los elementos al inicio en columna */
+  }
+
+  .ad-button {
+    width: 130; /* Botón ocupa todo el ancho en pantallas pequeñas */
+    height: 40px; /* Aumenta la altura del botón */
+    margin-top: 0; /* Elimina el margen superior */
+  }
+}
 </style>
 
 <style scoped>

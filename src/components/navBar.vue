@@ -15,22 +15,21 @@
         <!-- Menú de navegación desplegable -->
         <ul class="navbar-list" :class="{ 'navbar-list-open': isMenuOpen }">
           <li class="navbar-item">
-            <a href="#" class="navbar-link" @click.prevent="scrollTo('home')">Home</a>
+            <a href="#" class="navbar-link" @click.prevent="handleMenuClick('home')">Home</a>
           </li>
           <li class="navbar-item">
-            <a href="#" class="navbar-link" @click.prevent="scrollTo('exploraDest')">Explora Destinos</a>
+            <a href="#" class="navbar-link" @click.prevent="handleMenuClick('exploraDest')">Explora Destinos</a>
           </li>
           <li class="navbar-item">
-            <a href="#" class="navbar-link" @click.prevent="scrollTo('lugaresDesta')">Lugares Destacados</a>
+            <a href="#" class="navbar-link" @click.prevent="handleMenuClick('lugaresDesta')">Lugares Destacados</a>
           </li>
           <li class="navbar-item">
             <router-link to="/lugaresFavorito" class="navbar-logo-link">
-        
               <a class="navbar-link">Favoritos</a>
-      </router-link>
+            </router-link>
           </li>
           <li class="navbar-item">
-            <a href="#" class="navbar-link" @click.prevent="scrollTo('contacto')">Contacto</a>
+            <a href="#" class="navbar-link" @click.prevent="handleMenuClick('contacto')">Contacto</a>
           </li>
         </ul>
 
@@ -38,11 +37,7 @@
         <div class="user-icon-container" @click="toggleUserMenu">
           <img src="@/assets/images.jpeg" alt="User Icon" class="user-icon" />
           <transition name="fade">
-            <div
-              class="user-menu"
-              v-if="isUserMenuOpen"
-              @click.stop
-            >
+            <div class="user-menu" v-if="isUserMenuOpen" @click.stop>
               <ul>
                 <li><router-link to="/perfil">Perfil</router-link></li>
                 <li><a href="#" @click="logout">Cerrar sesión</a></li>
@@ -81,6 +76,11 @@ export default {
       }
       // Alterna el menú de usuario
       this.isUserMenuOpen = !this.isUserMenuOpen;
+    },
+    handleMenuClick(id) {
+      // Redirige a la ruta deseada y cierra el menú
+      this.scrollTo(id);
+      this.isMenuOpen = false; // Cierra el menú al seleccionar un enlace
     },
     scrollTo(id) {
       // Redirige a la ruta deseada
@@ -208,11 +208,16 @@ export default {
   }
 }
 
+/* Estilos para los elementos del menú */
+.navbar-item {
+  margin: 0 1rem; /* Espaciado horizontal uniforme entre elementos */
+}
+
 /* Estilos para el menú desplegable en modo móvil */
 @media (max-width: 768px) {
   .navbar-list {
     display: flex;
-    align-items: center;
+    flex-direction: column; /* Cambiado a columna */
     position: fixed;
     top: 60px; /* Ajusta según la altura del navbar */
     left: 0;
@@ -225,8 +230,6 @@ export default {
     opacity: 0;
     z-index: 1000;
     transition: transform 0.3s ease-out, opacity 0.3s ease-out;
-    flex-direction: row;
-    justify-content: space-around;
     pointer-events: none; /* Evita clics cuando está oculto en móvil */
   }
 
@@ -252,8 +255,7 @@ export default {
   font-size: 1rem;
   font-weight: 500;
   transition: color 0.3s ease, transform 0.3s ease;
-  cursor: pointer;
-  margin: 0.5rem 1rem; /* Ajustar espaciado: vertical y horizontal */
+  cursor: pointer; 
 }
 
 /* Efecto de enlace activo y hover */
@@ -278,53 +280,47 @@ export default {
 .user-icon {
   width: 30px;
   border-radius: 50%;
-  margin-right: 0.5rem;
-}
-
-/* Transición de desvanecimiento para el menú del usuario */
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s;
-}
-
-.fade-enter,
-.fade-leave-to {
-  opacity: 0;
+  margin-left: 1rem;
 }
 
 /* Estilos para el menú desplegable del usuario */
 .user-menu {
   position: absolute;
-  top: 40px;
+  top: 100%; /* Coloca el menú justo debajo del icono */
   right: 0;
   background: #2b2d42;
-  color: #fff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  border-radius: 8px;
-  overflow: hidden;
-  z-index: 1200;
-  border: 1px solid #1a283b;
-  width: 200px;
-  transition: opacity 0.3s ease;
+  padding: 0.5rem;
+  border-radius: 5px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+  z-index: 1200; /* Asegúrate de que esté por encima */
 }
 
 .user-menu ul {
   list-style: none;
-  margin: 0;
   padding: 0;
+  margin: 0;
 }
 
 .user-menu li {
-  padding: 0.75rem 1rem;
+  margin: 0.5rem 0;
 }
 
-.user-menu li a {
-  color: #fff;
+.user-menu a {
+  color: #ffffff; /* Color de texto del menú */
   text-decoration: none;
-  display: block;
+  transition: color 0.3s ease;
 }
 
-.user-menu li a:hover {
-  background: #1a283b;
+.user-menu a:hover {
+  color: #c9c9c9; /* Color al pasar el mouse */
+}
+
+/* Transiciones */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.5s;
+}
+
+.fade-enter, .fade-leave-to /* .fade-leave-active en <2.1.8 */ {
+  opacity: 0;
 }
 </style>
