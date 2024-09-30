@@ -118,7 +118,6 @@ export default {
                 if (response2.data.ok) {
                     console.log("Formulario de registro enviado");
                     this.selectedTab = 'login'
-                    this.$router.push('/')
                 }
                 console.log(response2)
 
