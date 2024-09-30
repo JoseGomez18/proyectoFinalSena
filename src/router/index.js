@@ -47,24 +47,23 @@ const routes = [
         path: '/pruebas',
         name: 'pruebas',
         component: ScrollPrueba,
-        meta:{ requiresAuth: true}
+        meta: { requiresAuth: true }
     },
-    
-    // {
-    //     path: '/perfil',
-    //     name: 'perfil',
-    //     component: Perfil,
-    // },
-    // {
-    //     path: '/editarPerfil',
-    //     name: 'editarPerfil',
-    //     component: EditarPerfil
-    // },
-    // {
-    //     path: '/cambiarPassword',
-    //     name: 'cambiarPassword',
-    //     component: CambiarPassword,
-    // },
+    {
+        path: '/perfil',
+        name: 'perfil',
+        component: Perfil,
+    },
+    {
+        path: '/editarPerfil',
+        name: 'editarPerfil',
+        component: EditarPerfil
+    },
+    {
+        path: '/cambiarPassword',
+        name: 'cambiarPassword',
+        component: CambiarPassword,
+    },
     {
         path: '/testimonials',
         name: 'testimonials',
@@ -89,12 +88,12 @@ const routes = [
         path: '/politica-privacidad',
         name: 'PrivacyPolicy',
         component: PrivacyPolicy,
-      },
-      {
+    },
+    {
         path: '/terminos-condiciones',
         name: 'TermsAndConditions',
         component: TermsAndConditions,
-      },
+    },
 ];
 
 const router = createRouter({

@@ -6,10 +6,12 @@
   
         <!-- Sección de información del usuario -->
         <section class="profile-info">
-          <img src="@/assets/images.jpeg" alt="Logo de la página" class="profile-logo" />
+          <i class="fa-solid fa-user profile-logo"></i>
+
+          <!-- <img src="@/assets/images.jpeg" alt="Logo de la página" class="profile-logo" /> -->
           <div class="profile-details">
-            <h2 class="profile-name">Santiago Madrid</h2>
-            <p class="profile-email">santiagom@gmail.com</p>
+            <h2 class="profile-name">{{nombre}}</h2>
+            <p class="profile-email">{{ correo }}</p>
           </div>
           <button class="edit-profile-btn" @click="goToEditProfile">Editar Perfil</button>
         </section>
@@ -37,6 +39,8 @@
   </template>
   
   <script>
+import { mapGetters, mapMutations } from 'vuex';
+
   export default {
     name: 'Perfil',
     methods: {
@@ -58,10 +62,20 @@
       deleteAccount() {
         alert('Función para eliminar la cuenta');
       },
-      logout() {
-        alert('Función para cerrar sesión');
-      },
+      ...mapMutations(['cerrarSesion']),
+    logout() {
+      this.cerrarSesion(); 
+      this.$router.push("/")
+    }
     },
+    computed: {
+    nombre() {
+      return this.$store.getters.obtenerNombre;
+    },
+    correo() {
+      return this.$store.getters.obtenerCorreo;
+    }
+  }
   };
   </script>
   
@@ -121,12 +135,14 @@
   }
   
   .profile-logo {
-    width: 100px;
-    height: auto;
-    border: 3px solid #4caf50; /* Añadido borde similar al estilo del perfil */
+    width: 67px;
+    text-align: center;
+    height: 54px;
+    font-size: 29px;
+    border: 3px solid #4caf50;
     border-radius: 50%;
-    background-color: #1a283b; /* Fondo oscuro para el logo */
-    padding: 0.5rem; /* Espacio alrededor del logo */
+    background-color: #1a283b;
+    padding: 0.5rem;
     margin-bottom: 1rem;
   }
   
