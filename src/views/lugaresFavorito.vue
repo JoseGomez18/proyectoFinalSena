@@ -28,8 +28,8 @@
             </span>
           </div>
           <!-- Botón "Ver más" centrado -->
-          <div class="ver-mas-container">
-            <button class="ver-mas-button">Ver más</button>
+          <div class="ver-mas-container"  :key="currentIndex">
+               <button class="ver-mas-button" @click="pagina(favoritePlaces[currentIndex].lugar_id)">Ver más</button>
           </div>
         </div>
       </div>
@@ -113,7 +113,11 @@ export default {
       } catch (error) {
         console.log(error)
       }
-    }
+    },
+   pagina(id) {
+     this.$router.push({ name: 'DetallesLugar', params: { id } });
+     console.log(id)
+   }
   },
   computed: {
   // Esto mapea el getter 'obtenerCorreo' a la propiedad computada 'correo'
@@ -152,6 +156,7 @@ export default {
 }
 
 .card-container {
+  width: 40%;
   flex-grow: 2;
   background-color: #2d3748;
   border: none;
@@ -232,9 +237,10 @@ export default {
 
 .scroll-area {
   flex-grow: 1;
-  height: calc(100vh - 200px);
-  overflow-y: auto;
+  height: calc(100vh - 200px); /* Altura ajustada para el contenedor con scroll */
+  overflow-y: auto; /* Habilita el scroll vertical */
 }
+
 
 .favorites-list {
   display: flex;
@@ -327,4 +333,80 @@ export default {
   cursor: pointer;
   border-radius: 0.5rem;
 }
+
+/* Media Queries para hacer el diseño más responsivo */
+@media (max-width: 768px) {
+  /* En pantallas menores a 768px (tablets y dispositivos similares) */
+  
+  /* Cambiamos la dirección del contenedor para que las tarjetas se alineen en columna */
+  .flex-container {
+    flex-direction: column;
+  }
+  
+  /* Ajustamos el tamaño de la imagen principal */
+  .large-image {
+    height: 250px;
+  }
+
+  /* Reducimos el tamaño de las tarjetas pequeñas */
+  .small-image {
+    width: 80px;
+    height: 60px;
+  }
+
+  /* Alineamos el contenido de las tarjetas pequeñas en columna */
+  .small-card-content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  /* Ajustamos la altura del área de scroll para ocupar mejor el espacio */
+  .scroll-area {
+    height: auto;
+    max-height: 400px; /* Altura limitada para evitar que ocupe demasiado espacio */
+  }
+}
+
+@media (max-width: 480px) {
+  /* En pantallas menores a 480px (móviles) */
+
+  /* Reducimos el tamaño del título */
+  .title {
+    font-size: 1.5rem;
+  }
+
+  /* Reducimos aún más la altura de la imagen principal */
+  .large-image {
+    height: 200px;
+  }
+
+  /* Ajustamos el tamaño de las imágenes pequeñas para pantallas muy pequeñas */
+  .small-image {
+    width: 70px;
+    height: 50px;
+  }
+
+  /* Ajustamos el tamaño del botón "Ver más" para móviles */
+  .ver-mas-button {
+    padding: 0.2rem 0.5rem;
+  }
+
+  /* Ajustamos el botón de consejos para que no ocupe tanto espacio */
+  .tips-button {
+    padding: 0.6rem 0.8rem;
+  }
+
+  /* Reducimos el tamaño del footer */
+  .footer {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  /* Ajustamos el texto del footer */
+  .footer-text {
+    font-size: 0.9rem;
+  }
+}
+
 </style>
