@@ -20,15 +20,120 @@
           </div>
         </form>
       </div>
+  <!-- Sección de banner con anuncio -->
+  <div class="banner-container">
+    <div class="relative">
+      <img
+        :src="bannerSrc"
+        alt="Anuncio Banner"
+        class="banner-image"
+      />
+      <div class="overlay">
+        <div class="text-center">
+          <p class="banner-text">¿Listo para tu próxima aventura?</p>
+          <button class="banner-button" @click="verOfertas">
+            Ver Ofertas
+          </button>
+        </div>
+      </div>
+      <div class="ad-tag">
+        <span>Anuncio</span>
+      </div>
+    </div>
+  </div>
     </section>
   </template>
   
   <script>
   export default {
-    name: 'ContactUs'
+    name: 'ContactUs', // Mantén el nombre que ya tienes
+  
+    // Añadimos el data() y los métodos
+    data() {
+      return {
+        bannerSrc: require('../assets/publicidadPrueba.jpg') // Ajusta la ruta si es necesario
+      };
+    },
+    methods: {
+      verOfertas() {
+        // Lógica para redirigir o mostrar ofertas
+        alert("Redirigiendo a las ofertas...");
+      }
+    }
   }
   </script>
   
+  <style scoped>
+/* Contenedor del banner */
+.banner-container {
+  margin: 3rem 0;
+  background-color: #2c4356;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Imagen del banner */
+.banner-image {
+  width: 100%;
+  height: 10rem;
+  object-fit: cover;
+  display: block;
+}
+
+/* Overlay oscuro que permite ver el texto */
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4); /* Fondo oscuro semitransparente */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1; /* Asegura que el overlay esté por encima de la imagen */
+}
+
+/* Texto dentro del overlay */
+.banner-text {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  z-index: 2; /* Asegura que el texto esté visible */
+}
+
+/* Botón dentro del overlay */
+.banner-button {
+  background-color: #4db6ac;
+  color: white;
+  padding: 0.5rem 1.5rem;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  z-index: 2;
+}
+
+.banner-button:hover {
+  background-color: #3a8f88;
+}
+
+/* Etiqueta de anuncio */
+.ad-tag {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  z-index: 2;
+}
+</style>
+
   <style scoped>
   .contact-section {
     padding: 2rem;
