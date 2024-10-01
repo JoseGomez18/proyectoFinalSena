@@ -23,7 +23,7 @@
           <li class="navbar-item">
             <a href="#" class="navbar-link" @click.prevent="handleMenuClick('lugaresDesta')">Lugares Destacados</a>
           </li>
-          <li class="navbar-item">
+          <li v-if="correo" class="navbar-item">
             <router-link to="/lugaresFavorito" class="navbar-logo-link">
               <a class="navbar-link">Favoritos</a>
             </router-link>
@@ -31,27 +31,38 @@
           <li class="navbar-item">
             <a href="#" class="navbar-link" @click.prevent="handleMenuClick('contacto')">Contacto</a>
           </li>
+          <!-- Icono de usuario y menú desplegable -->
+          <div v-if="correo" class="user-icon-container" @click="toggleUserMenu">
+            <i class="fa-solid fa-user icon"></i>
+            <p>{{ correo }}</p>
+            <transition name="fade">
+              <div
+                class="user-menu"
+                v-if="isUserMenuOpen"
+                @click.stop
+              >
+                <ul>
+                  <li><router-link to="/perfil">Perfil</router-link></li>
+                  <li><a href="#" @click="logout">Cerrar sesión</a></li>
+                </ul>
+              </div>
+            </transition>
+          </div>
+          <li v-else class="navbar-item">
+              <router-link to="/login" class="navbar-logo-link">
+          
+                <a class="navbar-link">Login</a>
+              </router-link>
+            </li>
         </ul>
-
-        <!-- Icono de usuario y menú desplegable -->
-        <div class="user-icon-container" @click="toggleUserMenu">
-          <img src="@/assets/images.jpeg" alt="User Icon" class="user-icon" />
-          <transition name="fade">
-            <div class="user-menu" v-if="isUserMenuOpen" @click.stop>
-              <ul>
-                <li><router-link to="/perfil">Perfil</router-link></li>
-                <li><a href="#" @click="logout">Cerrar sesión</a></li>
-                <li><router-link to="/configuracion">Configuración</router-link></li>
-              </ul>
-            </div>
-          </transition>
-        </div>
       </div>
     </div>
   </nav>
 </template>
 
 <script>
+import { mapGetters, mapMutations } from 'vuex';
+
 export default {
   name: 'Navbar',
   data() {
@@ -106,11 +117,21 @@ export default {
         this.isUserMenuOpen = false;
       }
     },
+    ...mapMutations(['cerrarSesion']),
     logout() {
-      // Lógica para cerrar sesión
+      this.cerrarSesion(); 
       alert('Cerrar sesión');
     }
   },
+  computed: {
+  // Esto mapea el getter 'obtenerCorreo' a la propiedad computada 'correo'
+  ...mapGetters(['obtenerNombre']),
+
+  // Puedes renombrar la propiedad si lo deseas:
+  correo() {
+    return this.obtenerNombre || false;
+  } 
+ },
   mounted() {
     document.addEventListener('click', this.handleClickOutside);
   },
@@ -187,6 +208,17 @@ export default {
   padding: 0;
   transition: transform 0.3s ease;
   pointer-events: none; /* Evita clics cuando está oculto en móvil */
+}
+
+.icon{
+  color: rgb(125, 211, 252);
+  ;
+    margin-right: 8px;
+}
+
+.user-icon-container p{
+  color: rgb(125, 211, 252);
+
 }
 
 /* Mostrar lista de enlaces en modo escritorio */

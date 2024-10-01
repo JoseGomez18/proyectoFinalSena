@@ -13,9 +13,13 @@
         <p v-if="message.type !== 'card'" class="message-text" :class="message.type">{{ message.text }}</p>
         <section v-else class="cards-container">
           <article v-for="(lugar, index) in message.lugares" :key="index" class="cardL">
-            <div @click="lugar.isFav ? eliminarfav(lugar.id) : addFav(lugar.id, index)" class="container-fav">
+
+            <div @click="handleFavClick(lugar)" class="container-fav">
               <i :class="lugar.isFav ? 'fa-solid fa-heart' : 'fa-regular fa-heart'"></i>
             </div>
+            <!-- <div @click="lugar.isFav ? eliminarfav(lugar.id) : addFav(lugar.id, index)" class="container-fav">
+              <i :class="lugar.isFav ? 'fa-solid fa-heart' : 'fa-regular fa-heart'"></i>
+            </div> -->
             <img :src="lugar.imagen" alt="Imagen del lugar">
             <h3 class="place-title">{{ lugar.nombre_lugar }}</h3>
             <p id="cardLp">Clima: {{ lugar.clima }}</p>
@@ -43,6 +47,8 @@
 
 
 <script>
+import { mapGetters, mapMutations } from 'vuex';
+
 import axios from 'axios';
 import LoadingSpinner from './loadingSpinner.vue';
 import { nextTick } from 'vue';
@@ -139,9 +145,10 @@ export default {
             }
 
              // Obtener los lugares favoritos del usuario
-        const idUser = 1; // Hardcodeado por ahora
-        const favoritosResponse = await axios.post(`${process.env.VUE_APP_RUTA_API}/api/obtenerFav`, { idUser });
-        const favoritos = favoritosResponse.data.lugares.map(fav => fav.lugar_id); // IDs de los lugares favoritos
+            const idUser = this.id; // Hardcodeado por ahora
+            console.log("id: " + idUser )
+            const favoritosResponse = await axios.post(`${process.env.VUE_APP_RUTA_API}/api/obtenerFav`, { idUser });
+            const favoritos = favoritosResponse.data.lugares.map(fav => fav.lugar_id); // IDs de los lugares favoritos
 
         // Procesar información de lugares y marcar como favoritos si están en la lista
         const lugares = response2.data.map(lugar => ({
@@ -182,6 +189,17 @@ export default {
         this.saveMessagesToLocalStorage(); // Guardar los mensajes en localStorage
       }
     },
+    handleFavClick(lugar) {
+      if (!this.correo) {
+        this.showLoginPopup(); // Si no está logueado, mostrar popup
+        return;
+      }
+
+      lugar.isFav ? this.eliminarfav(lugar.id) : this.addFav(lugar.id);
+    },
+    showLoginPopup() {
+      alert("Por favor, inicia sesión para agregar lugares a favoritos."); // Muestra un popup simple
+    },
     async addFav(id,index){
          // Busca el lugar por su ID y actualiza isFav
          this.messages.forEach(message => {
@@ -191,7 +209,8 @@ export default {
         }
       });
       try {
-        const response = await axios.post(`${process.env.VUE_APP_RUTA_API}/api/insertFav`,{idUser:1,idLugar:id}) 
+        console.log(this.id)
+        const response = await axios.post(`${process.env.VUE_APP_RUTA_API}/api/insertFav`,{idUser:this.id,idLugar:id}) 
         if(response.data.existe){
           alert("ya lo habias guardado como fav")
           return;
@@ -215,7 +234,8 @@ export default {
         }
       });
       try {
-        const response = await axios.post(`${process.env.VUE_APP_RUTA_API}/api/eliminarFav`,{idUser:1,idLugar:id}) 
+        console.log(this.id())
+        const response = await axios.post(`${process.env.VUE_APP_RUTA_API}/api/eliminarFav`,{idUser:this.id,idLugar:id}) 
         console.log(response)
         console.log("eliminao")
       } catch (error) {
@@ -257,6 +277,18 @@ export default {
       this.$router.push({ name: 'DetallesLugar', params: { id } });
     }
   },
+  computed: {
+  // Esto mapea el getter 'obtenerCorreo' a la propiedad computada 'correo'
+  ...mapGetters(['obtenerCorreo','obtenerId']),
+
+  // Puedes renombrar la propiedad si lo deseas:
+  correo() {
+    return this.obtenerCorreo || false;
+  },
+  id() {
+    return this.obtenerId || null; // o cualquier valor predeterminado que prefieras
+  }
+ },
   mounted() {
     this.loadMessagesFromLocalStorage(); // Cargar el historial al montar el componente
     this.scrollToBottom();

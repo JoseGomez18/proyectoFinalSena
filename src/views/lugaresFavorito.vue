@@ -66,6 +66,7 @@
 </template>
 
 <script>
+import { mapGetters, mapMutations } from 'vuex';
 import navBar from '../components/navBar.vue';
 import axios from 'axios';
 
@@ -74,7 +75,7 @@ export default {
     return {
       currentIndex: 0,
       favoritePlaces: [],
-      idUser: 1
+      idUser: this.id
     };
   },
   mounted() {
@@ -82,7 +83,7 @@ export default {
   },
   methods: {
     async fetchFavoritePlaces() {
-      const response = await axios.post(`${process.env.VUE_APP_RUTA_API}/api/obtenerFav`, { idUser: 1 });
+      const response = await axios.post(`${process.env.VUE_APP_RUTA_API}/api/obtenerFav`, { idUser: this.id });
       this.favoritePlaces = response.data.lugares;
       console.log(response.data);
     },
@@ -97,7 +98,7 @@ export default {
     },
     async eliminar(idLugar) {
       try {
-        const response = await axios.post(`${process.env.VUE_APP_RUTA_API}/api/eliminarFav`, { idUser: 1, idLugar:idLugar });
+        const response = await axios.post(`${process.env.VUE_APP_RUTA_API}/api/eliminarFav`, { idUser: this.id, idLugar:idLugar });
           // Verifica si la respuesta es exitosa antes de actualizar la lista local
     if (response.status === 200) {
       // Elimina el lugar del array local
@@ -118,6 +119,14 @@ export default {
      console.log(id)
    }
   },
+  computed: {
+  // Esto mapea el getter 'obtenerCorreo' a la propiedad computada 'correo'
+  ...mapGetters(['obtenerCorreo','obtenerId']),
+
+  id() {
+    return this.obtenerId || null; // o cualquier valor predeterminado que prefieras
+  }
+ },
   components: {
     navBar
   }

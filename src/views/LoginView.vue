@@ -84,16 +84,21 @@ export default {
                 console.log("Sirve");
                 
                 const response = await axios.post(`${process.env.VUE_APP_RUTA_API}/api/login`, { user: this.correoL, password: this.contraL }, {withCredentials:true})
-                console.log("Da vuelta el response");
+                console.log(response);
                 
                 if (response.data.validacion) {
-
+                    // this.$store.commit('actualizarValidado', response.data.validacion);
+                    // this.$store.commit('actualizarNombre', response.data.nombre);
+                    console.log(response.data.usuario[0].correo)
+                    this.$store.commit('actualizarNombre', response.data.usuario[0].nombre);
+                    this.$store.commit('actualizarCorreo', response.data.usuario[0].correo);
+                    this.$store.commit('actualizarId', response.data.usuario[0].id);
 
                     //redireccionar al home
                     this.$router.push('/')
                 } else {
                     console.log("error en login ")
-                    this.error = responsee.data.message
+                    this.error = response.data.message
 
                     // reiniciar inputs
                     this.correoL = ""
@@ -113,7 +118,6 @@ export default {
                 if (response2.data.ok) {
                     console.log("Formulario de registro enviado");
                     this.selectedTab = 'login'
-                    this.$router.push('/')
                 }
                 console.log(response2)
 
