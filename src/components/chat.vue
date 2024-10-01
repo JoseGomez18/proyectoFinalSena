@@ -2,8 +2,12 @@
   <section class="chat-container">
     <ul class="messages-container" ref="messagesContainer">
       <h2 class="chat-title">Chat</h2>
-      <button @click="deleteMessagesToLocalStorage" class="reset"><i
-          class="fa-solid fa-arrows-rotate icono"></i>Reiniciar chat</button>
+
+      <button @click="deleteMessagesToLocalStorage" class="reset">
+        <i  class="fa-solid fa-arrows-rotate icono"></i>
+        Reiniciar chat
+      </button>
+
       <li v-for="(message, index) in messages" :key="index" :class="['message', message.type]">
         <!-- Burbujas de tipo de mensaje (GPT o Tú) -->
         <span class="message-bubble" :class="message.type">
@@ -13,26 +17,25 @@
         <p v-if="message.type !== 'card'" class="message-text" :class="message.type">{{ message.text }}</p>
         <section v-else class="cards-container">
           <article v-for="(lugar, index) in message.lugares" :key="index" class="cardL">
-
+            <!-- corazon favoritos -->
             <div @click="handleFavClick(lugar)" class="container-fav">
               <i :class="lugar.isFav ? 'fa-solid fa-heart' : 'fa-regular fa-heart'"></i>
             </div>
-            <!-- <div @click="lugar.isFav ? eliminarfav(lugar.id) : addFav(lugar.id, index)" class="container-fav">
-              <i :class="lugar.isFav ? 'fa-solid fa-heart' : 'fa-regular fa-heart'"></i>
-            </div> -->
+            <!-- info de la card -->
             <img :src="lugar.imagen" alt="Imagen del lugar">
             <h3 class="place-title">{{ lugar.nombre_lugar }}</h3>
             <p id="cardLp">Clima: {{ lugar.clima }}</p>
             <button @click="pagina(lugar.id)">Ver más</button>
           </article>
         </section>
+
         <article class="sugerencias">
           <button :disabled="isLoading" v-for="(sugerencia, index) in message.sugerencias" :key="index"
             @click="sendMessage(sugerencia.text)" > {{ sugerencia.text }}</button>
         </article>
       </li>
-      <transition name="backLeft" enter-active-class="animate__animated animate__backInLeft animate__faster"
-        leave-active-class="animate__animated animate__backOutLeft animate__faster">
+
+      <transition name="backLeft" enter-active-class="animate__animated animate__backInLeft animate__faster" leave-active-class="animate__animated animate__backOutLeft animate__faster">
         <LoadingSpinner :loading="isLoading" />
       </transition>
     </ul>
@@ -40,18 +43,19 @@
     <form @submit.prevent="sendMessage(newMessage)" class="input-container">
       <textarea v-model="newMessage" placeholder="Escribe un mensaje..." class="custom-textarea"
         @input="autoResize" @keydown.enter="sendMessage(newMessage)" ></textarea>
-      <button :disabled="isLoading"><i class="fa-solid fa-arrow-up"></i></button>
+
+      <button :disabled="isLoading">
+        <i class="fa-solid fa-arrow-up"></i>
+      </button>
     </form>
   </section>
 </template>
 
 
 <script>
-import { mapGetters, mapMutations } from 'vuex';
-
+import { mapGetters} from 'vuex';
 import axios from 'axios';
 import LoadingSpinner from './loadingSpinner.vue';
-import { nextTick } from 'vue';
 
 export default {
   name: 'chat',
@@ -89,6 +93,7 @@ export default {
       this.$nextTick(() => {
         this.scrollToBottom();
       })
+
       this.isLoading = true;
       await this.botResponse(userMessage); // Obtener respuestas del bot
     },
@@ -136,50 +141,38 @@ export default {
         if (lugaresExactos.length > 0) {
           try {
             const response2 = await axios.post(`${process.env.VUE_APP_RUTA_API}/api/infoDestino`, { id: lugaresExactos });
-            console.log(response2)
             if (response2.data.error) {
-              console.log("llego al error")
+              console.log("llego al error: " + response2.data.error)
               this.botResponse("No hay estos lugares en la db, devuelve lugares que si esten en la db")
               this.cambiarEstado("isLoading")
               return;
             }
 
              // Obtener los lugares favoritos del usuario
-            const idUser = this.id; // Hardcodeado por ahora
-            console.log("id: " + idUser )
+            const idUser = this.id; 
             const favoritosResponse = await axios.post(`${process.env.VUE_APP_RUTA_API}/api/obtenerFav`, { idUser });
             const favoritos = favoritosResponse.data.lugares.map(fav => fav.lugar_id); // IDs de los lugares favoritos
 
-        // Procesar información de lugares y marcar como favoritos si están en la lista
-        const lugares = response2.data.map(lugar => ({
-          nombre_lugar: lugar.nombre_lugar,
-          clima: lugar.clima,
-          descripcion: lugar.descripcion,
-          imagen: lugar.imagen,
-          id: lugar.id,
-          isFav: favoritos.includes(lugar.id) // Marcar como favorito si está en la lista
-        }));
-
-            // Procesar información de lugares
-            // const lugares = response2.data.map(lugar => ({
-            //   nombre_lugar: lugar.nombre_lugar,
-            //   clima: lugar.clima,
-            //   descripcion: lugar.descripcion,
-            //   imagen: lugar.imagen,
-            //   id: lugar.id,
-            //   isFav: false 
-            // }));
+            // Procesar información de lugares y marcar como favoritos si están en la lista
+            const lugares = response2.data.map(lugar => ({
+              nombre_lugar: lugar.nombre_lugar,
+              clima: lugar.clima,
+              descripcion: lugar.descripcion,
+              imagen: lugar.imagen,
+              id: lugar.id,
+              isFav: favoritos.includes(lugar.id) // Marcar como favorito si está en la lista
+            }));
 
             this.messages.push({ type: 'card', lugares });
             this.$nextTick(() => {
               this.scrollToBottom();
             })
+
           } catch (error) {
             this.messages.push({ type: 'bot', text: 'Error al obtener detalles de los lugares.' });
             console.error("Error en infoDestino: ", error);
           }
         }
-
       } catch (error) {
         this.cambiarEstado('isLoading');
         this.messages.push({ type: 'bot', text: 'Error en la solicitud al servidor.' });
@@ -194,38 +187,30 @@ export default {
         this.showLoginPopup(); // Si no está logueado, mostrar popup
         return;
       }
-
       lugar.isFav ? this.eliminarfav(lugar.id) : this.addFav(lugar.id);
     },
     showLoginPopup() {
       alert("Por favor, inicia sesión para agregar lugares a favoritos."); // Muestra un popup simple
     },
-    async addFav(id,index){
-         // Busca el lugar por su ID y actualiza isFav
-         this.messages.forEach(message => {
+    async addFav(id){
+      // Busca el lugar por su ID y actualiza isFav
+      this.messages.forEach(message => {
         if (message.type === 'card') {
           const lugar = message.lugares.find(l => l.id === id);
           if (lugar) lugar.isFav = true; // Solo si el lugar existe
         }
       });
+
       try {
-        console.log(this.id)
         const response = await axios.post(`${process.env.VUE_APP_RUTA_API}/api/insertFav`,{idUser:this.id,idLugar:id}) 
         if(response.data.existe){
           alert("ya lo habias guardado como fav")
           return;
         } 
-        // this.favButton = true
-        // console.log(response.data)
-        
-      
-        
-        console.log("lugar guardado correctamente")
       } catch (error) {
         console.log(error)
       }
-    }
-    ,
+    },
     async eliminarfav(id){
       this.messages.forEach(message => {
         if (message.type === 'card') {
@@ -233,11 +218,10 @@ export default {
           if (lugar) lugar.isFav = false; // Solo si el lugar existe
         }
       });
+      
       try {
-        console.log(this.id())
         const response = await axios.post(`${process.env.VUE_APP_RUTA_API}/api/eliminarFav`,{idUser:this.id,idLugar:id}) 
         console.log(response)
-        console.log("eliminao")
       } catch (error) {
         console.log(error)
       }
@@ -272,7 +256,6 @@ export default {
       // Si no encuentra ningún número, devuelve el texto original
       return texto;
     },
-
     pagina(id) {
       this.$router.push({ name: 'DetallesLugar', params: { id } });
     }
@@ -303,9 +286,6 @@ export default {
 .chat-container {
   display: flex;
   flex-direction: column;
-  /* border: 1px solid rgb(2, 132, 199); /* Azul oscuro */
-  /* background-color: rgb(235, 247, 255); */
-
   --tw-bg-opacity: 1;
   background-color: rgb(31 41 55 / var(--tw-bg-opacity));
   border-radius: 5px;
@@ -349,7 +329,6 @@ export default {
   display: flex;
   flex-direction: column;
   scroll-behavior: smooth;
-  /* background-color: rgb(245, 248, 255); */
 }
 
 .custom-textarea {

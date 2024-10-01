@@ -4,8 +4,6 @@ import LoginView from '../views/LoginView.vue'
 import DetallesLugar from '@/views/DetallesLugar.vue'
 import ExploraDest from '@/components/exploraDest.vue'
 import LugaresDesta from '@/components/lugaresDesta.vue'
-import Ciudades from '@/components/ciudades.vue'
-import ScrollPrueba from '@/components/scrollPrueba.vue'
 import Perfil from '@/components/perfil.vue'
 import CambiarPassword from '@/components/CambiarPassword.vue'
 import EditarPerfil from '@/components/EditarPerfil.vue'
@@ -37,11 +35,6 @@ const routes = [
         path: '/lugaresDesta',
         name: 'lugaresDesta',
         component: LugaresDesta
-    },
-    {
-        path: '/ciudades',
-        name: 'ciudades',
-        component: Ciudades
     },
     {
         path: '/pruebas',

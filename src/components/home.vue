@@ -36,8 +36,7 @@
         <chat v-if="showChat"  class="chat"/>
 
       </transition> 
-      
-     
+    
     </div>
   </div>
 </template>

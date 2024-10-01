@@ -13,7 +13,6 @@
 <script>
 import Contacto from '@/components/contacto.vue';
 import Chat from '../components/chat.vue';
-import ciudadesVue from '../components/ciudades.vue';
 import exploraDestVue from '../components/exploraDest.vue';
 import footerVue from '../components/footer.vue';
 import homeVue from '../components/home.vue';

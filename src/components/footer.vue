@@ -53,8 +53,6 @@ export default {
 };
 </script>
 
-
-
 <style scoped>
 .footer {
   background: #1a283b;

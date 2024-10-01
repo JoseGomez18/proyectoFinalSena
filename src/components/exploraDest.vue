@@ -87,7 +87,6 @@ export default {
     this.loading = true;
     try {
       const response = await axios.post(`${process.env.VUE_APP_RUTA_API}/api/detallesCard`, { limit: 120 });
-      console.log('Datos recibidos de la API:', response.data);
 
       if (Array.isArray(response.data) && response.data.length > 0) {
         response.data.forEach(lugar => {
@@ -118,11 +117,10 @@ export default {
   methods: {
     // Cambiar categoría seleccionada y reiniciar el scroll
     seleccionarCategoria(filtro) {
-  console.log('Categoría seleccionada:', filtro); // Verifica la categoría seleccionada
-  this.categoriaSeleccionada = filtro;
-  this.$refs.horizontalContainer.scrollLeft = 0;
+      console.log('Categoría seleccionada:', filtro); // Verifica la categoría seleccionada
+      this.categoriaSeleccionada = filtro;
+      this.$refs.horizontalContainer.scrollLeft = 0;
   },
-
     pagina(id) {
       this.$router.push({ name: 'DetallesLugar', params: { id } });
     },

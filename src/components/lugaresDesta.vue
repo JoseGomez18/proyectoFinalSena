@@ -4,12 +4,14 @@
     <div v-if="loading">
       <LoadingSpinnerDestinos :loading="loading"/>
     </div>
+
     <div v-else class="galeria" data-aos="flip-left">
       <div @click="pagina(lugar.id)" class="tarjeta" v-for="(lugar, indice) in lugares" :key="indice" :class="lugar.tamano">
         <img :src="lugar.imagen" :alt="lugar.nombre" />
         <h3 class="nombre-ciudad">{{ lugar.nombre_lugar }}</h3>
       </div>
     </div>
+
   </div>
 </template>
 
@@ -20,50 +22,51 @@ import LoadingSpinnerDestinos from './loadingSpinnerDestinos.vue';
 
 export default {
   components: { loadingSpinner, LoadingSpinnerDestinos },
-name: 'lugaresDestaVue',
-data() {
-  return {
-    lugares: [],
-    tamanosPredefinidos: ['grande', 'mediana', 'grande', 'pequena', 'pequena'], // Tamaños predefinidos
-    loading: true
-  };
-},
-async created() {
-  this.loading=true
-  try {
-    // IDs de los lugares específicos
-    const ids = [17, 2, 3, 4, 5];
+  name: 'lugaresDestaVue',
+  data() {
+    return {
+      lugares: [],
+      tamanosPredefinidos: ['grande', 'mediana', 'grande', 'pequena', 'pequena'], // Tamaños predefinidos
+      loading: true
+    };
+  },
+  async created() {
+    this.loading=true
+    try {
+      // IDs de los lugares específicos
+      const ids = [17, 2, 3, 4, 5];
 
-    // Hacer la solicitud a la API con los IDs
-    const response = await axios.post(`${process.env.VUE_APP_RUTA_API}/api/lugaresPorIds`, { ids });
-    console.log('Datos recibidos de la API:', response.data);
+      // Hacer la solicitud a la API con los IDs
+      const response = await axios.post(`${process.env.VUE_APP_RUTA_API}/api/lugaresPorIds`, { ids });
+      console.log('Datos recibidos de la API:', response.data);
 
-    if (Array.isArray(response.data) && response.data.length > 0) {
-    // Asignar tamaños predefinidos a los lugares
-    this.lugares = response.data.map((lugar, index) => {
-      console.log('Lugar:', lugar); // Verifica que cada lugar tenga la propiedad nombre
-      return {
-        ...lugar,
-        tamano: this.tamanosPredefinidos[index % this.tamanosPredefinidos.length],  // Asignar tamaños en orden
-      };
-    });
-    } else {
-      console.error('Datos inesperados de la API:', response.data);
+      if (Array.isArray(response.data) && response.data.length > 0) {
+        // Asignar tamaños predefinidos a los lugares
+        this.lugares = response.data.map((lugar, index) => {
+        console.log('Lugar:', lugar); // Verifica que cada lugar tenga la propiedad nombre
+        return {
+          ...lugar,
+          tamano: this.tamanosPredefinidos[index % this.tamanosPredefinidos.length],  // Asignar tamaños en orden
+        };
+      });
+      } else {
+        console.error('Datos inesperados de la API:', response.data);
+      }
+    } catch (error) {
+      console.error('Error al obtener los lugares:', error);
     }
-  } catch (error) {
-    console.error('Error al obtener los lugares:', error);
-  }
-  finally{
-    this.loading=false
-  }
-},
+    finally{
+      this.loading=false
+    }
+  },
 methods:{
   pagina(id){
-        this.$router.push({ name: 'DetallesLugar', params: { id } });      
+    this.$router.push({ name: 'DetallesLugar', params: { id } });      
   }
 }
 };
 </script>
+
 <style scoped>
 /* Contenedor principal */
 .lugares-destacados {

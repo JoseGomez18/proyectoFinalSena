@@ -6,7 +6,7 @@
   
         <!-- Sección de edición de perfil -->
         <section class="edit-profile-info">
-          <img src="@/assets/images.jpeg" alt="Logo de la página" class="profile-logo" />
+          <!-- <img src="@/assets/images.jpeg" alt="Logo de la página" class="profile-logo" /> -->
           <h1 class="edit-title">Editar Perfil</h1>
   
           <form @submit.prevent="submitForm">

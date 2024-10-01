@@ -8,18 +8,22 @@
         <section class="edit-profile-info">
           <h1 class="edit-title">Cambiar Contraseña</h1>
           <form @submit.prevent="submitForm">
+            
             <div class="form-group">
               <label for="currentPassword">Contraseña Actual:</label>
               <input type="password" id="currentPassword" v-model="formData.currentPassword" placeholder="Ingresa tu contraseña actual" />
             </div>
+
             <div class="form-group">
               <label for="newPassword">Nueva Contraseña:</label>
               <input type="password" id="newPassword" v-model="formData.newPassword" placeholder="Ingresa la nueva contraseña" />
             </div>
+
             <div class="form-group">
               <label for="confirmPassword">Confirmar Nueva Contraseña:</label>
               <input type="password" id="confirmPassword" v-model="formData.confirmPassword" placeholder="Confirma la nueva contraseña" />
             </div>
+
             <button type="submit" class="save-btn">Cambiar Contraseña</button>
           </form>
         </section>
