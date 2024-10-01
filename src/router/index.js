@@ -36,12 +36,12 @@ const routes = [
         name: 'lugaresDesta',
         component: LugaresDesta
     },
-    {
-        path: '/pruebas',
-        name: 'pruebas',
-        component: ScrollPrueba,
-        meta: { requiresAuth: true }
-    },
+    // {
+    //     path: '/pruebas',
+    //     name: 'pruebas',
+    //     component: ScrollPrueba,
+    //     meta: { requiresAuth: true }
+    // },
     {
         path: '/perfil',
         name: 'perfil',
