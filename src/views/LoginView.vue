@@ -34,9 +34,6 @@
                             <input type="submit" value="Iniciar sesión">
                         </div>
                         <h3 id="error">{{ error }}</h3>
-                        <div class="signup-link">
-                            No es un miembro? <a href="" @click="selectedTab = 'signup'">Registrarse</a>
-                        </div>
                     </form>
                     <form action="#" enctype="multipart/form-data" v-else class="signup" @submit.prevent="signupSubmit">
                         <div class="field">

@@ -188,6 +188,7 @@ export default {
         return;
       }
       lugar.isFav ? this.eliminarfav(lugar.id) : this.addFav(lugar.id);
+      this.saveMessagesToLocalStorage()
     },
     showLoginPopup() {
       alert("Por favor, inicia sesión para agregar lugares a favoritos."); // Muestra un popup simple
